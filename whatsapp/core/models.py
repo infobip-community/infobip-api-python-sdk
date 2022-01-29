@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from typing import Dict, List, Optional
 
 
-def to_camel_case(string):
+def to_camel_case(string: str) -> str:
     output = "".join(word.capitalize() for word in string.split("_"))
     return output[0].lower() + output[1:]
 
@@ -54,7 +54,7 @@ class ResponseOK(Response):
     status: ResponseOKStatus
 
 
-def to_header_specific_case(string):
+def to_header_specific_case(string: str) -> str:
     return "-".join(word.capitalize() for word in string.split("_"))
 
 
@@ -67,6 +67,6 @@ class RequestHeaders(BaseModel):
         alias_generator = to_header_specific_case
         allow_population_by_field_name = True
 
-    def __init__(self, **data):
+    def __init__(self, **data: str) -> None:
         super().__init__(**data)
         self.authorization = f"App {self.authorization}"

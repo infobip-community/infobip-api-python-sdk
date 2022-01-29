@@ -3,7 +3,7 @@ import requests
 from whatsapp.authentication.models import Authentication
 from whatsapp.core.models import Response, RequestHeaders
 from whatsapp.core.utils import construct_response_model
-from whatsapp.text_message.models import Content, MessageBody
+from whatsapp.text_message.models import MessageBody
 
 ENDPOINT = "/whatsapp/1/message/text"
 
