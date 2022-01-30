@@ -1,11 +1,11 @@
-from pydantic import Field, constr
+from pydantic import Field, AnyHttpUrl, constr
 from typing import Optional
 
 from whatsapp.core.models import CamelCaseModel
 
 
 class Content(CamelCaseModel):
-    media_url: constr(max_length=2048)
+    media_url: AnyHttpUrl
     caption: Optional[constr(max_length=3000)]
     filename: Optional[constr(max_length=240)]
 
