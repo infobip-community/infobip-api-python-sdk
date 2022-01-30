@@ -3,9 +3,9 @@ import requests
 from whatsapp.authentication.models import Authentication
 from whatsapp.core.models import Response, RequestHeaders
 from whatsapp.core.utils import construct_response_model
-from whatsapp.text_message.models import MessageBody
+from whatsapp.document_message.models import MessageBody
 
-ENDPOINT = "/whatsapp/1/message/text"
+ENDPOINT = "/whatsapp/1/message/document"
 
 
 def send_message(auth: Authentication, message: MessageBody) -> Response:
@@ -18,4 +18,5 @@ def send_message(auth: Authentication, message: MessageBody) -> Response:
     )
 
     return construct_response_model(response)
+
 
