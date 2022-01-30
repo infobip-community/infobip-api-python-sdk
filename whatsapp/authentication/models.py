@@ -1,8 +1,6 @@
-from pydantic import AnyHttpUrl
-
-from core.models import CamelCaseModel
+from pydantic import AnyHttpUrl, BaseModel
 
 
-class Authentication(CamelCaseModel):
+class Authentication(BaseModel):
     base_url: AnyHttpUrl
     api_key: str
