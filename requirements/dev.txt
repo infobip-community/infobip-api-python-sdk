@@ -1,2 +1,4 @@
 -r common.txt
 pytest==6.2.5
+pytest-httpserver==1.0.4
+pydantic-factories==1.2.3
