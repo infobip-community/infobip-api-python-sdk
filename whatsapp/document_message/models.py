@@ -1,18 +1,14 @@
-from pydantic import Field, AnyHttpUrl, constr
+from pydantic import AnyHttpUrl, constr
 from typing import Optional
 
-from whatsapp.core.models import CamelCaseModel
+from whatsapp.core.models import CamelCaseModel, BaseMessageBody
 
 
 class Content(CamelCaseModel):
     media_url: AnyHttpUrl
-    caption: Optional[constr(max_length=3000)]
-    filename: Optional[constr(max_length=240)]
+    caption: Optional[constr(max_length=3000)] = None
+    filename: Optional[constr(max_length=240)] = None
 
 
-class MessageBody(CamelCaseModel):
-    from_number: constr(min_length=1, max_length=24) = Field(alias="from")
-    to: constr(min_length=1, max_length=24)
-    message_id: Optional[constr(max_length=50)]
+class MessageBody(BaseMessageBody):
     content: Content
-    callback_data: Optional[constr(max_length=4000)] = None
