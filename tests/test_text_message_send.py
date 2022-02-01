@@ -13,9 +13,7 @@ class MessageBodyFactory(ModelFactory):
 
 
 @pytest.mark.parametrize(
-    "base_url", [
-        None, "", "invalid_url", "ftp://123.api.infobip.com", {}
-    ]
+    "base_url", [None, "", "invalid_url", "ftp://123.api.infobip.com", {}]
 )
 def test_when_base_url_is_invalid__validation_error_is_raised(base_url):
     with pytest.raises(ValidationError):
@@ -29,10 +27,7 @@ def test_when_base_url_is_invalid__validation_error_is_raised(base_url):
 def test_when_api_key_is_invalid__validation_error_is_raised(api_key):
     with pytest.raises(ValidationError):
         send_message(
-            Authentication(
-                base_url="https://123.api.infobip.com",
-                api_key=api_key
-            ),
+            Authentication(base_url="https://123.api.infobip.com", api_key=api_key),
             MessageBodyFactory.build(),
         )
 
@@ -94,12 +89,7 @@ def test_when_content_preview_url_is_invalid__validation_error_is_raised(
         send_message(
             authentication,
             MessageBodyFactory.build(
-                **{
-                    "content": {
-                        "text": "text",
-                        "previewUrl": preview_url
-                    }
-                }
+                **{"content": {"text": "text", "previewUrl": preview_url}}
             ),
         )
 
@@ -113,11 +103,6 @@ def test_when_content_callback_data_is_invalid__validation_error_is_raised(
         send_message(
             authentication,
             MessageBodyFactory.build(
-                **{
-                    "content": {
-                        "text": "text",
-                        "callbackData": callback_data
-                    }
-                }
+                **{"content": {"text": "text", "callbackData": callback_data}}
             ),
         )
