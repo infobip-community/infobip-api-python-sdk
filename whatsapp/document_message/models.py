@@ -10,5 +10,5 @@ class Content(CamelCaseModel):
     filename: Optional[constr(max_length=240)] = None
 
 
-class MessageBody(BaseMessageBody):
+class DocumentMessageBody(BaseMessageBody):
     content: Content
