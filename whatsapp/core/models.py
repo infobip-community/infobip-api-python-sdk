@@ -2,7 +2,7 @@ from http import HTTPStatus
 from typing import Dict, List, Optional
 
 import requests
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, constr
 
 
 def to_camel_case(string: str) -> str:
@@ -14,6 +14,13 @@ class CamelCaseModel(BaseModel):
     class Config:
         alias_generator = to_camel_case
         allow_population_by_field_name = True
+
+
+class BaseMessageBody(CamelCaseModel):
+    from_number: constr(min_length=1, max_length=24) = Field(alias="from")
+    to: constr(min_length=1, max_length=24)
+    message_id: Optional[constr(max_length=50)]
+    callback_data: Optional[constr(max_length=4000)] = None
 
 
 class Response(CamelCaseModel):
