@@ -5,7 +5,7 @@ import pytest
 from pydantic_factories import ModelFactory
 
 from whatsapp.authentication.models import Authentication
-from whatsapp.core.models import BaseMessageBody
+from whatsapp.core.models import MessageBody
 
 
 def get_random_string(length):
@@ -17,7 +17,7 @@ class AuthenticationFactory(ModelFactory):
 
 
 class MessageBodyFactory(ModelFactory):
-    __model__ = BaseMessageBody
+    __model__ = MessageBody
 
 
 @pytest.fixture

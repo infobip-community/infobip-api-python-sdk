@@ -16,7 +16,7 @@ class CamelCaseModel(BaseModel):
         allow_population_by_field_name = True
 
 
-class BaseMessageBody(CamelCaseModel):
+class MessageBody(CamelCaseModel):
     from_number: constr(min_length=1, max_length=24) = Field(alias="from")
     to: constr(min_length=1, max_length=24)
     message_id: Optional[constr(max_length=50)]

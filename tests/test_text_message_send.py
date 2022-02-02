@@ -4,12 +4,14 @@ from pydantic_factories import ModelFactory
 
 from tests.conftest import get_random_string
 from whatsapp.authentication.models import Authentication
-from whatsapp.text_message.models import MessageBody
+from whatsapp.text_message.models import TextMessageBody
 from whatsapp.text_message.send import send_message
+
+TEXT_MESSAGE_ENDPOINT = "/whatsapp/1/message/text"
 
 
 class MessageBodyFactory(ModelFactory):
-    __model__ = MessageBody
+    __model__ = TextMessageBody
 
 
 @pytest.mark.parametrize(
