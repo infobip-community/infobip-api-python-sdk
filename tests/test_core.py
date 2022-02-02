@@ -1,9 +1,14 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
+from pydantic_factories import ModelFactory
 
 from tests.conftest import get_random_string
 from whatsapp.authentication.models import Authentication
 from whatsapp.core.models import MessageBody
+
+
+class MessageBodyFactory(ModelFactory):
+    __model__ = MessageBody
 
 
 @pytest.mark.parametrize(
@@ -23,13 +28,13 @@ def test_when_api_key_is_invalid__validation_error_is_raised(api_key):
 @pytest.mark.parametrize("from_number", [None, "", {}, get_random_string(25)])
 def test_when_from_number_is_invalid__validation_error_is_raised(from_number):
     with pytest.raises(ValidationError):
-        MessageBody(**{"from": from_number})
+        MessageBodyFactory.build(**{"from": from_number})
 
 
 @pytest.mark.parametrize("to", [None, "", {}, get_random_string(25)])
 def test_when_to_number_is_invalid__validation_error_is_raised(to):
     with pytest.raises(ValidationError):
-        MessageBody(**{"to": to})
+        MessageBodyFactory.build(**{"to": to})
 
 
 @pytest.mark.parametrize("callback_data", [{}, get_random_string(4001)])
@@ -37,4 +42,4 @@ def test_when_content_callback_data_is_invalid__validation_error_is_raised(
     callback_data,
 ):
     with pytest.raises(ValidationError):
-        MessageBody(**{"callbackData": callback_data})
+        MessageBodyFactory.build(**{"callbackData": callback_data})

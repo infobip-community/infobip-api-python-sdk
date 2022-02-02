@@ -19,7 +19,7 @@ class CamelCaseModel(BaseModel):
 class MessageBody(CamelCaseModel):
     from_number: constr(min_length=1, max_length=24) = Field(alias="from")
     to: constr(min_length=1, max_length=24)
-    message_id: Optional[constr(max_length=50)]
+    message_id: Optional[constr(max_length=50)] = None
     callback_data: Optional[constr(max_length=4000)] = None
 
 
