@@ -18,21 +18,3 @@ def send_message(auth: Authentication, message: DocumentMessageBody) -> Response
     )
 
     return construct_response_model(response)
-
-
-test = send_message(
-    Authentication(
-        base_url="https://nzp145.api.infobip.com", api_key=""
-    ),
-    DocumentMessageBody(
-        from_number="447860099299",
-        to="+385958165678",
-        messageId="test-message-123",
-        content=Content(
-            media_url="http://example.com/document",
-            caption="hehe",
-            filename="123"
-        )
-    )
-)
-print(test)
