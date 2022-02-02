@@ -1,7 +1,7 @@
 import requests
 
 from whatsapp.authentication.models import Authentication
-from whatsapp.core.models import Response, RequestHeaders
+from whatsapp.core.models import RequestHeaders, Response
 from whatsapp.core.utils import construct_response_model
 from whatsapp.text_message.models import MessageBody
 
@@ -18,4 +18,3 @@ def send_message(auth: Authentication, message: MessageBody) -> Response:
     )
 
     return construct_response_model(response)
-
