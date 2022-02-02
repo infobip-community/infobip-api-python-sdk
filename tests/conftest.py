@@ -23,7 +23,3 @@ class MessageBodyFactory(ModelFactory):
 @pytest.fixture
 def authentication():
     return AuthenticationFactory.build()
-
-
-def base_message_body():
-    return MessageBodyFactory.build()
