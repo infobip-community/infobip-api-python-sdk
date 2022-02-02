@@ -1,5 +1,6 @@
-import requests
 from http import HTTPStatus
+
+import requests
 
 from whatsapp.core.models import Response, ResponseError, ResponseOK
 
@@ -11,7 +12,7 @@ class ApiException(Exception):
 ERROR_STATUSES = (
     HTTPStatus.BAD_REQUEST,
     HTTPStatus.UNAUTHORIZED,
-    HTTPStatus.TOO_MANY_REQUESTS
+    HTTPStatus.TOO_MANY_REQUESTS,
 )
 
 

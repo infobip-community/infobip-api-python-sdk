@@ -1,5 +1,6 @@
-from pydantic import Field, StrictBool, constr
 from typing import Optional
+
+from pydantic import Field, StrictBool, constr
 
 from whatsapp.core.models import CamelCaseModel
 

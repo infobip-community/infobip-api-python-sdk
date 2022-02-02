@@ -1,8 +1,8 @@
 from http import HTTPStatus
-import requests
-
-from pydantic import BaseModel
 from typing import Dict, List, Optional
+
+import requests
+from pydantic import BaseModel
 
 
 def to_camel_case(string: str) -> str:
