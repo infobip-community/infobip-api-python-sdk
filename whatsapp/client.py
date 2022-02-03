@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Union
 
 import requests
 
@@ -35,7 +35,7 @@ class WhatsappClient:
 
     SEND_MESSAGE_URL_TEMPLATE = "/whatsapp/1/message/"
 
-    def __init__(self, client: Optional[HttpClient, Any]) -> None:
+    def __init__(self, client: Union[HttpClient, Any]) -> None:
         self._client = client
 
     @classmethod
