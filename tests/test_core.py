@@ -43,3 +43,9 @@ def test_when_content_callback_data_is_invalid__validation_error_is_raised(
 ):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(**{"callbackData": callback_data})
+
+
+@pytest.mark.parametrize("message_id", [{}, get_random_string(51)])
+def test_when_message_id_is_invalid__validation_error_is_raised(message_id):
+    with pytest.raises(ValidationError):
+        MessageBodyFactory.build(**{"messageId": message_id})
