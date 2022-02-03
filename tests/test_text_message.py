@@ -1,4 +1,5 @@
 import pytest
+from models.core import MessageBody
 from models.text_message import TextMessageBody
 from pydantic.error_wrappers import ValidationError
 from pydantic_factories import ModelFactory
@@ -8,6 +9,10 @@ from tests.conftest import get_random_string
 
 class TextMessageBodyFactory(ModelFactory):
     __model__ = TextMessageBody
+
+
+def test_text_message_body__is_an_instance_of_message_body():
+    assert isinstance(TextMessageBodyFactory.build(), MessageBody) is True
 
 
 @pytest.mark.parametrize("content", [None, "", {}])
