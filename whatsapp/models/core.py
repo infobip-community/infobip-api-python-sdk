@@ -23,7 +23,7 @@ class MessageBody(CamelCaseModel):
     callback_data: Optional[constr(max_length=4000)] = None
 
 
-class Response(CamelCaseModel):
+class WhatsappResponse(CamelCaseModel):
     status_code: HTTPStatus
     raw_response: requests.Response
 
@@ -41,7 +41,7 @@ class RequestError(CamelCaseModel):
     service_exception: ServiceException
 
 
-class ResponseError(Response):
+class WhatsappResponseError(WhatsappResponse):
     request_error: RequestError
 
 
@@ -54,7 +54,7 @@ class ResponseOKStatus(CamelCaseModel):
     action: Optional[str]
 
 
-class ResponseOK(Response):
+class WhatsappResponseOK(WhatsappResponse):
     to: str
     message_count: int
     message_id: str

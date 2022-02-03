@@ -2,10 +2,10 @@ from typing import Any, Dict, Union
 
 import requests
 
-from whatsapp.models.core import Authentication, RequestHeaders, Response
+from whatsapp.models.core import Authentication, RequestHeaders, WhatsappResponse
 from whatsapp.models.document_message import DocumentMessageBody
 from whatsapp.models.text_message import TextMessageBody
-from whatsapp.utils import construct_response_model
+from whatsapp.utils import construct_response
 
 
 class HttpClient:
@@ -15,19 +15,21 @@ class HttpClient:
         self.auth = auth
         self.headers = RequestHeaders(authorization=self.auth.api_key)
 
-    def post(self, endpoint: str, body: Dict) -> Response:
+    def post(
+        self, endpoint: str, body: Dict
+    ) -> Union[WhatsappResponse, requests.Response]:
         """Send an HTTP post request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
         :param body: Body to send with the request
-        :return: Response instance
+        :return: Received response
         """
         url = self.auth.base_url + endpoint
         response = requests.post(
             url=url, json=body, headers=self.headers.dict(by_alias=True)
         )
 
-        return construct_response_model(response)
+        return construct_response(response)
 
 
 class WhatsappClient:
@@ -79,7 +81,7 @@ class WhatsappClient:
 
     def send_text_message(
         self, message: Union[TextMessageBody, Dict]
-    ) -> Union[Response, Any]:
+    ) -> Union[WhatsappResponse, Any]:
         """Send a text message to a single recipient. Text messages can only be
         successfully delivered, if the recipient has contacted the business within the
         last 24 hours, otherwise template message should be used.
@@ -96,7 +98,7 @@ class WhatsappClient:
 
     def send_document_message(
         self, message: Union[DocumentMessageBody, Dict]
-    ) -> Union[Response, Any]:
+    ) -> Union[WhatsappResponse, Any]:
         """Send a document to a single recipient. Document messages can only be
         successfully delivered, if the recipient has contacted the business within the
         last 24 hours, otherwise template message should be used.

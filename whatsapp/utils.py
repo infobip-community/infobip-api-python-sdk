@@ -1,13 +1,13 @@
 from http import HTTPStatus
+from typing import Union
 
 import requests
 
-from whatsapp.models.core import Response, ResponseError, ResponseOK
-
-
-class ApiException(Exception):
-    pass
-
+from whatsapp.models.core import (
+    WhatsappResponse,
+    WhatsappResponseError,
+    WhatsappResponseOK,
+)
 
 ERROR_STATUSES = (
     HTTPStatus.BAD_REQUEST,
@@ -16,7 +16,15 @@ ERROR_STATUSES = (
 )
 
 
-def construct_response_model(response: requests.Response) -> Response:
+def construct_response(
+    response: requests.Response,
+) -> Union[WhatsappResponse, requests.Response]:
+    """Return instance of the custom Response model if the status code was expected,
+    else return the raw requests.Response.
+
+    :param response: Response received from the API
+    :return: Received response
+    """
     response_body = {
         "status_code": response.status_code,
         "raw_response": response,
@@ -24,9 +32,9 @@ def construct_response_model(response: requests.Response) -> Response:
     }
 
     if response.status_code == HTTPStatus.OK:
-        return ResponseOK(**response_body)
+        return WhatsappResponseOK(**response_body)
 
     elif response.status_code in ERROR_STATUSES:
-        return ResponseError(**response_body)
+        return WhatsappResponseError(**response_body)
 
-    raise ApiException("Unexpected status code received")
+    return response
