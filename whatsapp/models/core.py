@@ -2,7 +2,7 @@ from http import HTTPStatus
 from typing import Dict, List, Optional
 
 import requests
-from pydantic import BaseModel, Field, constr
+from pydantic import AnyHttpUrl, BaseModel, Field, constr
 
 
 def to_camel_case(string: str) -> str:
@@ -16,14 +16,14 @@ class CamelCaseModel(BaseModel):
         allow_population_by_field_name = True
 
 
-class BaseMessageBody(CamelCaseModel):
+class MessageBody(CamelCaseModel):
     from_number: constr(min_length=1, max_length=24) = Field(alias="from")
     to: constr(min_length=1, max_length=24)
     message_id: Optional[constr(max_length=50)] = None
     callback_data: Optional[constr(max_length=4000)] = None
 
 
-class Response(CamelCaseModel):
+class WhatsappResponse(CamelCaseModel):
     status_code: HTTPStatus
     raw_response: requests.Response
 
@@ -41,7 +41,7 @@ class RequestError(CamelCaseModel):
     service_exception: ServiceException
 
 
-class ResponseError(Response):
+class WhatsappResponseError(WhatsappResponse):
     request_error: RequestError
 
 
@@ -54,7 +54,7 @@ class ResponseOKStatus(CamelCaseModel):
     action: Optional[str]
 
 
-class ResponseOK(Response):
+class WhatsappResponseOK(WhatsappResponse):
     to: str
     message_count: int
     message_id: str
@@ -77,3 +77,8 @@ class RequestHeaders(BaseModel):
     def __init__(self, **data: str) -> None:
         super().__init__(**data)
         self.authorization = f"App {self.authorization}"
+
+
+class Authentication(BaseModel):
+    base_url: AnyHttpUrl
+    api_key: constr(min_length=1)

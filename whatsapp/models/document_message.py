@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import AnyUrl, constr
 
-from whatsapp.core.models import BaseMessageBody, CamelCaseModel
+from whatsapp.models.core import CamelCaseModel, MessageBody
 
 
 class Content(CamelCaseModel):
@@ -11,5 +11,5 @@ class Content(CamelCaseModel):
     filename: Optional[constr(max_length=240)] = None
 
 
-class DocumentMessageBody(BaseMessageBody):
+class DocumentMessageBody(MessageBody):
     content: Content
