@@ -33,7 +33,7 @@ class HttpClient:
 class WhatsappClient:
     """Client used for interaction with the Infobip's Whatsapp API."""
 
-    def __init__(self, client: Optional[HttpClient] = None) -> None:
+    def __init__(self, client: Optional[HttpClient, Any]) -> None:
         self._client = client
 
     @classmethod
