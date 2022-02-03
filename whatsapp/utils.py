@@ -1,7 +1,8 @@
 from http import HTTPStatus
 
 import requests
-from models.core import Response, ResponseError, ResponseOK
+
+from whatsapp.models.core import Response, ResponseError, ResponseOK
 
 
 class ApiException(Exception):

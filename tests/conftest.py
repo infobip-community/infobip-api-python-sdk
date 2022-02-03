@@ -2,8 +2,9 @@ from random import choice
 from string import ascii_letters
 
 import pytest
-from models.core import Authentication
 from pydantic_factories import ModelFactory
+
+from whatsapp.models.core import Authentication
 
 
 def get_random_string(length: int) -> str:

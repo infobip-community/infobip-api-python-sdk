@@ -1,7 +1,8 @@
 from typing import Optional
 
-from models.core import CamelCaseModel, MessageBody
 from pydantic import StrictBool, constr
+
+from whatsapp.models.core import CamelCaseModel, MessageBody
 
 
 class Content(CamelCaseModel):
