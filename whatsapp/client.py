@@ -2,9 +2,9 @@ from typing import Any, Dict, Optional, Union
 
 import requests
 from models.core import Authentication, RequestHeaders, Response
+from models.document_message import DocumentMessageBody
 from models.text_message import TextMessageBody
-
-from whatsapp.core.utils import construct_response_model
+from utils import construct_response_model
 
 
 class HttpClient:
@@ -31,6 +31,8 @@ class HttpClient:
 
 class WhatsappClient:
     """Client used for interaction with the Infobip's Whatsapp API."""
+
+    SEND_MESSAGE_URL_TEMPLATE = "/whatsapp/1/message/"
 
     def __init__(self, client: Optional[HttpClient, Any]) -> None:
         self._client = client
@@ -77,9 +79,33 @@ class WhatsappClient:
     def send_text_message(
         self, message: Union[TextMessageBody, Dict]
     ) -> Union[Response, Any]:
+        """Send a text message to a single recipient. Text messages can only be
+        successfully delivered, if the recipient has contacted the business within the
+        last 24 hours, otherwise template message should be used.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
         if not isinstance(message, TextMessageBody):
             message = TextMessageBody(**message)
 
         return self._client.post(
-            "/whatsapp/1/message/text", message.dict(by_alias=True)
+            self.SEND_MESSAGE_URL_TEMPLATE + "text", message.dict(by_alias=True)
+        )
+
+    def send_document_message(
+        self, message: Union[DocumentMessageBody, Dict]
+    ) -> Union[Response, Any]:
+        """Send a document to a single recipient. Document messages can only be
+        successfully delivered, if the recipient has contacted the business within the
+        last 24 hours, otherwise template message should be used.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        if not isinstance(message, DocumentMessageBody):
+            message = DocumentMessageBody(**message)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "document", message.dict(by_alias=True)
         )
