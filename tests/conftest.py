@@ -2,9 +2,9 @@ from random import choice
 from string import ascii_letters
 
 import pytest
+from core.models import Authentication
 from pydantic_factories import ModelFactory
 
-from whatsapp.authentication.models import Authentication
 from whatsapp.core.models import MessageBody
 
 

@@ -2,7 +2,7 @@ from http import HTTPStatus
 from typing import Dict, List, Optional
 
 import requests
-from pydantic import BaseModel, Field, constr
+from pydantic import AnyHttpUrl, BaseModel, Field, constr
 
 
 def to_camel_case(string: str) -> str:
@@ -77,3 +77,8 @@ class RequestHeaders(BaseModel):
     def __init__(self, **data: str) -> None:
         super().__init__(**data)
         self.authorization = f"App {self.authorization}"
+
+
+class Authentication(BaseModel):
+    base_url: AnyHttpUrl
+    api_key: constr(min_length=1)
