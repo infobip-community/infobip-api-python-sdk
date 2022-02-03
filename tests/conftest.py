@@ -2,11 +2,11 @@ from random import choice
 from string import ascii_letters
 
 import pytest
-from models.core import Authentication, MessageBody
+from models.core import Authentication
 from pydantic_factories import ModelFactory
 
 
-def get_random_string(length):
+def get_random_string(length: int) -> str:
     return "".join(choice(ascii_letters) for _ in range(length))
 
 
@@ -14,14 +14,6 @@ class AuthenticationFactory(ModelFactory):
     __model__ = Authentication
 
 
-class MessageBodyFactory(ModelFactory):
-    __model__ = MessageBody
-
-
 @pytest.fixture
 def authentication():
     return AuthenticationFactory.build()
-
-
-def base_message_body():
-    return MessageBodyFactory.build()
