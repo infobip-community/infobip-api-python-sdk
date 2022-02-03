@@ -1,9 +1,9 @@
 import pytest
+from models.text_message import TextMessageBody
 from pydantic.error_wrappers import ValidationError
 from pydantic_factories import ModelFactory
 
 from tests.conftest import get_random_string
-from whatsapp.text_message.models import TextMessageBody
 
 
 class TextMessageBodyFactory(ModelFactory):

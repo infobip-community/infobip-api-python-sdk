@@ -1,11 +1,10 @@
 from typing import Any, Dict, Optional, Union
 
 import requests
-from core.models import Authentication
+from models.core import Authentication, RequestHeaders, Response
+from models.text_message import TextMessageBody
 
-from whatsapp.core.models import RequestHeaders, Response
 from whatsapp.core.utils import construct_response_model
-from whatsapp.text_message.models import TextMessageBody
 
 
 class HttpClient:
