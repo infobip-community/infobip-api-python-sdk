@@ -84,7 +84,7 @@ class Authentication(BaseModel):
     api_key: constr(min_length=1)
 
     @validator("base_url", pre=True)
-    def validate_scheme(cls, value):
+    def validate_scheme(cls, value: str) -> str:
         if not isinstance(value, str):
             return value
 
