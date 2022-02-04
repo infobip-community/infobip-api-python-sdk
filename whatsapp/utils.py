@@ -19,8 +19,8 @@ ERROR_STATUSES = (
 def construct_response(
     response: requests.Response,
 ) -> Union[WhatsappResponse, requests.Response]:
-    """Return instance of the custom Response model if the status code was expected,
-    else return the raw requests.Response.
+    """Return WhatsappResponse if the status code has expected value, else return the
+    raw requests.Response.
 
     :param response: Response received from the API
     :return: Received response

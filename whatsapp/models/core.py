@@ -34,7 +34,7 @@ class WhatsappResponse(CamelCaseModel):
 class ServiceException(CamelCaseModel):
     message_id: str
     text: str
-    validation_errors: Optional[Dict[str, List[str]]]
+    validation_errors: Optional[Dict[str, List[str]]] = None
 
 
 class RequestError(CamelCaseModel):
@@ -48,10 +48,10 @@ class WhatsappResponseError(WhatsappResponse):
 class ResponseOKStatus(CamelCaseModel):
     group_id: int
     group_name: str
-    id: str
+    id: int
     name: str
     description: str
-    action: Optional[str]
+    action: Optional[str] = None
 
 
 class WhatsappResponseOK(WhatsappResponse):
