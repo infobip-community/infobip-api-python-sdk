@@ -65,15 +65,12 @@ def test_send_text_message_with_provided_client__returns_raw_response(
 @pytest.mark.parametrize(
     "raw_response,response_object,status_code,response_body",
     [
-        ("response_ok", WhatsappResponseOK, 200, "ok_content"),
-        ("response_bad_request", WhatsappResponseError, 400, "bad_request_content"),
+        ("response_ok", WhatsappResponseOK, 200,
+         "ok_content"),
+        ("response_bad_request",
+         WhatsappResponseError, 400, "bad_request_content"),
         ("response_unauthorized", WhatsappResponseError, 401, "unauthorized_content"),
-        (
-            "response_too_many_requests",
-            WhatsappResponseError,
-            429,
-            "too_many_requests_content",
-        ),
+        ("response_too_many_requests", WhatsappResponseError, 429, "too_many_requests_content",),
     ],
 )
 def test_send_text_message_with_auth_params__returns_whatsapp_response(
