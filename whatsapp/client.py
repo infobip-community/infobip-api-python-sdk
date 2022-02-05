@@ -4,6 +4,7 @@ import requests
 
 from whatsapp.models.core import Authentication, RequestHeaders, WhatsAppResponse
 from whatsapp.models.document_message import DocumentMessageBody
+from whatsapp.models.image_message import ImageMessageBody
 from whatsapp.models.text_message import TextMessageBody
 from whatsapp.utils import construct_response
 
@@ -111,4 +112,21 @@ class WhatsAppChannel:
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "document", message.dict(by_alias=True)
+        )
+
+    def send_image_message(
+        self, message: Union[ImageMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Send an image to a single recipient. Image messages can only be
+        successfully delivered, if the recipient has contacted the business within
+        the last 24 hours, otherwise template message should be used.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        if not isinstance(message, ImageMessageBody):
+            message = ImageMessageBody(**message)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "image", message.dict(by_alias=True)
         )
