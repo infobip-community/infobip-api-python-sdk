@@ -115,3 +115,15 @@ def too_many_requests_content():
 @pytest.fixture
 def response_too_many_requests(too_many_requests_content):
     return Response(json.dumps(too_many_requests_content), status=429)
+
+
+@pytest.fixture
+def get_expected_headers():
+    def _get_expected_headers(api_key):
+        return {
+            "Authorization": f"App {api_key}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+
+    return _get_expected_headers

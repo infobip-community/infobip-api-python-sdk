@@ -78,25 +78,30 @@ def test_send_text_message_with_provided_client__returns_raw_response(
 )
 def test_send_text_message_with_auth_params__returns_whatsapp_response(
     httpserver,
-    http_test_client,
     raw_response,
     response_object,
     status_code,
     response_body,
     request,
+    get_expected_headers,
 ):
     raw_response_fixture = request.getfixturevalue(raw_response)
     response_body_fixture = request.getfixturevalue(response_body)
+    message_body = TextMessageBodyFactory.build()
+    expected_headers = get_expected_headers("secret")
 
     httpserver.expect_request(
-        TEXT_MESSAGE_ENDPOINT, method="POST"
+        TEXT_MESSAGE_ENDPOINT,
+        method="POST",
+        json=message_body.dict(by_alias=True),
+        headers=expected_headers,
     ).respond_with_response(raw_response_fixture)
 
     server_url = httpserver.url_for("/")
     whatsapp_client = WhatsAppChannel.from_auth_params(
         {"base_url": server_url, "api_key": "secret"}
     )
-    response = whatsapp_client.send_text_message(TextMessageBodyFactory.build())
+    response = whatsapp_client.send_text_message(message_body)
     response_dict_cleaned = response.dict(by_alias=True, exclude_unset=True)
     raw_response = response_dict_cleaned.pop("rawResponse")
 
