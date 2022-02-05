@@ -116,7 +116,7 @@ class WhatsAppChannel:
 
     def send_image_message(
         self, message: Union[ImageMessageBody, Dict]
-    ) -> Union[WhatsappResponse, Any]:
+    ) -> Union[WhatsAppResponse, Any]:
         """Send an image to a single recipient. Image messages can only be
         successfully delivered, if the recipient has contacted the business within
         the last 24 hours, otherwise template message should be used.
