@@ -5,12 +5,12 @@ from pydantic.error_wrappers import ValidationError
 from pydantic_factories import ModelFactory
 
 from tests.conftest import get_random_string
-from whatsapp.client import WhatsappClient
+from whatsapp.client import WhatsAppChannel
 from whatsapp.models.core import (
     MessageBody,
-    WhatsappResponse,
-    WhatsappResponseError,
-    WhatsappResponseOK,
+    WhatsAppResponse,
+    WhatsAppResponseError,
+    WhatsAppResponseOK,
 )
 from whatsapp.models.text_message import TextMessageBody
 
@@ -52,12 +52,12 @@ def test_send_text_message_with_provided_client__returns_raw_response(
         TEXT_MESSAGE_ENDPOINT, method="POST"
     ).respond_with_response(response_ok)
 
-    whatsapp_client = WhatsappClient.from_provided_client(
+    whatsapp_client = WhatsAppChannel.from_provided_client(
         http_test_client(httpserver.url_for("/"))
     )
     response = whatsapp_client.send_text_message(TextMessageBodyFactory.build())
 
-    assert isinstance(response, WhatsappResponse) is False
+    assert isinstance(response, WhatsAppResponse) is False
     assert response.status_code == 200
     assert response.json() == ok_content
 
@@ -65,12 +65,12 @@ def test_send_text_message_with_provided_client__returns_raw_response(
 @pytest.mark.parametrize(
     "raw_response,response_object,status_code,response_body",
     [
-        ("response_ok", WhatsappResponseOK, 200, "ok_content"),
-        ("response_bad_request", WhatsappResponseError, 400, "bad_request_content"),
-        ("response_unauthorized", WhatsappResponseError, 401, "unauthorized_content"),
+        ("response_ok", WhatsAppResponseOK, 200, "ok_content"),
+        ("response_bad_request", WhatsAppResponseError, 400, "bad_request_content"),
+        ("response_unauthorized", WhatsAppResponseError, 401, "unauthorized_content"),
         (
             "response_too_many_requests",
-            WhatsappResponseError,
+            WhatsAppResponseError,
             429,
             "too_many_requests_content",
         ),
@@ -93,7 +93,7 @@ def test_send_text_message_with_auth_params__returns_whatsapp_response(
     ).respond_with_response(raw_response_fixture)
 
     server_url = httpserver.url_for("/")
-    whatsapp_client = WhatsappClient.from_auth_params(
+    whatsapp_client = WhatsAppChannel.from_auth_params(
         {"base_url": server_url, "api_key": "secret"}
     )
     response = whatsapp_client.send_text_message(TextMessageBodyFactory.build())

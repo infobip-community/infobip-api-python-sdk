@@ -4,9 +4,9 @@ from typing import Union
 import requests
 
 from whatsapp.models.core import (
-    WhatsappResponse,
-    WhatsappResponseError,
-    WhatsappResponseOK,
+    WhatsAppResponse,
+    WhatsAppResponseError,
+    WhatsAppResponseOK,
 )
 
 ERROR_STATUSES = (
@@ -18,8 +18,8 @@ ERROR_STATUSES = (
 
 def construct_response(
     response: requests.Response,
-) -> Union[WhatsappResponse, requests.Response]:
-    """Return WhatsappResponse if the status code has expected value, else return the
+) -> Union[WhatsAppResponse, requests.Response]:
+    """Return WhatsAppResponse if the status code has expected value, else return the
     raw requests.Response.
 
     :param response: Response received from the API
@@ -32,9 +32,9 @@ def construct_response(
     }
 
     if response.status_code == HTTPStatus.OK:
-        return WhatsappResponseOK(**response_body)
+        return WhatsAppResponseOK(**response_body)
 
     elif response.status_code in ERROR_STATUSES:
-        return WhatsappResponseError(**response_body)
+        return WhatsAppResponseError(**response_body)
 
     return response

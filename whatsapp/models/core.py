@@ -2,7 +2,7 @@ from http import HTTPStatus
 from typing import Dict, List, Optional
 
 import requests
-from pydantic import AnyHttpUrl, BaseModel, Field, constr
+from pydantic import AnyHttpUrl, BaseModel, Field, constr, validator
 
 
 def to_camel_case(string: str) -> str:
@@ -24,7 +24,7 @@ class MessageBody(CamelCaseModel):
     notify_url: Optional[AnyHttpUrl] = None
 
 
-class WhatsappResponse(CamelCaseModel):
+class WhatsAppResponse(CamelCaseModel):
     status_code: HTTPStatus
     raw_response: requests.Response
 
@@ -42,7 +42,7 @@ class RequestError(CamelCaseModel):
     service_exception: ServiceException
 
 
-class WhatsappResponseError(WhatsappResponse):
+class WhatsAppResponseError(WhatsAppResponse):
     request_error: RequestError
 
 
@@ -55,7 +55,7 @@ class ResponseOKStatus(CamelCaseModel):
     action: Optional[str] = None
 
 
-class WhatsappResponseOK(WhatsappResponse):
+class WhatsAppResponseOK(WhatsAppResponse):
     to: str
     message_count: int
     message_id: str
@@ -83,3 +83,13 @@ class RequestHeaders(BaseModel):
 class Authentication(BaseModel):
     base_url: AnyHttpUrl
     api_key: constr(min_length=1)
+
+    @validator("base_url", pre=True)
+    def validate_scheme(cls, value: str) -> str:
+        if not isinstance(value, str):
+            return value
+
+        if value.startswith(("http://", "https://")):
+            return value
+
+        return f"https://{value}"
