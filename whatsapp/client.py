@@ -2,6 +2,7 @@ from typing import Any, Dict, Union
 
 import requests
 
+from whatsapp.models.audio_message import AudioMessageBody
 from whatsapp.models.core import Authentication, RequestHeaders, WhatsAppResponse
 from whatsapp.models.document_message import DocumentMessageBody
 from whatsapp.models.text_message import TextMessageBody
@@ -113,4 +114,13 @@ class WhatsAppChannel:
             self.SEND_MESSAGE_URL_TEMPLATE + "document", message.dict(by_alias=True)
         )
 
-    # def send_audio_message(self,):
+    def send_audio_message(
+        self, message: Union[AudioMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+
+        if not isinstance(message, AudioMessageBody):
+            message = AudioMessageBody(**message)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "image", message.dict(by_alias=True)
+        )
