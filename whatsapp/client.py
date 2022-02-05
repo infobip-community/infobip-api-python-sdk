@@ -112,3 +112,5 @@ class WhatsAppChannel:
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "document", message.dict(by_alias=True)
         )
+
+    # def send_audio_message(self,):
