@@ -10,9 +10,7 @@ class MessageBodyFactory(ModelFactory):
     __model__ = MessageBody
 
 
-@pytest.mark.parametrize(
-    "base_url", [None, "", "invalid_url", "ftp://123.api.infobip.com", {}]
-)
+@pytest.mark.parametrize("base_url", [None, "", "ftp://123.api.infobip.com", {}])
 def test_when_base_url_is_invalid__validation_error_is_raised(base_url):
     with pytest.raises(ValidationError):
         Authentication(base_url=base_url, api_key="api_key")
@@ -22,6 +20,21 @@ def test_when_base_url_is_invalid__validation_error_is_raised(base_url):
 def test_when_api_key_is_invalid__validation_error_is_raised(api_key):
     with pytest.raises(ValidationError):
         Authentication(base_url="https://123.api.infobip.com", api_key=api_key)
+
+
+@pytest.mark.parametrize(
+    "base_url",
+    [
+        "http://123.api.infobip.com",
+        "https://123.api.infobip.com",
+        "123.api.infobip.com",
+    ],
+)
+def test_base_url_in_different_forms__validation_passes(base_url):
+    try:
+        Authentication(base_url=base_url, api_key="api_key")
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
 
 
 @pytest.mark.parametrize("from_number", [None, "", {}, get_random_string(25)])

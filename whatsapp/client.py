@@ -2,14 +2,14 @@ from typing import Any, Dict, Union
 
 import requests
 
-from whatsapp.models.core import Authentication, RequestHeaders, WhatsappResponse
+from whatsapp.models.core import Authentication, RequestHeaders, WhatsAppResponse
 from whatsapp.models.document_message import DocumentMessageBody
 from whatsapp.models.text_message import TextMessageBody
 from whatsapp.utils import construct_response
 
 
 class HttpClient:
-    """Default HTTP client used by the WhatsappClient for making HTTP requests."""
+    """Default HTTP client used by the WhatsAppChannel for making HTTP requests."""
 
     def __init__(self, auth: Authentication):
         self.auth = auth
@@ -17,7 +17,7 @@ class HttpClient:
 
     def post(
         self, endpoint: str, body: Dict
-    ) -> Union[WhatsappResponse, requests.Response]:
+    ) -> Union[WhatsAppResponse, requests.Response]:
         """Send an HTTP post request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
@@ -32,8 +32,8 @@ class HttpClient:
         return construct_response(response)
 
 
-class WhatsappClient:
-    """Client used for interaction with the Infobip's Whatsapp API."""
+class WhatsAppChannel:
+    """Client used for interaction with the Infobip's WhatsApp API."""
 
     SEND_MESSAGE_URL_TEMPLATE = "/whatsapp/1/message/"
 
@@ -41,11 +41,11 @@ class WhatsappClient:
         self._client = client
 
     @classmethod
-    def from_auth_params(cls, auth_params: Dict[str, str]) -> "WhatsappClient":
+    def from_auth_params(cls, auth_params: Dict[str, str]) -> "WhatsAppChannel":
         """Create an Authentication instance from the provided dictionary and
-        use it to instantiate WhatsappClient. Dictionary has to contain "base_url" and
+        use it to instantiate WhatsAppChannel. Dictionary has to contain "base_url" and
         "api_key" to be able to authenticate with the Infobip's API.
-        WhatsappClient instantiated this way will use the default HttpClient class for
+        WhatsAppChannel instantiated this way will use the default HttpClient class for
         making HTTP requests.
 
         :param auth_params: Dictionary containing "base_url" and "api_key"
@@ -55,9 +55,9 @@ class WhatsappClient:
         return cls(client)
 
     @classmethod
-    def from_auth_instance(cls, auth_instance: Authentication) -> "WhatsappClient":
-        """Instantiate WhatsappClient with the provided auth object.
-        WhatsappClient instantiated this way will use the default HttpClient class for
+    def from_auth_instance(cls, auth_instance: Authentication) -> "WhatsAppChannel":
+        """Instantiate WhatsAppChannel with the provided auth object.
+        WhatsAppChannel instantiated this way will use the default HttpClient class for
         making HTTP requests.
 
         :param auth_instance: Authentication class instance
@@ -67,9 +67,9 @@ class WhatsappClient:
         return cls(client)
 
     @classmethod
-    def from_provided_client(cls, client: Any) -> "WhatsappClient":
-        """Instantiate WhatsappClient with the provided client object.
-        WhatsappClient instantiated this way will use the provided client for making
+    def from_provided_client(cls, client: Any) -> "WhatsAppChannel":
+        """Instantiate WhatsAppChannel with the provided client object.
+        WhatsAppChannel instantiated this way will use the provided client for making
         HTTP requests. This client can implement its own retry mechanisms, timeouts,
         etc., but it has to implement all the methods used in the default HttpClient
         class.
@@ -81,7 +81,7 @@ class WhatsappClient:
 
     def send_text_message(
         self, message: Union[TextMessageBody, Dict]
-    ) -> Union[WhatsappResponse, Any]:
+    ) -> Union[WhatsAppResponse, Any]:
         """Send a text message to a single recipient. Text messages can only be
         successfully delivered, if the recipient has contacted the business within the
         last 24 hours, otherwise template message should be used.
@@ -98,7 +98,7 @@ class WhatsappClient:
 
     def send_document_message(
         self, message: Union[DocumentMessageBody, Dict]
-    ) -> Union[WhatsappResponse, Any]:
+    ) -> Union[WhatsAppResponse, Any]:
         """Send a document to a single recipient. Document messages can only be
         successfully delivered, if the recipient has contacted the business within the
         last 24 hours, otherwise template message should be used.
