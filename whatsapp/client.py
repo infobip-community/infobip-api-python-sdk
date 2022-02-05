@@ -117,7 +117,15 @@ class WhatsAppChannel:
     def send_audio_message(
         self, message: Union[AudioMessageBody, Dict]
     ) -> Union[WhatsAppResponse, Any]:
+        """
+        Send an audio to a single recipient. Audio messages can only be successfully
+        delivered, if the recipient has contacted the business within the last 24
+        hours, otherwise template message should be used.
 
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
         if not isinstance(message, AudioMessageBody):
             message = AudioMessageBody(**message)
 
