@@ -1,11 +1,17 @@
 from typing import Any, Dict, Union
 
 import requests
+from pydantic.error_wrappers import ValidationError
 
-from whatsapp.models.core import Authentication, RequestHeaders, WhatsAppResponse
+from whatsapp.models.core import (
+    Authentication,
+    RequestHeaders,
+    WhatsAppResponse,
+    WhatsAppResponseError,
+    WhatsAppResponseOK,
+)
 from whatsapp.models.document_message import DocumentMessageBody
 from whatsapp.models.text_message import TextMessageBody
-from whatsapp.utils import construct_response
 
 
 class HttpClient:
@@ -29,7 +35,33 @@ class HttpClient:
             url=url, json=body, headers=self.headers.dict(by_alias=True)
         )
 
-        return construct_response(response)
+        return self._construct_response(response)
+
+    def _construct_response(
+        self, response: requests.Response
+    ) -> Union[WhatsAppResponse, requests.Response]:
+        response_body = {
+            "status_code": response.status_code,
+            "raw_response": response,
+            **response.json(),
+        }
+
+        try:
+            response_class = self._get_response_class(response)
+            return response_class(**response_body)
+
+        except ValidationError:
+            return response
+
+    @staticmethod
+    def _get_response_class(response):
+        if 200 <= response.status_code < 300:
+            return WhatsAppResponseOK
+
+        elif 400 <= response.status_code < 500:
+            return WhatsAppResponseError
+
+        raise ValidationError
 
 
 class WhatsAppChannel:
