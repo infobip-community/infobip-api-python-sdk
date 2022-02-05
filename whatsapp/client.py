@@ -124,7 +124,6 @@ class WhatsappClient:
         :param message: Body of the message to send
         :return: Received response
         """
-
         if not isinstance(message, ImageMessageBody):
             message = ImageMessageBody(**message)
 
