@@ -151,7 +151,7 @@ class WhatsAppChannel:
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "sticker", message.dict(by_alias=True)
         )
-      
+
     def send_video_message(
         self, message: Union[VideoMessageBody, Dict]
     ) -> Union[WhatsAppResponse, Any]:
