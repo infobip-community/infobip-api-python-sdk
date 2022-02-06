@@ -14,7 +14,7 @@ from whatsapp.models.core import (
     WhatsAppResponseOK,
 )
 
-IMAGE_MESSAGE_ENDPOINT = "/whatsapp/1/message/audio"
+AUDIO_MESSAGE_ENDPOINT = "/whatsapp/1/message/audio"
 
 
 class AudioMessageBodyFactory(ModelFactory):
@@ -41,7 +41,7 @@ def test_send_audio_message_with_provided_client__returns_raw_response(
     httpserver, http_test_client, ok_content, response_ok
 ):
     httpserver.expect_request(
-        IMAGE_MESSAGE_ENDPOINT, method="POST"
+        AUDIO_MESSAGE_ENDPOINT, method="POST"
     ).respond_with_response(response_ok)
 
     whatsapp_client = WhatsAppChannel.from_provided_client(
@@ -81,7 +81,7 @@ def test_send_audio_message_with_auth_params__returns_whatsapp_response(
     response_body_fixture = request.getfixturevalue(response_body)
 
     httpserver.expect_request(
-        IMAGE_MESSAGE_ENDPOINT, method="POST"
+        AUDIO_MESSAGE_ENDPOINT, method="POST"
     ).respond_with_response(raw_response_fixture)
 
     server_url = httpserver.url_for("/")
