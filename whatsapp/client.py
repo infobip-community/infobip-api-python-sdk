@@ -6,6 +6,7 @@ from whatsapp.models.audio_message import AudioMessageBody
 from whatsapp.models.core import Authentication, RequestHeaders, WhatsAppResponse
 from whatsapp.models.document_message import DocumentMessageBody
 from whatsapp.models.image_message import ImageMessageBody
+from whatsapp.models.sticker_message import StickerMessageBody
 from whatsapp.models.text_message import TextMessageBody
 from whatsapp.models.video_message import VideoMessageBody
 from whatsapp.utils import construct_response
@@ -134,6 +135,23 @@ class WhatsAppChannel:
             self.SEND_MESSAGE_URL_TEMPLATE + "image", message.dict(by_alias=True)
         )
 
+    def send_sticker_message(
+        self, message: Union[StickerMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Send a sticker to a single recipient. Sticker messages can only be
+        successfully delivered, if the recipient has contacted the business within
+        the last 24 hours, otherwise template message should be used.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        if not isinstance(message, StickerMessageBody):
+            message = StickerMessageBody(**message)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "sticker", message.dict(by_alias=True)
+        )
+
     def send_video_message(
         self, message: Union[VideoMessageBody, Dict]
     ) -> Union[WhatsAppResponse, Any]:
@@ -144,6 +162,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
+
         if not isinstance(message, VideoMessageBody):
             message = VideoMessageBody(**message)
 
