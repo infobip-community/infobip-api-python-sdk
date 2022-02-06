@@ -29,7 +29,7 @@ MESSAGE_TYPE_ATTRIBUTES = {
 @parametrize(
     message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
     message_body_type=("message_body_instance", "dict"),
-    whatsapp_channel_type=("auth_params", "auth_instance"),
+    whatsapp_channel_instantiation_type=("auth_params", "auth_instance"),
     responses=(
         (200, get_response_ok, get_response_ok_content),
         (201, get_response_ok, get_response_ok_content),
@@ -38,7 +38,7 @@ MESSAGE_TYPE_ATTRIBUTES = {
     ),
 )
 def from_auth_params_or_instance_case__valid(
-    message_type, responses, message_body_type, whatsapp_channel_type
+    message_type, responses, message_body_type, whatsapp_channel_instantiation_type
 ):
     return (
         MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
@@ -48,7 +48,7 @@ def from_auth_params_or_instance_case__valid(
         responses[0],
         responses[2](),
         message_body_type,
-        whatsapp_channel_type,
+        whatsapp_channel_instantiation_type,
     )
 
 
@@ -56,14 +56,14 @@ def from_auth_params_or_instance_case__valid(
 @parametrize(
     message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
     message_body_type=("message_body_instance", "dict"),
-    whatsapp_channel_type=("auth_params", "auth_instance"),
+    whatsapp_channel_instantiation_type=("auth_params", "auth_instance"),
     responses=(
         (201, get_response_ok, get_response_ok_invalid_content),
         (500, get_response_error, get_response_error_invalid_content),
     ),
 )
 def from_auth_params_or_instance_case__invalid(
-    message_type, responses, message_body_type, whatsapp_channel_type
+    message_type, responses, message_body_type, whatsapp_channel_instantiation_type
 ):
     return (
         MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
@@ -73,7 +73,7 @@ def from_auth_params_or_instance_case__invalid(
         responses[0],
         responses[2](),
         message_body_type,
-        whatsapp_channel_type,
+        whatsapp_channel_instantiation_type,
     )
 
 

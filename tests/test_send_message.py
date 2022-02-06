@@ -6,9 +6,50 @@ from whatsapp.client import WhatsAppChannel
 from whatsapp.models.core import Authentication, WhatsAppResponse
 
 
+def get_whatsapp_channel_instance(instantiation_type, **kwargs):
+    if instantiation_type == "auth_params":
+        return WhatsAppChannel.from_auth_params(
+            {"base_url": kwargs["server_url"], "api_key": "secret"}
+        )
+
+    elif instantiation_type == "auth_instance":
+        return WhatsAppChannel.from_auth_instance(
+            Authentication(base_url=kwargs["server_url"], api_key="secret")
+        )
+
+    return WhatsAppChannel.from_provided_client(kwargs["client"])
+
+
+def send_message_request(
+    factory,
+    http_server,
+    endpoint,
+    headers,
+    response,
+    instantiation_type,
+    message_body_type,
+    method_name,
+    **kwargs,
+):
+    message_body_instance = message_body = factory.build()
+    http_server.expect_request(
+        endpoint,
+        method="POST",
+        json=message_body_instance.dict(by_alias=True),
+        headers=headers,
+    ).respond_with_response(response)
+
+    whatsapp_channel = get_whatsapp_channel_instance(instantiation_type, **kwargs)
+
+    if message_body_type == "dict":
+        message_body = message_body_instance.dict()
+
+    return getattr(whatsapp_channel, method_name)(message_body)
+
+
 @parametrize_with_cases(
     "endpoint, message_body_factory, method_name, raw_response_fixture, status_code, "
-    "response_content, message_body_type, whatsapp_channel_type",
+    "response_content, message_body_type, whatsapp_channel_instantiation_type",
     prefix="from_auth_params_or_instance",
     has_tag="valid_response_content",
 )
@@ -21,34 +62,24 @@ def test_send_message_from_auth_params_or_instance__valid(
     status_code,
     response_content,
     message_body_type,
-    whatsapp_channel_type,
+    whatsapp_channel_instantiation_type,
     get_expected_headers,
 ):
-    expected_headers = get_expected_headers("secret")
-    message_body_instance = message_body = message_body_factory.build()
-    if message_body_type == "dict":
-        message_body = message_body_instance.dict()
 
-    httpserver.expect_request(
-        endpoint,
-        method="POST",
-        json=message_body_instance.dict(by_alias=True),
-        headers=expected_headers,
-    ).respond_with_response(raw_response_fixture(status_code, response_content))
+    response = send_message_request(
+        factory=message_body_factory,
+        http_server=httpserver,
+        endpoint=endpoint,
+        headers=get_expected_headers("secret"),
+        response=raw_response_fixture(status_code, response_content),
+        instantiation_type=whatsapp_channel_instantiation_type,
+        message_body_type=message_body_type,
+        method_name=method_name,
+        server_url=httpserver.url_for("/"),
+    )
 
-    server_url = httpserver.url_for("/")
-    if whatsapp_channel_type == "auth_params":
-        whatsapp_client = WhatsAppChannel.from_auth_params(
-            {"base_url": server_url, "api_key": "secret"}
-        )
-    else:
-        whatsapp_client = WhatsAppChannel.from_auth_instance(
-            Authentication(base_url=server_url, api_key="secret")
-        )
-    response = getattr(whatsapp_client, method_name)(message_body)
     response_dict_cleaned = response.dict(by_alias=True, exclude_unset=True)
     raw_response = response_dict_cleaned.pop("rawResponse")
-
     expected_response_dict = {
         **response_content,
         "statusCode": HTTPStatus(status_code),
@@ -62,7 +93,7 @@ def test_send_message_from_auth_params_or_instance__valid(
 
 @parametrize_with_cases(
     "endpoint, message_body_factory, method_name, raw_response_fixture, status_code, "
-    "response_content, message_body_type, whatsapp_channel_type",
+    "response_content, message_body_type, whatsapp_channel_instantiation_type",
     prefix="from_auth_params_or_instance",
     has_tag="invalid_content_or_unexpected_response",
 )
@@ -75,31 +106,20 @@ def test_send_message_from_auth_params_or_instance__invalid(
     status_code,
     response_content,
     message_body_type,
-    whatsapp_channel_type,
+    whatsapp_channel_instantiation_type,
     get_expected_headers,
 ):
-    expected_headers = get_expected_headers("secret")
-    message_body_instance = message_body = message_body_factory.build()
-    if message_body_type == "dict":
-        message_body = message_body_instance.dict()
-
-    httpserver.expect_request(
-        endpoint,
-        method="POST",
-        json=message_body_instance.dict(by_alias=True),
-        headers=expected_headers,
-    ).respond_with_response(raw_response_fixture(status_code, response_content))
-
-    server_url = httpserver.url_for("/")
-    if whatsapp_channel_type == "auth_params":
-        whatsapp_client = WhatsAppChannel.from_auth_params(
-            {"base_url": server_url, "api_key": "secret"}
-        )
-    else:
-        whatsapp_client = WhatsAppChannel.from_auth_instance(
-            Authentication(base_url=server_url, api_key="secret")
-        )
-    response = getattr(whatsapp_client, method_name)(message_body)
+    response = send_message_request(
+        factory=message_body_factory,
+        http_server=httpserver,
+        endpoint=endpoint,
+        headers=get_expected_headers("secret"),
+        response=raw_response_fixture(status_code, response_content),
+        instantiation_type=whatsapp_channel_instantiation_type,
+        message_body_type=message_body_type,
+        method_name=method_name,
+        server_url=httpserver.url_for("/"),
+    )
 
     assert isinstance(response, WhatsAppResponse) is False
     assert response.status_code == status_code
@@ -123,25 +143,20 @@ def test_send_message_from_provided_client(
     message_body_type,
     get_expected_headers,
 ):
-    expected_headers = get_expected_headers("secret")
-    message_body_instance = message_body = message_body_factory.build()
-    if message_body_type == "dict":
-        message_body = message_body_instance.dict()
-
-    httpserver.expect_request(
-        endpoint,
-        method="POST",
-        json=message_body_instance.dict(by_alias=True),
-        headers=expected_headers,
-    ).respond_with_response(raw_response_fixture(status_code, response_content))
-
-    whatsapp_client = WhatsAppChannel.from_provided_client(
-        http_test_client(
+    response = send_message_request(
+        factory=message_body_factory,
+        http_server=httpserver,
+        endpoint=endpoint,
+        headers=get_expected_headers("secret"),
+        response=raw_response_fixture(status_code, response_content),
+        instantiation_type="provided_client",
+        message_body_type=message_body_type,
+        method_name=method_name,
+        client=http_test_client(
             url=httpserver.url_for("/"),
             headers=WhatsAppChannel.build_request_headers("secret"),
-        )
+        ),
     )
-    response = getattr(whatsapp_client, method_name)(message_body)
 
     assert isinstance(response, WhatsAppResponse) is False
     assert response.status_code == status_code
