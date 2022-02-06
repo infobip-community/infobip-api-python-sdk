@@ -52,8 +52,7 @@ def http_test_client():
     return _get_http_test_client
 
 
-@pytest.fixture
-def response_ok_content():
+def get_response_ok_content():
     return {
         "to": "441134960001",
         "messageCount": 1,
@@ -68,8 +67,7 @@ def response_ok_content():
     }
 
 
-@pytest.fixture
-def response_ok_invalid_content():
+def get_response_ok_invalid_content():
     return {
         "to": "441134960001",
         "messageCount": 1,
@@ -77,16 +75,14 @@ def response_ok_invalid_content():
     }
 
 
-@pytest.fixture
-def get_response_ok(response_ok_content):
-    def _get_response_ok(status_code=200, content=response_ok_content):
+def get_response_ok():
+    def _get_response_ok(status_code, content):
         return Response(json.dumps(content), status=status_code)
 
     return _get_response_ok
 
 
-@pytest.fixture
-def response_error_content():
+def get_response_error_content():
     return {
         "requestError": {
             "serviceException": {
@@ -103,16 +99,14 @@ def response_error_content():
     }
 
 
-@pytest.fixture
-def response_error_invalid_content():
+def get_response_error_invalid_content():
     return {
         "error": {"field_one": "error_one", "field_two": "error_two"},
     }
 
 
-@pytest.fixture
-def get_response_error(response_error_content):
-    def _get_response_error(status_code=400, content=response_error_content):
+def get_response_error():
+    def _get_response_error(status_code, content):
         return Response(json.dumps(content), status=status_code)
 
     return _get_response_error

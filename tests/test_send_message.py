@@ -55,9 +55,9 @@ def test_send_message_from_auth_params__valid_response_content(
     "endpoint, message_body_factory, method_name, raw_response_fixture, status_code, "
     "response_content",
     prefix="from_auth_params",
-    has_tag="invalid_response_content",
+    has_tag="invalid_content_or_unexpected_response",
 )
-def test_send_message_from_auth_params__invalid_response_content(
+def test_send_message_from_auth_params__invalid_content_or_unexpected_response(
     httpserver,
     endpoint,
     message_body_factory,
