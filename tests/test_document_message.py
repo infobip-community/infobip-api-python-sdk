@@ -15,9 +15,7 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
         DocumentMessageBodyFactory.build(**{"content": content})
 
 
-@pytest.mark.parametrize(
-    "media_url", [None, "", {}, get_random_string(2049), "www.infobip.com/document"]
-)
+@pytest.mark.parametrize("media_url", [None, "", {}, get_random_string(2049)])
 def test_when_content_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
         DocumentMessageBodyFactory.build(**{"content": {"mediaUrl": media_url}})
