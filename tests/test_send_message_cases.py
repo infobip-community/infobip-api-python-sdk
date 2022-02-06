@@ -28,6 +28,8 @@ MESSAGE_TYPE_ATTRIBUTES = {
 @case(tags="valid_response_content")
 @parametrize(
     message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
+    message_body_type=("message_body_instance", "dict"),
+    whatsapp_channel_type=("auth_params", "auth_instance"),
     responses=(
         (200, get_response_ok, get_response_ok_content),
         (201, get_response_ok, get_response_ok_content),
@@ -35,27 +37,8 @@ MESSAGE_TYPE_ATTRIBUTES = {
         (405, get_response_error, get_response_error_content),
     ),
 )
-def from_auth_params_case__ok(message_type, responses):
-    return (
-        MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
-        MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
-        MESSAGE_TYPE_ATTRIBUTES[message_type]["method_name"],
-        responses[1](),
-        responses[0],
-        responses[2](),
-    )
-
-
-@case(tags="invalid_content_or_unexpected_response")
-@parametrize(
-    message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
-    responses=(
-        (201, get_response_ok, get_response_ok_invalid_content),
-        (500, get_response_error, get_response_error_invalid_content),
-    ),
-)
-def from_auth_params_case__invalid_content_or_unexpected_response(
-    message_type, responses
+def from_auth_params_or_instance_case__valid(
+    message_type, responses, message_body_type, whatsapp_channel_type
 ):
     return (
         MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
@@ -64,12 +47,41 @@ def from_auth_params_case__invalid_content_or_unexpected_response(
         responses[1](),
         responses[0],
         responses[2](),
+        message_body_type,
+        whatsapp_channel_type,
     )
 
 
-@case(tags="provided_client")
-@parametrize(message_type=MESSAGE_TYPE_ATTRIBUTES.keys())
-def from_provided_client_case(message_type):
+@case(tags="invalid_content_or_unexpected_response")
+@parametrize(
+    message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
+    message_body_type=("message_body_instance", "dict"),
+    whatsapp_channel_type=("auth_params", "auth_instance"),
+    responses=(
+        (201, get_response_ok, get_response_ok_invalid_content),
+        (500, get_response_error, get_response_error_invalid_content),
+    ),
+)
+def from_auth_params_or_instance_case__invalid(
+    message_type, responses, message_body_type, whatsapp_channel_type
+):
+    return (
+        MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
+        MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
+        MESSAGE_TYPE_ATTRIBUTES[message_type]["method_name"],
+        responses[1](),
+        responses[0],
+        responses[2](),
+        message_body_type,
+        whatsapp_channel_type,
+    )
+
+
+@parametrize(
+    message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
+    message_body_type=("message_body_instance", "dict"),
+)
+def from_provided_client_case(message_type, message_body_type):
     return (
         MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
@@ -77,4 +89,5 @@ def from_provided_client_case(message_type):
         get_response_ok(),
         200,
         get_response_ok_content(),
+        message_body_type,
     )
