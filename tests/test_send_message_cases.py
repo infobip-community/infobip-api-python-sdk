@@ -1,4 +1,4 @@
-from pytest_cases import parametrize
+from pytest_cases import case, parametrize
 
 from tests.conftest import DocumentMessageBodyFactory, TextMessageBodyFactory
 
@@ -16,6 +16,7 @@ MESSAGE_TYPE_ATTRIBUTES = {
 }
 
 
+@case(tags="valid_response_content")
 @parametrize(message_type=MESSAGE_TYPE_ATTRIBUTES.keys(), status_code=(200, 201))
 def from_auth_params_case__ok(
     message_type, status_code, get_response_ok, response_ok_content
@@ -30,6 +31,7 @@ def from_auth_params_case__ok(
     )
 
 
+@case(tags="valid_response_content")
 @parametrize(message_type=MESSAGE_TYPE_ATTRIBUTES.keys(), status_code=(400, 405))
 def from_auth_params_case__error(
     message_type,
@@ -44,6 +46,23 @@ def from_auth_params_case__error(
         get_response_error,
         status_code,
         response_error_content,
+    )
+
+
+@case(tags="invalid_response_content")
+@parametrize(message_type=MESSAGE_TYPE_ATTRIBUTES.keys())
+def from_auth_params_case__ok_invalid_content(
+    message_type,
+    get_response_ok,
+    response_ok_invalid_content,
+):
+    return (
+        MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
+        MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
+        MESSAGE_TYPE_ATTRIBUTES[message_type]["method_name"],
+        get_response_ok,
+        201,
+        response_ok_invalid_content,
     )
 
 

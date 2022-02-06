@@ -69,14 +69,6 @@ def response_ok_content():
 
 
 @pytest.fixture
-def get_response_ok(response_ok_content):
-    def _get_response_ok(status_code=200):
-        return Response(json.dumps(response_ok_content), status=status_code)
-
-    return _get_response_ok
-
-
-@pytest.fixture
 def response_ok_invalid_content():
     return {
         "to": "441134960001",
@@ -86,11 +78,11 @@ def response_ok_invalid_content():
 
 
 @pytest.fixture
-def get_response_ok_invalid_content(response_ok_invalid_content):
-    def _get_response_ok_invalid_content(status_code=201):
-        return Response(json.dumps(response_ok_invalid_content), status=status_code)
+def get_response_ok(response_ok_content):
+    def _get_response_ok(status_code=200, content=response_ok_content):
+        return Response(json.dumps(content), status=status_code)
 
-    return _get_response_ok_invalid_content
+    return _get_response_ok
 
 
 @pytest.fixture
@@ -112,14 +104,6 @@ def response_error_content():
 
 
 @pytest.fixture
-def get_response_error(response_error_content):
-    def _get_response_error(status_code=400):
-        return Response(json.dumps(response_error_content), status=status_code)
-
-    return _get_response_error
-
-
-@pytest.fixture
 def response_error_invalid_content():
     return {
         "error": {"field_one": "error_one", "field_two": "error_two"},
@@ -127,11 +111,11 @@ def response_error_invalid_content():
 
 
 @pytest.fixture
-def get_response_error_invalid_content(response_error_invalid_content):
-    def _get_response_error_invalid_content(status_code=403):
-        return Response(json.dumps(response_error_invalid_content), status=status_code)
+def get_response_error(response_error_content):
+    def _get_response_error(status_code=400, content=response_error_content):
+        return Response(json.dumps(content), status=status_code)
 
-    return _get_response_error_invalid_content
+    return _get_response_error
 
 
 @pytest.fixture
