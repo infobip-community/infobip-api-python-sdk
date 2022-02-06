@@ -6,54 +6,48 @@ from pydantic_factories import ModelFactory
 
 from tests.conftest import get_random_string
 from whatsapp.client import WhatsAppChannel
+from whatsapp.models.audio_message import AudioMessageBody
 from whatsapp.models.core import (
     MessageBody,
     WhatsAppResponse,
     WhatsAppResponseError,
     WhatsAppResponseOK,
 )
-from whatsapp.models.image_message import ImageMessageBody
 
-IMAGE_MESSAGE_ENDPOINT = "/whatsapp/1/message/image"
-
-
-class ImageMessageBodyFactory(ModelFactory):
-    __model__ = ImageMessageBody
+AUDIO_MESSAGE_ENDPOINT = "/whatsapp/1/message/audio"
 
 
-def test_image_message_body__is_an_instance_of_message_body():
-    assert isinstance(ImageMessageBodyFactory.build(), MessageBody) is True
+class AudioMessageBodyFactory(ModelFactory):
+    __model__ = AudioMessageBody
+
+
+def test_audio_message_body__is_an_instance_of_message_body():
+    assert isinstance(AudioMessageBodyFactory.build(), MessageBody) is True
 
 
 @pytest.mark.parametrize("content", [None, "", {}])
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
-        ImageMessageBodyFactory.build(**{"content": content})
+        AudioMessageBodyFactory.build(**{"content": content})
 
 
 @pytest.mark.parametrize("media_url", [None, "", {}, get_random_string(4097)])
 def test_when_content_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
-        ImageMessageBodyFactory.build(**{"content": {"mediaUrl": media_url}})
+        AudioMessageBodyFactory.build(**{"content": {"mediaUrl": media_url}})
 
 
-@pytest.mark.parametrize("caption", [None, "", {}, get_random_string(3001)])
-def test_when_content_caption_is_invalid__validation_error_is_raised(caption):
-    with pytest.raises(ValidationError):
-        ImageMessageBodyFactory.build(**{"content": {"caption": caption}})
-
-
-def test_send_image_message_with_provided_client__returns_raw_response(
+def test_send_audio_message_with_provided_client__returns_raw_response(
     httpserver, http_test_client, ok_content, response_ok
 ):
     httpserver.expect_request(
-        IMAGE_MESSAGE_ENDPOINT, method="POST"
+        AUDIO_MESSAGE_ENDPOINT, method="POST"
     ).respond_with_response(response_ok)
 
     whatsapp_client = WhatsAppChannel.from_provided_client(
         http_test_client(httpserver.url_for("/"))
     )
-    response = whatsapp_client.send_image_message(ImageMessageBodyFactory.build())
+    response = whatsapp_client.send_audio_message(AudioMessageBodyFactory.build())
 
     assert isinstance(response, WhatsAppResponse) is False
     assert response.status_code == 200
@@ -74,7 +68,7 @@ def test_send_image_message_with_provided_client__returns_raw_response(
         ),
     ],
 )
-def test_send_image_message_with_auth_params__returns_whatsapp_response(
+def test_send_audio_message_with_auth_params__returns_whatsapp_response(
     httpserver,
     http_test_client,
     raw_response,
@@ -87,14 +81,14 @@ def test_send_image_message_with_auth_params__returns_whatsapp_response(
     response_body_fixture = request.getfixturevalue(response_body)
 
     httpserver.expect_request(
-        IMAGE_MESSAGE_ENDPOINT, method="POST"
+        AUDIO_MESSAGE_ENDPOINT, method="POST"
     ).respond_with_response(raw_response_fixture)
 
     server_url = httpserver.url_for("/")
     whatsapp_client = WhatsAppChannel.from_auth_params(
         {"base_url": server_url, "api_key": "secret"}
     )
-    response = whatsapp_client.send_image_message(ImageMessageBodyFactory.build())
+    response = whatsapp_client.send_audio_message(AudioMessageBodyFactory.build())
     response_dict_cleaned = response.dict(by_alias=True, exclude_unset=True)
     raw_response = response_dict_cleaned.pop("rawResponse")
 
