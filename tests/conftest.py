@@ -8,6 +8,8 @@ from pydantic_factories import ModelFactory
 from werkzeug.wrappers.response import Response
 
 from whatsapp.models.core import Authentication
+from whatsapp.models.document_message import DocumentMessageBody
+from whatsapp.models.text_message import TextMessageBody
 
 
 def get_random_string(length: int) -> str:
@@ -18,29 +20,40 @@ class AuthenticationFactory(ModelFactory):
     __model__ = Authentication
 
 
+class TextMessageBodyFactory(ModelFactory):
+    __model__ = TextMessageBody
+
+
+class DocumentMessageBodyFactory(ModelFactory):
+    __model__ = DocumentMessageBody
+
+
 @pytest.fixture
 def authentication():
     return AuthenticationFactory.build()
 
 
 class HttpTestClient:
-    def __init__(self, url):
+    def __init__(self, url, headers):
         self.url = url
+        self.headers = headers
 
     def post(self, endpoint, body):
-        return requests.post(url=f"{self.url}" + endpoint, json=body)
+        return requests.post(
+            url=f"{self.url}" + endpoint, json=body, headers=self.headers
+        )
 
 
 @pytest.fixture
 def http_test_client():
-    def _get_http_test_client(url):
-        return HttpTestClient(url)
+    def _get_http_test_client(url, headers):
+        return HttpTestClient(url, headers)
 
     return _get_http_test_client
 
 
 @pytest.fixture
-def ok_content():
+def response_ok_content():
     return {
         "to": "441134960001",
         "messageCount": 1,
@@ -56,12 +69,32 @@ def ok_content():
 
 
 @pytest.fixture
-def response_ok(ok_content):
-    return Response(json.dumps(ok_content), status=200)
+def get_response_ok(response_ok_content):
+    def _get_response_ok(status_code=200):
+        return Response(json.dumps(response_ok_content), status=status_code)
+
+    return _get_response_ok
 
 
 @pytest.fixture
-def bad_request_content():
+def response_ok_invalid_content():
+    return {
+        "to": "441134960001",
+        "messageCount": 1,
+        "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+    }
+
+
+@pytest.fixture
+def get_response_ok_invalid_content(response_ok_invalid_content):
+    def _get_response_ok_invalid_content(status_code=201):
+        return Response(json.dumps(response_ok_invalid_content), status=status_code)
+
+    return _get_response_ok_invalid_content
+
+
+@pytest.fixture
+def response_error_content():
     return {
         "requestError": {
             "serviceException": {
@@ -79,42 +112,26 @@ def bad_request_content():
 
 
 @pytest.fixture
-def response_bad_request(bad_request_content):
-    return Response(json.dumps(bad_request_content), status=400)
+def get_response_error(response_error_content):
+    def _get_response_error(status_code=400):
+        return Response(json.dumps(response_error_content), status=status_code)
+
+    return _get_response_error
 
 
 @pytest.fixture
-def unauthorized_content():
+def response_error_invalid_content():
     return {
-        "requestError": {
-            "serviceException": {
-                "messageId": "UNAUTHORIZED",
-                "text": "Invalid login details",
-            }
-        }
+        "error": {"field_one": "error_one", "field_two": "error_two"},
     }
 
 
 @pytest.fixture
-def response_unauthorized(unauthorized_content):
-    return Response(json.dumps(unauthorized_content), status=401)
+def get_response_error_invalid_content(response_error_invalid_content):
+    def _get_response_error_invalid_content(status_code=403):
+        return Response(json.dumps(response_error_invalid_content), status=status_code)
 
-
-@pytest.fixture
-def too_many_requests_content():
-    return {
-        "requestError": {
-            "serviceException": {
-                "messageId": "TOO_MANY_REQUESTS",
-                "text": "Too many requests",
-            }
-        }
-    }
-
-
-@pytest.fixture
-def response_too_many_requests(too_many_requests_content):
-    return Response(json.dumps(too_many_requests_content), status=429)
+    return _get_response_error_invalid_content
 
 
 @pytest.fixture
