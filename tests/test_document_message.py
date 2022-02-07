@@ -1,14 +1,8 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
-from pydantic_factories import ModelFactory
 
-from tests.conftest import get_random_string
+from tests.conftest import DocumentMessageBodyFactory, get_random_string
 from whatsapp.models.core import MessageBody
-from whatsapp.models.document_message import DocumentMessageBody
-
-
-class DocumentMessageBodyFactory(ModelFactory):
-    __model__ = DocumentMessageBody
 
 
 def test_document_message_body__is_an_instance_of_message_body():
