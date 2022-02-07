@@ -7,9 +7,13 @@ import requests
 from pydantic_factories import ModelFactory
 from werkzeug.wrappers.response import Response
 
+from whatsapp.models.audio_message import AudioMessageBody
 from whatsapp.models.core import Authentication
 from whatsapp.models.document_message import DocumentMessageBody
+from whatsapp.models.image_message import ImageMessageBody
+from whatsapp.models.sticker_message import StickerMessageBody
 from whatsapp.models.text_message import TextMessageBody
+from whatsapp.models.video_message import VideoMessageBody
 
 
 def get_random_string(length: int) -> str:
@@ -26,6 +30,22 @@ class TextMessageBodyFactory(ModelFactory):
 
 class DocumentMessageBodyFactory(ModelFactory):
     __model__ = DocumentMessageBody
+
+
+class AudioMessageBodyFactory(ModelFactory):
+    __model__ = AudioMessageBody
+
+
+class ImageMessageBodyFactory(ModelFactory):
+    __model__ = ImageMessageBody
+
+
+class StickerMessageBodyFactory(ModelFactory):
+    __model__ = StickerMessageBody
+
+
+class VideoMessageBodyFactory(ModelFactory):
+    __model__ = VideoMessageBody
 
 
 @pytest.fixture
