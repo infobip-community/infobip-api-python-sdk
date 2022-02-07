@@ -11,6 +11,7 @@ from whatsapp.models.audio_message import AudioMessageBody
 from whatsapp.models.core import Authentication
 from whatsapp.models.document_message import DocumentMessageBody
 from whatsapp.models.image_message import ImageMessageBody
+from whatsapp.models.location_message import LocationMessageBody
 from whatsapp.models.sticker_message import StickerMessageBody
 from whatsapp.models.text_message import TextMessageBody
 from whatsapp.models.video_message import VideoMessageBody
@@ -46,6 +47,10 @@ class StickerMessageBodyFactory(ModelFactory):
 
 class VideoMessageBodyFactory(ModelFactory):
     __model__ = VideoMessageBody
+
+
+class LocationMessageBodyFactory(ModelFactory):
+    __model__ = LocationMessageBody
 
 
 @pytest.fixture
