@@ -4,6 +4,7 @@ from tests.conftest import (
     AudioMessageBodyFactory,
     DocumentMessageBodyFactory,
     ImageMessageBodyFactory,
+    LocationMessageBodyFactory,
     StickerMessageBodyFactory,
     TextMessageBodyFactory,
     VideoMessageBodyFactory,
@@ -45,6 +46,11 @@ MESSAGE_TYPE_ATTRIBUTES = {
         "message_body_factory": VideoMessageBodyFactory,
         "endpoint": "/whatsapp/1/message/video",
         "method_name": "send_video_message",
+    },
+    "location": {
+        "message_body_factory": LocationMessageBodyFactory,
+        "endpoint": "/whatsapp/1/message/location",
+        "method_name": "send_location_message",
     },
 }
 
