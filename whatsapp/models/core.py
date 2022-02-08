@@ -16,12 +16,30 @@ class CamelCaseModel(BaseModel):
         allow_population_by_field_name = True
 
 
-class MessageBody(CamelCaseModel):
+class ValidateUrlLengthMixin:
+    MAX_URL_LENGTH = 2048
+
+    @classmethod
+    def validate_scheme(cls, value: str) -> str:
+        if not isinstance(value, str):
+            return value
+
+        if len(value) > cls.MAX_URL_LENGTH:
+            raise ValueError("Url length must be less than 2048")
+
+        return value
+
+
+class MessageBody(ValidateUrlLengthMixin, CamelCaseModel):
     from_number: constr(min_length=1, max_length=24) = Field(alias="from")
     to: constr(min_length=1, max_length=24)
     message_id: Optional[constr(max_length=50)] = None
     callback_data: Optional[constr(max_length=4000)] = None
     notify_url: Optional[AnyHttpUrl] = None
+
+    @validator("notify_url", pre=True)
+    def validate_scheme(cls, value: str) -> str:
+        return super().validate_scheme(value)
 
 
 class WhatsAppResponse(CamelCaseModel):
