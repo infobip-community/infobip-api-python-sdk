@@ -8,8 +8,8 @@ from whatsapp.models.core import CamelCaseModel, MessageBody
 class Content(CamelCaseModel):
     latitude: confloat(ge=-90, le=90)
     longitude: confloat(ge=-180, le=180)
-    name: Optional[constr(min_length=1, max_length=1000)] = None
-    address: Optional[constr(min_length=1, max_length=1000)] = None
+    name: Optional[constr(max_length=1000)] = None
+    address: Optional[constr(max_length=1000)] = None
 
 
 class LocationMessageBody(MessageBody):

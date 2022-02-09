@@ -15,25 +15,39 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
         LocationMessageBodyFactory.build(**{"content": content})
 
 
-@pytest.mark.parametrize("latitude", [None, "", {}, -91.0, 91.0])
+@pytest.mark.parametrize("latitude", [None, "", {}, -90.001, 90.0001])
 def test_when_content_latitude_is_invalid__validation_error_is_raised(latitude):
     with pytest.raises(ValidationError):
-        LocationMessageBodyFactory.build(**{"content": {"latitude": latitude}})
+        LocationMessageBodyFactory.build(
+            **{"content": {"latitude": latitude}, "longitude": 120.53}
+        )
 
 
 @pytest.mark.parametrize("longitude", [None, "", {}, -181.0, 181.0])
 def test_when_content_longitude_is_invalid__validation_error_is_raised(longitude):
     with pytest.raises(ValidationError):
-        LocationMessageBodyFactory.build(**{"content": {"longitude": longitude}})
+        LocationMessageBodyFactory.build(
+            **{"content": {"longitude": longitude, "latitude": -50.934}}
+        )
 
 
-@pytest.mark.parametrize("name", [None, "", {}, get_random_string(1001)])
+@pytest.mark.parametrize("name", [{}, get_random_string(1001)])
 def test_when_content_name_is_invalid__validation_error_is_raised(name):
     with pytest.raises(ValidationError):
-        LocationMessageBodyFactory.build(**{"content": {"name": name}})
+        LocationMessageBodyFactory.build(
+            **{"content": {"longitude": 130.5541, "latitude": -50.934, "name": name}}
+        )
 
 
-@pytest.mark.parametrize("address", [None, "", {}, get_random_string(1001)])
+@pytest.mark.parametrize("address", [{}, get_random_string(1001)])
 def test_when_content_address_is_invalid__validation_error_is_raised(address):
     with pytest.raises(ValidationError):
-        LocationMessageBodyFactory.build(**{"content": {"address": address}})
+        LocationMessageBodyFactory.build(
+            **{
+                "content": {
+                    "longitude": -165.33,
+                    "latitude": -89.205,
+                    "address": address,
+                }
+            }
+        )

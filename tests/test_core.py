@@ -50,7 +50,7 @@ def test_when_to_number_is_invalid__validation_error_is_raised(to):
 
 
 @pytest.mark.parametrize("callback_data", [{}, get_random_string(4001)])
-def test_when_content_callback_data_is_invalid__validation_error_is_raised(
+def test_when_callback_data_is_invalid__validation_error_is_raised(
     callback_data,
 ):
     with pytest.raises(ValidationError):
@@ -61,3 +61,11 @@ def test_when_content_callback_data_is_invalid__validation_error_is_raised(
 def test_when_message_id_is_invalid__validation_error_is_raised(message_id):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(**{"messageId": message_id})
+
+
+@pytest.mark.parametrize(
+    "notify_url", [{}, f"http://myserver.com/{get_random_string(2029)}"]
+)
+def test_when_notify_url_is_invalid__validation_error_is_raised(notify_url):
+    with pytest.raises(ValidationError):
+        MessageBodyFactory.build(**{"notifyUrl": notify_url})

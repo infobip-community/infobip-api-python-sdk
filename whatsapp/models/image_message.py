@@ -1,13 +1,17 @@
 from typing import Optional
 
-from pydantic import AnyUrl, constr
+from pydantic import AnyHttpUrl, constr, validator
 
-from whatsapp.models.core import CamelCaseModel, MessageBody
+from whatsapp.models.core import CamelCaseModel, MessageBody, ValidateUrlLengthMixin
 
 
-class Content(CamelCaseModel):
-    media_url: AnyUrl
+class Content(ValidateUrlLengthMixin, CamelCaseModel):
+    media_url: AnyHttpUrl
     caption: Optional[constr(max_length=3000)] = None
+
+    @validator("media_url", pre=True)
+    def validate_url_length(cls, value: str) -> str:
+        return super().validate_url_length(value)
 
 
 class ImageMessageBody(MessageBody):
