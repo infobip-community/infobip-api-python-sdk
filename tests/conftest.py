@@ -8,6 +8,7 @@ from pydantic_factories import ModelFactory
 from werkzeug.wrappers.response import Response
 
 from whatsapp.models.audio_message import AudioMessageBody
+from whatsapp.models.contact_message import ContactMessageBody
 from whatsapp.models.core import Authentication
 from whatsapp.models.document_message import DocumentMessageBody
 from whatsapp.models.image_message import ImageMessageBody
@@ -51,6 +52,10 @@ class VideoMessageBodyFactory(ModelFactory):
 
 class LocationMessageBodyFactory(ModelFactory):
     __model__ = LocationMessageBody
+
+
+class ContactMessageBodyFactory(ModelFactory):
+    __model__ = ContactMessageBody
 
 
 @pytest.fixture

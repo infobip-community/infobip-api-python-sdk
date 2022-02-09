@@ -4,6 +4,7 @@ import requests
 from pydantic.error_wrappers import ValidationError
 
 from whatsapp.models.audio_message import AudioMessageBody
+from whatsapp.models.contact_message import ContactMessageBody
 from whatsapp.models.core import (
     Authentication,
     RequestHeaders,
@@ -262,3 +263,44 @@ class WhatsAppChannel:
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "location", message.dict(by_alias=True)
         )
+
+    def send_contact_message(
+        self, message: Union[ContactMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Send a contact to a single recipient. Contact messages can only be
+        successfully delivered, if the recipient has contacted the business within
+        the last 24 hours, otherwise template message should be used.
+
+        :param message:
+        :return:
+        """
+
+        if not isinstance(message, ContactMessageBody):
+            message = ContactMessageBody(**message)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "contact", message.dict(by_alias=True)
+        )
+
+
+# c = WhatsAppChannel.from_auth_params({
+#     "base_url": "https://k31g2n.api.infobip.com",
+#     "api_key": "ef0419ea2f4bd72f85b03c6627a720d0-ae2aed32-af20-47db-b49b-fa3c91c10204"
+# })
+# test_response = c.send_contact_message(
+#     {"from": "447860099299", "to": "385989384963", "content":
+#         {
+#             "contacts": [
+#                 {
+#                     "name": {"firstName": "Art", "formattedName": "Art Vandelay"},
+#                     "emails": [{"email": "vandelay@ind.com", "type": "HOME"}],
+#                     "addresses": [{"street": "Splitska", "city": "Split"}],
+#                     "birthday": "1986-10-19",
+#                     "phones": [{"phone": "441134960019", "type": "IPHONE"}],
+#                     "urls": [{"url": "http://example.com/John.Smith", "type": "WORK"}],
+#                 }
+#             ]
+#         }
+#      }
+# )
+# print(test_response)

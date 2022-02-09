@@ -2,6 +2,7 @@ from pytest_cases import case, parametrize
 
 from tests.conftest import (
     AudioMessageBodyFactory,
+    ContactMessageBodyFactory,
     DocumentMessageBodyFactory,
     ImageMessageBodyFactory,
     LocationMessageBodyFactory,
@@ -51,6 +52,11 @@ MESSAGE_TYPE_ATTRIBUTES = {
         "message_body_factory": LocationMessageBodyFactory,
         "endpoint": "/whatsapp/1/message/location",
         "method_name": "send_location_message",
+    },
+    "contact": {
+        "message_body_factory": ContactMessageBodyFactory,
+        "endpoint": "/whatsapp/1/message/contact",
+        "method_name": "send_contact_message",
     },
 }
 
