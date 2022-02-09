@@ -25,7 +25,7 @@ class ValidateUrlLengthMixin:
             return value
 
         if len(value) > cls.MAX_URL_LENGTH:
-            raise ValueError("Url length must be less than 2048")
+            raise ValueError(f"Url length must be less than {cls.MAX_URL_LENGTH}")
 
         return value
 
