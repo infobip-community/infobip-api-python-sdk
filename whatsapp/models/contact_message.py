@@ -14,10 +14,10 @@ class ContactTypeEnum(str, Enum):
 
 
 class PhoneTypeEnum(str, Enum):
-    cell = ("CELL",)
-    main = ("MAIN",)
-    iphone = ("IPHONE",)
-    home = ("HOME",)
+    cell = "CELL"
+    main = "MAIN"
+    iphone = "IPHONE"
+    home = "HOME"
     work = "WORK"
 
 
