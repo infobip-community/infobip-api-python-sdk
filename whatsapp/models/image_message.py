@@ -10,8 +10,8 @@ class Content(ValidateUrlLengthMixin, CamelCaseModel):
     caption: Optional[constr(max_length=3000)] = None
 
     @validator("media_url", pre=True)
-    def validate_scheme(cls, value: str) -> str:
-        return super().validate_scheme(value)
+    def validate_url_length(cls, value: str) -> str:
+        return super().validate_url_length(value)
 
 
 class ImageMessageBody(MessageBody):

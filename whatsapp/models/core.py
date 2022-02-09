@@ -20,7 +20,7 @@ class ValidateUrlLengthMixin:
     MAX_URL_LENGTH = 2048
 
     @classmethod
-    def validate_scheme(cls, value: str) -> str:
+    def validate_url_length(cls, value: str) -> str:
         if not isinstance(value, str):
             return value
 
@@ -38,8 +38,8 @@ class MessageBody(ValidateUrlLengthMixin, CamelCaseModel):
     notify_url: Optional[AnyHttpUrl] = None
 
     @validator("notify_url", pre=True)
-    def validate_scheme(cls, value: str) -> str:
-        return super().validate_scheme(value)
+    def validate_url_length(cls, value: str) -> str:
+        return super().validate_url_length(value)
 
 
 class WhatsAppResponse(CamelCaseModel):

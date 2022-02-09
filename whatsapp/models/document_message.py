@@ -11,8 +11,8 @@ class Content(ValidateUrlLengthMixin, CamelCaseModel):
     filename: Optional[constr(max_length=240)] = None
 
     @validator("media_url", pre=True)
-    def validate_scheme(cls, value: str) -> str:
-        return super().validate_scheme(value)
+    def validate_url_length(cls, value: str) -> str:
+        return super().validate_url_length(value)
 
 
 class DocumentMessageBody(MessageBody):
