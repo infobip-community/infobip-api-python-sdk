@@ -64,19 +64,19 @@ class Content(CamelCaseModel):
 
     @validator("header")
     def validate_header(cls, value):
-        if value:
-            header_value = value.get("type")
 
-            if header_value == HeaderTypeEnum.text:
-                return HeaderText(**value)
-            elif header_value == HeaderTypeEnum.image:
-                return HeaderImage(**value)
-            elif header_value == HeaderTypeEnum.video:
-                return HeaderVideo(**value)
-            elif header_value == HeaderTypeEnum.document:
-                return HeaderDocument(**value)
+        header_value = value.get("type")
 
-            raise ValueError("Unsupported header type")
+        if header_value == HeaderTypeEnum.text:
+            return HeaderText(**value)
+        elif header_value == HeaderTypeEnum.image:
+            return HeaderImage(**value)
+        elif header_value == HeaderTypeEnum.video:
+            return HeaderVideo(**value)
+        elif header_value == HeaderTypeEnum.document:
+            return HeaderDocument(**value)
+
+        raise ValueError("Unsupported header type")
 
 
 class ButtonsMessageBody(MessageBody):
