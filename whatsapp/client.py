@@ -1,4 +1,5 @@
-from typing import Any, Dict, Union
+from functools import wraps
+from typing import Any, Callable, Dict, Type, Union
 
 import requests
 from pydantic.error_wrappers import ValidationError
@@ -6,6 +7,7 @@ from pydantic.error_wrappers import ValidationError
 from whatsapp.models.audio_message import AudioMessageBody
 from whatsapp.models.core import (
     Authentication,
+    MessageBody,
     RequestHeaders,
     WhatsAppResponse,
     WhatsAppResponseError,
@@ -17,6 +19,23 @@ from whatsapp.models.location_message import LocationMessageBody
 from whatsapp.models.sticker_message import StickerMessageBody
 from whatsapp.models.text_message import TextMessageBody
 from whatsapp.models.video_message import VideoMessageBody
+
+
+def validate_message_body(
+    message_body_type: Type[MessageBody],
+) -> Union[WhatsAppResponse, Any]:
+    def decorate(endpoint_method: Callable) -> Callable:
+        @wraps(endpoint_method)
+        def wrapper(
+            self, message: Union[Type[MessageBody], Dict]
+        ) -> Union[WhatsAppResponse, Any]:
+            if not isinstance(message, message_body_type):
+                message = message_body_type(**message)
+            return endpoint_method(self, message)
+
+        return wrapper
+
+    return decorate
 
 
 class HttpClient:
@@ -140,8 +159,9 @@ class WhatsAppChannel:
         """
         return RequestHeaders(authorization=api_key).dict(by_alias=True)
 
+    @validate_message_body(TextMessageBody)
     def send_text_message(
-        self, message: Union[TextMessageBody, Dict]
+        self, message: TextMessageBody
     ) -> Union[WhatsAppResponse, Any]:
         """Send a text message to a single recipient. Text messages can only be
         successfully delivered, if the recipient has contacted the business within the
@@ -150,9 +170,6 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-        if not isinstance(message, TextMessageBody):
-            message = TextMessageBody(**message)
-
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "text", message.dict(by_alias=True)
         )
