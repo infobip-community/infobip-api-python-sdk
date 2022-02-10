@@ -15,19 +15,26 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
         DocumentMessageBodyFactory.build(**{"content": content})
 
 
-@pytest.mark.parametrize("media_url", [None, "", {}, get_random_string(2049)])
+@pytest.mark.parametrize(
+    "media_url",
+    [None, "", {}, "ftp://myfile.com", f"http://myfile.com/{get_random_string(2031)}"],
+)
 def test_when_content_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
         DocumentMessageBodyFactory.build(**{"content": {"mediaUrl": media_url}})
 
 
-@pytest.mark.parametrize("caption", [None, "", {}, get_random_string(3001)])
+@pytest.mark.parametrize("caption", [{}, get_random_string(3001)])
 def test_when_content_caption_is_invalid__validation_error_is_raised(caption):
     with pytest.raises(ValidationError):
-        DocumentMessageBodyFactory.build(**{"content": {"caption": caption}})
+        DocumentMessageBodyFactory.build(
+            **{"content": {"mediaUrl": "http://mymedia.com", "caption": caption}}
+        )
 
 
-@pytest.mark.parametrize("filename", [None, "", {}, get_random_string(241)])
+@pytest.mark.parametrize("filename", [{}, get_random_string(241)])
 def test_when_content_filename_is_invalid__validation_error_is_raised(filename):
     with pytest.raises(ValidationError):
-        DocumentMessageBodyFactory.build(**{"content": {"filename": filename}})
+        DocumentMessageBodyFactory.build(
+            **{"content": {"mediaUrl": "http://mymedia.com", "filename": filename}}
+        )
