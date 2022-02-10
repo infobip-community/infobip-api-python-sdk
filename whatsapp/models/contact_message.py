@@ -2,7 +2,7 @@ from datetime import date
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import validator
+from pydantic import Field, validator
 from pydantic_collections import BaseCollectionModel
 
 from whatsapp.models.core import CamelCaseModel, MessageBody
@@ -28,7 +28,7 @@ class Address(CamelCaseModel):
     zip: Optional[str] = None
     country: Optional[str] = None
     country_code: Optional[str] = None
-    type: Optional[ContactTypeEnum] = None
+    address_type: Optional[ContactTypeEnum] = Field(alias="type")
 
 
 class Addresses(BaseCollectionModel[Address]):
@@ -37,7 +37,7 @@ class Addresses(BaseCollectionModel[Address]):
 
 class Email(CamelCaseModel):
     email: Optional[str] = None
-    type: Optional[ContactTypeEnum] = None
+    email_type: Optional[ContactTypeEnum] = Field(alias="type")
 
 
 class Emails(BaseCollectionModel[Email]):
@@ -61,7 +61,7 @@ class Org(CamelCaseModel):
 
 class Phone(CamelCaseModel):
     phone: Optional[str] = None
-    type: Optional[PhoneTypeEnum] = None
+    phone_type: Optional[PhoneTypeEnum] = Field(alias="type")
     wa_id: Optional[str] = None
 
 
@@ -71,7 +71,7 @@ class Phones(BaseCollectionModel[Phone]):
 
 class Url(CamelCaseModel):
     url: Optional[str] = None
-    type: Optional[ContactTypeEnum] = None
+    url_type: Optional[ContactTypeEnum] = Field(alias="type")
 
 
 class Urls(BaseCollectionModel[Url]):

@@ -15,8 +15,8 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
         ContactMessageBodyFactory.build(**{"content": content})
 
 
-@pytest.mark.parametrize("test_type", ["", {}, "TEST"])
-def test_when_addresses_type_is_invalid__validation_error_is_raised(test_type):
+@pytest.mark.parametrize("address_type", ["", {}, "TEST"])
+def test_when_addresses_type_is_invalid__validation_error_is_raised(address_type):
     with pytest.raises(ValidationError):
         ContactMessageBodyFactory.build(
             **{
@@ -27,7 +27,7 @@ def test_when_addresses_type_is_invalid__validation_error_is_raised(test_type):
                                 "firstName": "Art",
                                 "formattedName": "Art Vandelay",
                             },
-                            "addresses": [{"type": test_type}],
+                            "addresses": [{"type": address_type}],
                         },
                     ]
                 }
