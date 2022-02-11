@@ -3,22 +3,31 @@ from enum import Enum
 from typing import List, Optional
 
 from pydantic import Field, validator
-from pydantic_collections import BaseCollectionModel
 
 from whatsapp.models.core import CamelCaseModel, MessageBody
 
 
-class ContactTypeEnum(str, Enum):
-    home = "HOME"
-    work = "WORK"
+class AddressTypeEnum(str, Enum):
+    HOME = "HOME"
+    WORK = "WORK"
+
+
+class EmailTypeEnum(str, Enum):
+    HOME = "HOME"
+    WORK = "WORK"
+
+
+class UrlTypeEnum(str, Enum):
+    HOME = "HOME"
+    WORK = "WORK"
 
 
 class PhoneTypeEnum(str, Enum):
-    cell = "CELL"
-    main = "MAIN"
-    iphone = "IPHONE"
-    home = "HOME"
-    work = "WORK"
+    CELL = "CELL"
+    MAIN = "MAIN"
+    IPHONE = "IPHONE"
+    HOME = "HOME"
+    WORK = "WORK"
 
 
 class Address(CamelCaseModel):
@@ -28,20 +37,12 @@ class Address(CamelCaseModel):
     zip: Optional[str] = None
     country: Optional[str] = None
     country_code: Optional[str] = None
-    address_type: Optional[ContactTypeEnum] = Field(alias="type")
-
-
-class Addresses(BaseCollectionModel[Address]):
-    pass
+    address_type: Optional[AddressTypeEnum] = Field(alias="type")
 
 
 class Email(CamelCaseModel):
     email: Optional[str] = None
-    email_type: Optional[ContactTypeEnum] = Field(alias="type")
-
-
-class Emails(BaseCollectionModel[Email]):
-    pass
+    email_type: Optional[EmailTypeEnum] = Field(alias="type")
 
 
 class Name(CamelCaseModel):
@@ -65,27 +66,19 @@ class Phone(CamelCaseModel):
     wa_id: Optional[str] = None
 
 
-class Phones(BaseCollectionModel[Phone]):
-    pass
-
-
 class Url(CamelCaseModel):
     url: Optional[str] = None
-    url_type: Optional[ContactTypeEnum] = Field(alias="type")
+    url_type: Optional[UrlTypeEnum] = Field(alias="type")
 
 
-class Urls(BaseCollectionModel[Url]):
-    pass
-
-
-class Contacts(CamelCaseModel):
-    addresses: Optional[Addresses] = None
+class Contact(CamelCaseModel):
+    addresses: Optional[List[Address]] = None
     birthday: Optional[date] = None
-    emails: Optional[Emails] = None
+    emails: Optional[List[Email]] = None
     name: Name
     org: Optional[Org] = None
-    phones: Optional[Phones] = None
-    urls: Optional[Urls] = None
+    phones: Optional[List[Phone]] = None
+    urls: Optional[List[Url]] = None
 
     @validator("birthday")
     def datetime_to_string(cls, v):
@@ -94,7 +87,7 @@ class Contacts(CamelCaseModel):
 
 
 class Content(CamelCaseModel):
-    contacts: Optional[List[Contacts]]
+    contacts: List[Contact]
 
 
 class ContactMessageBody(MessageBody):

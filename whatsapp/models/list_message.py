@@ -1,8 +1,7 @@
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import Field, constr
-from pydantic_collections import BaseCollectionModel
 
 from whatsapp.models.core import CamelCaseModel, MessageBody
 
@@ -26,22 +25,14 @@ class Row(CamelCaseModel):
     description: constr(min_length=1, max_length=72) = None
 
 
-class Rows(BaseCollectionModel[Row]):
-    pass
-
-
 class Section(CamelCaseModel):
     title: constr(min_length=1, max_length=24) = None
-    rows: Rows
-
-
-class Sections(BaseCollectionModel[Section]):
-    pass
+    rows: List[Row]
 
 
 class Action(CamelCaseModel):
     title: constr(min_length=1, max_length=20)
-    sections: Sections
+    sections: List[Section]
 
 
 class Body(CamelCaseModel):

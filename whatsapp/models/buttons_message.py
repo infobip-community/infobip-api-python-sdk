@@ -1,13 +1,13 @@
 from enum import Enum
-from typing import List, Literal, Optional, Union
+from typing import Literal, Optional, Union
 
-from pydantic import AnyUrl, Field, constr
+from pydantic import AnyUrl, Field, conlist, constr
 
 from whatsapp.models.core import CamelCaseModel, MessageBody
 
 
 class ButtonTypeEnum(str, Enum):
-    reply = "REPLY"
+    REPLY = "REPLY"
 
 
 class Footer(CamelCaseModel):
@@ -15,23 +15,23 @@ class Footer(CamelCaseModel):
 
 
 class HeaderDocument(CamelCaseModel):
-    header_type: Literal["document"]
+    header_type: Literal["DOCUMENT"]
     media_url: AnyUrl
     filename: constr(min_length=1, max_length=240) = None
 
 
 class HeaderVideo(CamelCaseModel):
-    header_type: Literal["video"]
+    header_type: Literal["VIDEO"]
     media_url: AnyUrl
 
 
 class HeaderImage(CamelCaseModel):
-    header_type: Literal["image"]
+    header_type: Literal["IMAGE"]
     media_url: AnyUrl
 
 
 class HeaderText(CamelCaseModel):
-    header_type: Literal["text"]
+    header_type: Literal["TEXT"]
     text: constr(min_length=1, max_length=60)
 
 
@@ -42,7 +42,7 @@ class Button(CamelCaseModel):
 
 
 class Action(CamelCaseModel):
-    buttons: List[Button]
+    buttons: conlist(Button, min_items=1, max_items=3)
 
 
 class Body(CamelCaseModel):

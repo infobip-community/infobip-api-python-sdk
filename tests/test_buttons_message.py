@@ -28,14 +28,27 @@ def test_when_body_text_is_invalid__validation_error_is_raised(text):
 
 
 @pytest.mark.parametrize("action", [None, "", {}])
-def test_when_body_action_is_invalid__validation_error_is_raised(action):
+def test_when_action_is_invalid__validation_error_is_raised(action):
     with pytest.raises(ValidationError):
         ButtonsMessageBodyFactory.build(
             **{"content": {"body": {"text": "test"}, "action": action}}
         )
 
 
-@pytest.mark.parametrize("buttons", [None, "", {}])
+@pytest.mark.parametrize(
+    "buttons",
+    [
+        None,
+        "",
+        {},
+        [
+            {"type": "REPLY", "id": "1", "title": "Yes"},
+            {"type": "REPLY", "id": "2", "title": "No"},
+            {"type": "REPLY", "id": "3", "title": "Or"},
+            {"type": "REPLY", "id": "4", "title": "Else"},
+        ],
+    ],
+)
 def test_when_action_buttons_is_invalid__validation_error_is_raised(buttons):
     with pytest.raises(ValidationError):
         ButtonsMessageBodyFactory.build(
@@ -159,7 +172,7 @@ def test_when_image_media_url_is_invalid__validation_error_is_raised(media_url):
 @pytest.mark.parametrize(
     "media_url", [None, "", {}, "www.infobip.com", get_random_string(2049)]
 )
-def test_when_doc_image_media_url_is_invalid__validation_error_is_raised(media_url):
+def test_when_document_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
         ButtonsMessageBodyFactory.build(
             **{
@@ -169,6 +182,26 @@ def test_when_doc_image_media_url_is_invalid__validation_error_is_raised(media_u
                         "buttons": [{"type": "REPLY", "id": "1", "title": "Yes"}]
                     },
                     "header": {"type": "DOCUMENT", "mediaUrl": media_url},
+                }
+            }
+        )
+
+
+@pytest.mark.parametrize("filename", [None, "", get_random_string(24)])
+def test_when_document_filename_is_invalid__validation_error_is_raised(filename):
+    with pytest.raises(ValidationError):
+        ButtonsMessageBodyFactory.build(
+            **{
+                "content": {
+                    "body": {"text": "test"},
+                    "action": {
+                        "buttons": [{"type": "REPLY", "id": "1", "title": "Yes"}]
+                    },
+                    "header": {
+                        "type": "DOCUMENT",
+                        "mediaUrl": "http://infobip.com/docs.pdf",
+                        "filename": filename,
+                    },
                 }
             }
         )
