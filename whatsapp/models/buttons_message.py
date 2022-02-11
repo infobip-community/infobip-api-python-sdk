@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import List, Literal, Optional, Union
 
-from pydantic import AnyUrl, Field, constr, validator
+from pydantic import AnyUrl, Field, constr
 
 from whatsapp.models.core import CamelCaseModel, MessageBody
 
@@ -10,35 +10,28 @@ class ButtonTypeEnum(str, Enum):
     reply = "REPLY"
 
 
-class HeaderTypeEnum(str, Enum):
-    text = "TEXT"
-    video = "VIDEO"
-    image = "IMAGE"
-    document = "DOCUMENT"
-
-
 class Footer(CamelCaseModel):
     text: constr(min_length=1, max_length=60)
 
 
 class HeaderDocument(CamelCaseModel):
-    header_type: HeaderTypeEnum = Field(alias="type")
+    header_type: Literal["document"]
     media_url: AnyUrl
     filename: constr(min_length=1, max_length=240) = None
 
 
 class HeaderVideo(CamelCaseModel):
-    header_type: HeaderTypeEnum = Field(alias="type")
+    header_type: Literal["video"]
     media_url: AnyUrl
 
 
 class HeaderImage(CamelCaseModel):
-    header_type: HeaderTypeEnum = Field(alias="type")
+    header_type: Literal["image"]
     media_url: AnyUrl
 
 
 class HeaderText(CamelCaseModel):
-    header_type: HeaderTypeEnum = Field(alias="type")
+    header_type: Literal["text"]
     text: constr(min_length=1, max_length=60)
 
 
@@ -59,24 +52,8 @@ class Body(CamelCaseModel):
 class Content(CamelCaseModel):
     body: Body
     action: Action
-    header: Optional[Dict[str, str]] = None
+    header: Optional[Union[HeaderText, HeaderImage, HeaderDocument, HeaderVideo]] = None
     footer: Optional[Footer] = None
-
-    @validator("header")
-    def validate_header(cls, value):
-
-        header_value = value.get("type")
-
-        if header_value == HeaderTypeEnum.text:
-            return HeaderText(**value)
-        elif header_value == HeaderTypeEnum.image:
-            return HeaderImage(**value)
-        elif header_value == HeaderTypeEnum.video:
-            return HeaderVideo(**value)
-        elif header_value == HeaderTypeEnum.document:
-            return HeaderDocument(**value)
-
-        raise ValueError("Unsupported header type")
 
 
 class ButtonsMessageBody(MessageBody):

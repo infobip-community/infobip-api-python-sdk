@@ -5,31 +5,8 @@ from tests.conftest import ButtonsMessageBodyFactory, get_random_string
 from whatsapp.models.core import MessageBody
 
 
-# todo If we don't build class in this manner test will not pass occasionally :D
-# todo this has to be connected with the way we build header
-# todo tests with platform work
-# todo if we do this for other "test cases" we should be fine, but don't like it
 def test_buttons_message_body__is_an_instance_of_message_body():
-    assert (
-        isinstance(
-            ButtonsMessageBodyFactory.build(
-                **{
-                    "content": {
-                        "body": {"text": "test"},
-                        "action": {
-                            "buttons": [{"type": "REPLY", "id": "1", "title": "Yes"}]
-                        },
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": "http://infobip.com/f.jpg",
-                        },
-                    }
-                }
-            ),
-            MessageBody,
-        )
-        is True
-    )
+    assert isinstance(ButtonsMessageBodyFactory.build(), MessageBody) is True
 
 
 @pytest.mark.parametrize("content", [None])
