@@ -1,6 +1,8 @@
-from pydantic import AnyHttpUrl, validator
+from typing import Optional
 
-from channels.whatsapp.models.core import (
+from pydantic import AnyHttpUrl, constr, validator
+
+from infobip_channels.whatsapp.models.core import (
     CamelCaseModel,
     MessageBody,
     ValidateUrlLengthMixin,
@@ -9,11 +11,12 @@ from channels.whatsapp.models.core import (
 
 class Content(ValidateUrlLengthMixin, CamelCaseModel):
     media_url: AnyHttpUrl
+    caption: Optional[constr(max_length=3000)] = None
 
     @validator("media_url", pre=True)
     def validate_url_length(cls, value: str) -> str:
         return super().validate_url_length(value)
 
 
-class AudioMessageBody(MessageBody):
+class ImageMessageBody(MessageBody):
     content: Content

@@ -3,8 +3,8 @@ from typing import Any, Dict, Type, Union
 import requests
 from pydantic.error_wrappers import ValidationError
 
-from channels.whatsapp.models.audio_message import AudioMessageBody
-from channels.whatsapp.models.core import (
+from infobip_channels.whatsapp.models.audio_message import AudioMessageBody
+from infobip_channels.whatsapp.models.core import (
     Authentication,
     MessageBody,
     RequestHeaders,
@@ -12,12 +12,12 @@ from channels.whatsapp.models.core import (
     WhatsAppResponseError,
     WhatsAppResponseOK,
 )
-from channels.whatsapp.models.document_message import DocumentMessageBody
-from channels.whatsapp.models.image_message import ImageMessageBody
-from channels.whatsapp.models.location_message import LocationMessageBody
-from channels.whatsapp.models.sticker_message import StickerMessageBody
-from channels.whatsapp.models.text_message import TextMessageBody
-from channels.whatsapp.models.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.document_message import DocumentMessageBody
+from infobip_channels.whatsapp.models.image_message import ImageMessageBody
+from infobip_channels.whatsapp.models.location_message import LocationMessageBody
+from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
+from infobip_channels.whatsapp.models.text_message import TextMessageBody
+from infobip_channels.whatsapp.models.video_message import VideoMessageBody
 
 
 class HttpClient:

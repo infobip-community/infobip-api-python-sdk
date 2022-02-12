@@ -2,7 +2,7 @@ import pytest
 from pydantic.error_wrappers import ValidationError
 from pydantic_factories import ModelFactory
 
-from channels.whatsapp.models.core import Authentication, MessageBody
+from infobip_channels.whatsapp.models.core import Authentication, MessageBody
 from tests.conftest import get_random_string
 
 
