@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import Literal, Optional, Union
 
-from pydantic import AnyUrl, conlist, constr
+from pydantic import AnyHttpUrl, conlist, constr, validator
 
-from whatsapp.models.core import CamelCaseModel, MessageBody
+from whatsapp.models.core import CamelCaseModel, MessageBody, ValidateUrlLengthMixin
 
 
 class ButtonTypeEnum(str, Enum):
@@ -14,20 +14,32 @@ class Footer(CamelCaseModel):
     text: constr(min_length=1, max_length=60)
 
 
-class HeaderDocument(CamelCaseModel):
+class HeaderDocument(ValidateUrlLengthMixin, CamelCaseModel):
     type: Literal["DOCUMENT"]
-    media_url: AnyUrl
-    filename: constr(min_length=1, max_length=240) = None
+    media_url: AnyHttpUrl
+    filename: Optional[constr(max_length=240)] = None
+
+    @validator("media_url", pre=True)
+    def validate_url_length(cls, value: str) -> str:
+        return super().validate_url_length(value)
 
 
-class HeaderVideo(CamelCaseModel):
+class HeaderVideo(ValidateUrlLengthMixin, CamelCaseModel):
     type: Literal["VIDEO"]
-    media_url: AnyUrl
+    media_url: AnyHttpUrl
+
+    @validator("media_url", pre=True)
+    def validate_url_length(cls, value: str) -> str:
+        return super().validate_url_length(value)
 
 
-class HeaderImage(CamelCaseModel):
+class HeaderImage(ValidateUrlLengthMixin, CamelCaseModel):
     type: Literal["IMAGE"]
-    media_url: AnyUrl
+    media_url: AnyHttpUrl
+
+    @validator("media_url", pre=True)
+    def validate_url_length(cls, value: str) -> str:
+        return super().validate_url_length(value)
 
 
 class HeaderText(CamelCaseModel):

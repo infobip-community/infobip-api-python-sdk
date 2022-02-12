@@ -22,7 +22,7 @@ class Header(CamelCaseModel):
 class Row(CamelCaseModel):
     id: constr(min_length=1, max_length=200)
     title: constr(min_length=1, max_length=24)
-    description: constr(min_length=1, max_length=72) = None
+    description: Optional[constr(max_length=72)] = None
 
 
 class Section(CamelCaseModel):

@@ -5,11 +5,11 @@ from tests.conftest import ListMessageBodyFactory, get_random_string
 from whatsapp.models.core import MessageBody
 
 
-def test_contact_message_body__is_an_instance_of_message_body():
+def test_list_message_body__is_an_instance_of_message_body():
     assert isinstance(ListMessageBodyFactory.build(), MessageBody) is True
 
 
-@pytest.mark.parametrize("content", [None])
+@pytest.mark.parametrize("content", [None, "", {}])
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
         ListMessageBodyFactory.build(**{"content": content})
@@ -28,14 +28,67 @@ def test_when_body_text_is_invalid__validation_error_is_raised(text):
 
 
 @pytest.mark.parametrize("action", [None, "", {}])
-def test_when_body_action_is_invalid__validation_error_is_raised(action):
+def test_when_action_is_invalid__validation_error_is_raised(action):
     with pytest.raises(ValidationError):
         ListMessageBodyFactory.build(
             **{"content": {"body": {"text": "test"}, "action": action}}
         )
 
 
-@pytest.mark.parametrize("sections", [None, "", {}])
+@pytest.mark.parametrize(
+    "sections",
+    [
+        None,
+        "",
+        {},
+        [
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+            {
+                "title": "My title",
+                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
+            },
+        ],
+    ],
+)
 def test_when_action_sections_is_invalid__validation_error_is_raised(sections):
     with pytest.raises(ValidationError):
         ListMessageBodyFactory.build(
@@ -43,6 +96,29 @@ def test_when_action_sections_is_invalid__validation_error_is_raised(sections):
                 "content": {
                     "body": {"text": "test"},
                     "action": {"title": "TEST", "sections": sections},
+                }
+            }
+        )
+
+
+@pytest.mark.parametrize("title", [None, "", {}])
+def test_when_action_title_is_invalid__validation_error_is_raised(title):
+    with pytest.raises(ValidationError):
+        ListMessageBodyFactory.build(
+            **{
+                "content": {
+                    "body": {"text": "Test"},
+                    "action": {
+                        "title": title,
+                        "sections": [
+                            {
+                                "title": "My title",
+                                "rows": [
+                                    {"id": "myId", "title": "T", "description": "Test"}
+                                ],
+                            }
+                        ],
+                    },
                 }
             }
         )
@@ -68,6 +144,22 @@ def test_when_sections_id_is_invalid__validation_error_is_raised(sections_id):
                                 ],
                             }
                         ],
+                    },
+                }
+            }
+        )
+
+
+@pytest.mark.parametrize("rows", [None, "", {}])
+def test_when_sections_rows_is_invalid__validation_error_is_raised(rows):
+    with pytest.raises(ValidationError):
+        ListMessageBodyFactory.build(
+            **{
+                "content": {
+                    "body": {"text": "test"},
+                    "action": {
+                        "title": "TEST",
+                        "sections": [{"title": "My title", "rows": rows}],
                     },
                 }
             }

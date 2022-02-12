@@ -9,10 +9,16 @@ def test_contact_message_body__is_an_instance_of_message_body():
     assert isinstance(ContactMessageBodyFactory.build(), MessageBody) is True
 
 
-@pytest.mark.parametrize("content", [None])
+@pytest.mark.parametrize("content", [None, "", {}])
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
         ContactMessageBodyFactory.build(**{"content": content})
+
+
+@pytest.mark.parametrize("contacts", [None, "", {}])
+def test_when_contacts_type_is_invalid__validation_error_is_raised(contacts):
+    with pytest.raises(ValidationError):
+        ContactMessageBodyFactory.build(**{"content": {"contacts": contacts}})
 
 
 @pytest.mark.parametrize("address_type", ["", {}, "TEST"])
@@ -48,6 +54,52 @@ def test_when_emails_type_is_invalid__validation_error_is_raised(test_type):
                                 "formattedName": "Art Vandelay",
                             },
                             "emails": [{"type": test_type}],
+                        }
+                    ]
+                }
+            }
+        )
+
+
+@pytest.mark.parametrize("name", [None, {}])
+def test_when_name_is_invalid__validation_error_is_raised(name):
+    with pytest.raises(ValidationError):
+        ContactMessageBodyFactory.build(**{"content": {"contacts": [{"name": name}]}})
+
+
+@pytest.mark.parametrize("first_name", [None, {}])
+def test_when_first_name_type_is_invalid__validation_error_is_raised(first_name):
+    with pytest.raises(ValidationError):
+        ContactMessageBodyFactory.build(
+            **{
+                "content": {
+                    "contacts": [
+                        {
+                            "name": {
+                                "firstName": first_name,
+                                "formattedName": "Art Vandelay",
+                            },
+                        }
+                    ]
+                }
+            }
+        )
+
+
+@pytest.mark.parametrize("formatted_name", [None, {}])
+def test_when_formatted_name_type_is_invalid__validation_error_is_raised(
+    formatted_name,
+):
+    with pytest.raises(ValidationError):
+        ContactMessageBodyFactory.build(
+            **{
+                "content": {
+                    "contacts": [
+                        {
+                            "name": {
+                                "firstName": "First Name",
+                                "formattedName": formatted_name,
+                            },
                         }
                     ]
                 }

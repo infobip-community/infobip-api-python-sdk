@@ -187,7 +187,7 @@ def test_when_document_media_url_is_invalid__validation_error_is_raised(media_ur
         )
 
 
-@pytest.mark.parametrize("filename", ["", get_random_string(241)])
+@pytest.mark.parametrize("filename", [get_random_string(241)])
 def test_when_document_filename_is_invalid__validation_error_is_raised(filename):
     with pytest.raises(ValidationError):
         ButtonsMessageBodyFactory.build(
