@@ -7,14 +7,14 @@ import requests
 from pydantic_factories import ModelFactory
 from werkzeug.wrappers.response import Response
 
-from whatsapp.models.audio_message import AudioMessageBody
-from whatsapp.models.core import Authentication
-from whatsapp.models.document_message import DocumentMessageBody
-from whatsapp.models.image_message import ImageMessageBody
-from whatsapp.models.location_message import LocationMessageBody
-from whatsapp.models.sticker_message import StickerMessageBody
-from whatsapp.models.text_message import TextMessageBody
-from whatsapp.models.video_message import VideoMessageBody
+from channels.whatsapp.models.audio_message import AudioMessageBody
+from channels.whatsapp.models.core import Authentication
+from channels.whatsapp.models.document_message import DocumentMessageBody
+from channels.whatsapp.models.image_message import ImageMessageBody
+from channels.whatsapp.models.location_message import LocationMessageBody
+from channels.whatsapp.models.sticker_message import StickerMessageBody
+from channels.whatsapp.models.text_message import TextMessageBody
+from channels.whatsapp.models.video_message import VideoMessageBody
 
 
 def get_random_string(length: int) -> str:

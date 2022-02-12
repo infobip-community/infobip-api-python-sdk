@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 from pytest_cases import parametrize_with_cases
 
-from whatsapp.client import WhatsAppChannel
-from whatsapp.models.core import Authentication, WhatsAppResponse
+from channels.whatsapp import WhatsAppChannel
+from channels.whatsapp.models.core import Authentication, WhatsAppResponse
 
 
 def get_whatsapp_channel_instance(instantiation_type, **kwargs):
