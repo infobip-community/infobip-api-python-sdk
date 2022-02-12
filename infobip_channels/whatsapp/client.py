@@ -155,7 +155,7 @@ class WhatsAppChannel:
         return message if isinstance(message, message_type) else message_type(**message)
 
     def send_text_message(
-        self, message: TextMessageBody
+        self, message: Union[TextMessageBody, Dict]
     ) -> Union[WhatsAppResponse, Any]:
         """Send a text message to a single recipient. Text messages can only be
         successfully delivered, if the recipient has contacted the business within the
