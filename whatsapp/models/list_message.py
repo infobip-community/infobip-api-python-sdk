@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import Field, constr
+from pydantic import conlist, constr
 
 from whatsapp.models.core import CamelCaseModel, MessageBody
 
@@ -15,7 +15,7 @@ class Footer(CamelCaseModel):
 
 
 class Header(CamelCaseModel):
-    header_type: HeaderTypeEnum = Field(alias="type")
+    type: HeaderTypeEnum
     text: constr(min_length=1, max_length=60)
 
 
@@ -26,13 +26,13 @@ class Row(CamelCaseModel):
 
 
 class Section(CamelCaseModel):
-    title: constr(min_length=1, max_length=24) = None
+    title: constr(max_length=24) = None
     rows: List[Row]
 
 
 class Action(CamelCaseModel):
     title: constr(min_length=1, max_length=20)
-    sections: List[Section]
+    sections: conlist(Section, min_items=1, max_items=10)
 
 
 class Body(CamelCaseModel):

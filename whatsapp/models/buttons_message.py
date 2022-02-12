@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Literal, Optional, Union
 
-from pydantic import AnyUrl, Field, conlist, constr
+from pydantic import AnyUrl, conlist, constr
 
 from whatsapp.models.core import CamelCaseModel, MessageBody
 
@@ -15,28 +15,28 @@ class Footer(CamelCaseModel):
 
 
 class HeaderDocument(CamelCaseModel):
-    header_type: Literal["DOCUMENT"]
+    type: Literal["DOCUMENT"]
     media_url: AnyUrl
     filename: constr(min_length=1, max_length=240) = None
 
 
 class HeaderVideo(CamelCaseModel):
-    header_type: Literal["VIDEO"]
+    type: Literal["VIDEO"]
     media_url: AnyUrl
 
 
 class HeaderImage(CamelCaseModel):
-    header_type: Literal["IMAGE"]
+    type: Literal["IMAGE"]
     media_url: AnyUrl
 
 
 class HeaderText(CamelCaseModel):
-    header_type: Literal["TEXT"]
+    type: Literal["TEXT"]
     text: constr(min_length=1, max_length=60)
 
 
 class Button(CamelCaseModel):
-    button_type: ButtonTypeEnum = Field(alias="type")
+    type: ButtonTypeEnum
     id: constr(min_length=1, max_length=256)
     title: constr(min_length=1, max_length=20)
 
