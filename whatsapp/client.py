@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Any, Dict, Type, Union
 
 import requests
 from pydantic.error_wrappers import ValidationError
@@ -8,6 +8,7 @@ from whatsapp.models.buttons_message import ButtonsMessageBody
 from whatsapp.models.contact_message import ContactMessageBody
 from whatsapp.models.core import (
     Authentication,
+    MessageBody,
     RequestHeaders,
     WhatsAppResponse,
     WhatsAppResponseError,
@@ -143,8 +144,21 @@ class WhatsAppChannel:
         """
         return RequestHeaders(authorization=api_key).dict(by_alias=True)
 
+    @staticmethod
+    def validate_message_body(
+        message: Union[MessageBody, Dict], message_type: Type[MessageBody]
+    ) -> MessageBody:
+        """Validate the message by trying to instantiate the provided type class.
+        If the message passed is already of that type, just return it as is.
+
+        :param message: Message body to validate
+        :param message_type: Type of the message body
+        :return: Class instance corresponding to the provided message body type
+        """
+        return message if isinstance(message, message_type) else message_type(**message)
+
     def send_text_message(
-        self, message: Union[TextMessageBody, Dict]
+        self, message: TextMessageBody
     ) -> Union[WhatsAppResponse, Any]:
         """Send a text message to a single recipient. Text messages can only be
         successfully delivered, if the recipient has contacted the business within the
@@ -153,8 +167,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-        if not isinstance(message, TextMessageBody):
-            message = TextMessageBody(**message)
+        message = self.validate_message_body(message, TextMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "text", message.dict(by_alias=True)
@@ -170,8 +183,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-        if not isinstance(message, DocumentMessageBody):
-            message = DocumentMessageBody(**message)
+        message = self.validate_message_body(message, DocumentMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "document", message.dict(by_alias=True)
@@ -188,8 +200,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-        if not isinstance(message, ImageMessageBody):
-            message = ImageMessageBody(**message)
+        message = self.validate_message_body(message, ImageMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "image", message.dict(by_alias=True)
@@ -205,8 +216,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-        if not isinstance(message, StickerMessageBody):
-            message = StickerMessageBody(**message)
+        message = self.validate_message_body(message, StickerMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "sticker", message.dict(by_alias=True)
@@ -222,9 +232,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-
-        if not isinstance(message, VideoMessageBody):
-            message = VideoMessageBody(**message)
+        message = self.validate_message_body(message, VideoMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "video", message.dict(by_alias=True)
@@ -240,9 +248,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-
-        if not isinstance(message, AudioMessageBody):
-            message = AudioMessageBody(**message)
+        message = self.validate_message_body(message, AudioMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "audio", message.dict(by_alias=True)
@@ -258,9 +264,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-
-        if not isinstance(message, LocationMessageBody):
-            message = LocationMessageBody(**message)
+        message = self.validate_message_body(message, LocationMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "location", message.dict(by_alias=True)
