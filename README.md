@@ -79,9 +79,10 @@ For the password, use the token value, including the pypi- prefix.
 
 
 ## Installing your newly uploaded package
-To test the newly uploaded package, create a virtual environment and inside it run:
+To test the newly uploaded package, create a virtual environment and download the
+package:
 ```
-pip install -i https://test.pypi.org/simple/ infobip-channels==x.y.z
+pip install --extra-index-url https://test.pypi.org/simple/ infobip-channels==x.y.z
 ```
 
 After that, create a test script or import the library in a shell and try it out.
