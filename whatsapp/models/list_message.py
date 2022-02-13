@@ -7,7 +7,7 @@ from whatsapp.models.core import CamelCaseModel, MessageBody
 
 
 class HeaderTypeEnum(str, Enum):
-    text = "TEXT"
+    TEXT = "TEXT"
 
 
 class Footer(CamelCaseModel):

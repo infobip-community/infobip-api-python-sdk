@@ -9,7 +9,7 @@ def test_buttons_message_body__is_an_instance_of_message_body():
     assert isinstance(ButtonsMessageBodyFactory.build(), MessageBody) is True
 
 
-@pytest.mark.parametrize("content", [None])
+@pytest.mark.parametrize("content", [None, "", {}])
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
         ButtonsMessageBodyFactory.build(**{"content": content})
