@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import conlist, constr
 
-from whatsapp.models.core import CamelCaseModel, MessageBody
+from infobip_channels.whatsapp.models.core import CamelCaseModel, MessageBody
 
 
 class HeaderTypeEnum(str, Enum):
