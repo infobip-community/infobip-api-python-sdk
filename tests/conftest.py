@@ -15,6 +15,9 @@ from infobip_channels.whatsapp.models.location_message import LocationMessageBod
 from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
 from infobip_channels.whatsapp.models.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.buttons_message import ButtonsMessageBody
+from infobip_channels.whatsapp.models.contact_message import ContactMessageBody
+from infobip_channels.whatsapp.models.list_message import ListMessageBody
 
 
 def get_random_string(length: int) -> str:
@@ -51,6 +54,18 @@ class VideoMessageBodyFactory(ModelFactory):
 
 class LocationMessageBodyFactory(ModelFactory):
     __model__ = LocationMessageBody
+
+
+class ContactMessageBodyFactory(ModelFactory):
+    __model__ = ContactMessageBody
+
+
+class ButtonsMessageBodyFactory(ModelFactory):
+    __model__ = ButtonsMessageBody
+
+
+class ListMessageBodyFactory(ModelFactory):
+    __model__ = ListMessageBody
 
 
 @pytest.fixture
