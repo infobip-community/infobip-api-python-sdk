@@ -4,6 +4,8 @@ import requests
 from pydantic.error_wrappers import ValidationError
 
 from whatsapp.models.audio_message import AudioMessageBody
+from whatsapp.models.buttons_message import ButtonsMessageBody
+from whatsapp.models.contact_message import ContactMessageBody
 from whatsapp.models.core import (
     Authentication,
     MessageBody,
@@ -14,6 +16,7 @@ from whatsapp.models.core import (
 )
 from whatsapp.models.document_message import DocumentMessageBody
 from whatsapp.models.image_message import ImageMessageBody
+from whatsapp.models.list_message import ListMessageBody
 from whatsapp.models.location_message import LocationMessageBody
 from whatsapp.models.sticker_message import StickerMessageBody
 from whatsapp.models.text_message import TextMessageBody
@@ -265,4 +268,62 @@ class WhatsAppChannel:
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "location", message.dict(by_alias=True)
+        )
+
+    def send_contact_message(
+        self, message: Union[ContactMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Send a contact to a single recipient. Contact messages can only be
+        successfully delivered, if the recipient has contacted the business within
+        the last 24 hours, otherwise template message should be used.
+
+        :param message:
+        :return:
+        """
+
+        if not isinstance(message, ContactMessageBody):
+            message = ContactMessageBody(**message)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "contact", message.dict(by_alias=True)
+        )
+
+    def send_interactive_buttons_message(
+        self, message: Union[ButtonsMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Send an interactive buttons message to a single recipient. Interactive
+        buttons messages can only be successfully delivered, if the recipient has
+        contacted the business within the last 24 hours, otherwise template message
+        should be used.
+
+        :param message:
+        :return:
+        """
+
+        if not isinstance(message, ButtonsMessageBody):
+            message = ButtonsMessageBody(**message)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "interactive/buttons",
+            message.dict(by_alias=True),
+        )
+
+    def send_interactive_list_message(
+        self, message: Union[ListMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Send an interactive list message to a single recipient. Interactive list
+        messages can only be successfully delivered, if the recipient has contacted
+        the business within the last 24 hours, otherwise template message should be
+        used.
+
+        :param message:
+        :return:
+        """
+
+        if not isinstance(message, ListMessageBody):
+            message = ListMessageBody(**message)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "interactive/list",
+            message.dict(by_alias=True),
         )
