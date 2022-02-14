@@ -5,7 +5,7 @@ from tests.conftest import ProductMessageBodyFactory, get_random_string
 from whatsapp.models.core import MessageBody
 
 
-def test_buttons_message_body__is_an_instance_of_message_body():
+def test_product_message_body__is_an_instance_of_message_body():
     assert isinstance(ProductMessageBodyFactory.build(), MessageBody) is True
 
 
