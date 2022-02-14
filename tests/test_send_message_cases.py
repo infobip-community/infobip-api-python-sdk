@@ -8,6 +8,7 @@ from tests.conftest import (
     ImageMessageBodyFactory,
     ListMessageBodyFactory,
     LocationMessageBodyFactory,
+    MultiProductMessageBodyFactory,
     StickerMessageBodyFactory,
     TextMessageBodyFactory,
     VideoMessageBodyFactory,
@@ -69,6 +70,11 @@ MESSAGE_TYPE_ATTRIBUTES = {
         "message_body_factory": ListMessageBodyFactory,
         "endpoint": "/whatsapp/1/message/interactive/list",
         "method_name": "send_interactive_list_message",
+    },
+    "multi_product": {
+        "message_body_factory": MultiProductMessageBodyFactory,
+        "endpoint": "/whatsapp/1/message/interactive/multi-product",
+        "method_name": "send_interactive_multi_product_message",
     },
 }
 

@@ -15,6 +15,7 @@ from whatsapp.models.document_message import DocumentMessageBody
 from whatsapp.models.image_message import ImageMessageBody
 from whatsapp.models.list_message import ListMessageBody
 from whatsapp.models.location_message import LocationMessageBody
+from whatsapp.models.multi_product_message import MultiProductMessageBody
 from whatsapp.models.sticker_message import StickerMessageBody
 from whatsapp.models.text_message import TextMessageBody
 from whatsapp.models.video_message import VideoMessageBody
@@ -66,6 +67,10 @@ class ButtonsMessageBodyFactory(ModelFactory):
 
 class ListMessageBodyFactory(ModelFactory):
     __model__ = ListMessageBody
+
+
+class MultiProductMessageBodyFactory(ModelFactory):
+    __model__ = MultiProductMessageBody
 
 
 @pytest.fixture
