@@ -45,47 +45,8 @@ def test_when_action_is_invalid__validation_error_is_raised(action):
             {
                 "title": "My title",
                 "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
-            {
-                "title": "My title",
-                "rows": [{"id": "myId", "title": "T", "description": "Test"}],
-            },
+            }
+            for _ in range(11)
         ],
     ],
 )

@@ -37,17 +37,7 @@ def test_when_action_is_invalid__validation_error_is_raised(action):
 
 @pytest.mark.parametrize(
     "buttons",
-    [
-        None,
-        "",
-        {},
-        [
-            {"type": "REPLY", "id": "1", "title": "Yes"},
-            {"type": "REPLY", "id": "2", "title": "No"},
-            {"type": "REPLY", "id": "3", "title": "Or"},
-            {"type": "REPLY", "id": "4", "title": "Else"},
-        ],
-    ],
+    [None, "", {}, [{"type": "REPLY", "id": "1", "title": "Yes"} for _ in range(4)]],
 )
 def test_when_action_buttons_is_invalid__validation_error_is_raised(buttons):
     with pytest.raises(ValidationError):
