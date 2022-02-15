@@ -282,8 +282,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ContactMessageBody):
-            message = ContactMessageBody(**message)
+        message = self.validate_message_body(message, ContactMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "contact", message.dict(by_alias=True)
@@ -301,8 +300,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ButtonsMessageBody):
-            message = ButtonsMessageBody(**message)
+        message = self.validate_message_body(message, ButtonsMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/buttons",
@@ -321,8 +319,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ListMessageBody):
-            message = ListMessageBody(**message)
+        message = self.validate_message_body(message, ListMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/list",
@@ -341,8 +338,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ProductMessageBody):
-            message = ProductMessageBody(**message)
+        message = self.validate_message_body(message, ProductMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/product",
