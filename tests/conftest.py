@@ -15,6 +15,9 @@ from infobip_channels.whatsapp.models.document_message import DocumentMessageBod
 from infobip_channels.whatsapp.models.image_message import ImageMessageBody
 from infobip_channels.whatsapp.models.list_message import ListMessageBody
 from infobip_channels.whatsapp.models.location_message import LocationMessageBody
+from infobip_channels.whatsapp.models.multi_product_message import (
+    MultiProductMessageBody,
+)
 from infobip_channels.whatsapp.models.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
 from infobip_channels.whatsapp.models.text_message import TextMessageBody
@@ -71,6 +74,37 @@ class ListMessageBodyFactory(ModelFactory):
 
 class ProductMessageBodyFactory(ModelFactory):
     __model__ = ProductMessageBody
+
+
+class MultiProductMessageBodyFactory(ModelFactory):
+    __model__ = MultiProductMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return MultiProductMessageBody(
+            **{
+                "from": "1234",
+                "to": "6789",
+                "content": {
+                    "header": {"type": "TEXT", "text": "Some text"},
+                    "body": {"text": "Some text"},
+                    "action": {
+                        "catalogId": "1",
+                        "sections": [
+                            {
+                                "title": "Title",
+                                "productRetailerIds": ["id 2"],
+                            },
+                            {
+                                "title": "Title 2",
+                                "productRetailerIds": ["id 2", "id 3"],
+                            },
+                        ],
+                    },
+                },
+            }
+        )
 
 
 @pytest.fixture
