@@ -19,6 +19,7 @@ from whatsapp.models.image_message import ImageMessageBody
 from whatsapp.models.list_message import ListMessageBody
 from whatsapp.models.location_message import LocationMessageBody
 from whatsapp.models.sticker_message import StickerMessageBody
+from whatsapp.models.template_message import TemplateMassageBody
 from whatsapp.models.text_message import TextMessageBody
 from whatsapp.models.video_message import VideoMessageBody
 
@@ -325,5 +326,24 @@ class WhatsAppChannel:
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/list",
+            message.dict(by_alias=True),
+        )
+
+    def send_template_message(
+        self, message: Union[TemplateMassageBody, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Send a single or multiple template messages to a one or more recipients.
+        Template messages can be sent and delivered at anytime. Each template sent
+        needs to be registered and pre-approved by WhatsApp.
+
+        :param message:
+        :return:
+        """
+
+        if not isinstance(message, TemplateMassageBody):
+            message = TemplateMassageBody(**message)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "template",
             message.dict(by_alias=True),
         )
