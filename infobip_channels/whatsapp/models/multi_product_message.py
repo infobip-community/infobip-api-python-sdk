@@ -11,7 +11,7 @@ class HeaderTypeEnum(str, Enum):
 
 
 class Section(CamelCaseModel):
-    title: Optional[constr(min_length=1, max_length=24)]
+    title: Optional[constr(max_length=24)]
     product_retailer_ids: List[str]
 
 
