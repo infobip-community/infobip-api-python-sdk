@@ -283,7 +283,6 @@ class WhatsAppChannel:
         :param message:
         :return:
         """
-
         message = self.validate_message_body(message, ContactMessageBody)
 
         return self._client.post(
@@ -301,7 +300,6 @@ class WhatsAppChannel:
         :param message:
         :return:
         """
-
         message = self.validate_message_body(message, ButtonsMessageBody)
 
         return self._client.post(
@@ -320,7 +318,6 @@ class WhatsAppChannel:
         :param message:
         :return:
         """
-
         message = self.validate_message_body(message, ListMessageBody)
 
         return self._client.post(
@@ -339,7 +336,6 @@ class WhatsAppChannel:
         :param message:
         :return:
         """
-
         message = self.validate_message_body(message, MultiProductMessageBody)
 
         return self._client.post(

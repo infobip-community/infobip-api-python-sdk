@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import conlist, constr
+from pydantic import conlist, constr, validator
 
 from infobip_channels.whatsapp.models.core import CamelCaseModel, MessageBody
 
@@ -22,6 +22,18 @@ class Footer(CamelCaseModel):
 class Action(CamelCaseModel):
     catalog_id: str
     sections: conlist(Section, min_items=1, max_items=10)
+
+    @validator("sections")
+    def validate_sections(cls, sections: List[Section]) -> List[Section]:
+        if len(sections) > 1:
+            for section in sections:
+                if not section.dict().get("title"):
+                    raise ValueError(
+                        "When there is more than one section, "
+                        "each one of them needs to have a title"
+                    )
+
+        return sections
 
 
 class Header(CamelCaseModel):

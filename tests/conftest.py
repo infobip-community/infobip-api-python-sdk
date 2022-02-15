@@ -74,6 +74,33 @@ class ListMessageBodyFactory(ModelFactory):
 class MultiProductMessageBodyFactory(ModelFactory):
     __model__ = MultiProductMessageBody
 
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return MultiProductMessageBody(
+            **{
+                "from": "1234",
+                "to": "6789",
+                "content": {
+                    "header": {"type": "TEXT", "text": "Some text"},
+                    "body": {"text": "Some text"},
+                    "action": {
+                        "catalogId": "1",
+                        "sections": [
+                            {
+                                "title": "Title",
+                                "productRetailerIds": ["id 2"],
+                            },
+                            {
+                                "title": "Title 2",
+                                "productRetailerIds": ["id 2", "id 3"],
+                            },
+                        ],
+                    },
+                },
+            }
+        )
+
 
 @pytest.fixture
 def authentication():
