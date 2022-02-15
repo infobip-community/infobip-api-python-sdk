@@ -8,6 +8,7 @@ from tests.conftest import (
     ImageMessageBodyFactory,
     ListMessageBodyFactory,
     LocationMessageBodyFactory,
+    ProductMessageBodyFactory,
     StickerMessageBodyFactory,
     TemplateMessageBodyFactory,
     TextMessageBodyFactory,
@@ -75,6 +76,11 @@ MESSAGE_TYPE_ATTRIBUTES = {
         "message_body_factory": TemplateMessageBodyFactory,
         "endpoint": "/whatsapp/1/message/template",
         "method_name": "send_template_message",
+    },
+    "product": {
+        "message_body_factory": ProductMessageBodyFactory,
+        "endpoint": "/whatsapp/1/message/interactive/product",
+        "method_name": "send_interactive_product_message",
     },
 }
 

@@ -15,6 +15,7 @@ from infobip_channels.whatsapp.models.document_message import DocumentMessageBod
 from infobip_channels.whatsapp.models.image_message import ImageMessageBody
 from infobip_channels.whatsapp.models.list_message import ListMessageBody
 from infobip_channels.whatsapp.models.location_message import LocationMessageBody
+from infobip_channels.whatsapp.models.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
 from infobip_channels.whatsapp.models.template_message import (
     Message,
@@ -78,6 +79,10 @@ class TemplateMessageBodyFactory(ModelFactory):
 
 class MessageBodyFactory(ModelFactory):
     __model__ = Message
+
+
+class ProductMessageBodyFactory(ModelFactory):
+    __model__ = ProductMessageBody
 
 
 @pytest.fixture
