@@ -3,10 +3,10 @@ from typing import Any, Dict, Type, Union
 import requests
 from pydantic.error_wrappers import ValidationError
 
-from whatsapp.models.audio_message import AudioMessageBody
-from whatsapp.models.buttons_message import ButtonsMessageBody
-from whatsapp.models.contact_message import ContactMessageBody
-from whatsapp.models.core import (
+from infobip_channels.whatsapp.models.audio_message import AudioMessageBody
+from infobip_channels.whatsapp.models.buttons_message import ButtonsMessageBody
+from infobip_channels.whatsapp.models.contact_message import ContactMessageBody
+from infobip_channels.whatsapp.models.core import (
     Authentication,
     MessageBody,
     RequestHeaders,
@@ -14,14 +14,16 @@ from whatsapp.models.core import (
     WhatsAppResponseError,
     WhatsAppResponseOK,
 )
-from whatsapp.models.document_message import DocumentMessageBody
-from whatsapp.models.image_message import ImageMessageBody
-from whatsapp.models.list_message import ListMessageBody
-from whatsapp.models.location_message import LocationMessageBody
-from whatsapp.models.multi_product_message import MultiProductMessageBody
-from whatsapp.models.sticker_message import StickerMessageBody
-from whatsapp.models.text_message import TextMessageBody
-from whatsapp.models.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.document_message import DocumentMessageBody
+from infobip_channels.whatsapp.models.image_message import ImageMessageBody
+from infobip_channels.whatsapp.models.list_message import ListMessageBody
+from infobip_channels.whatsapp.models.location_message import LocationMessageBody
+from infobip_channels.whatsapp.models.multi_product_message import (
+    MultiProductMessageBody,
+)
+from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
+from infobip_channels.whatsapp.models.text_message import TextMessageBody
+from infobip_channels.whatsapp.models.video_message import VideoMessageBody
 
 
 class HttpClient:
@@ -159,7 +161,7 @@ class WhatsAppChannel:
         return message if isinstance(message, message_type) else message_type(**message)
 
     def send_text_message(
-        self, message: TextMessageBody
+        self, message: Union[TextMessageBody, Dict]
     ) -> Union[WhatsAppResponse, Any]:
         """Send a text message to a single recipient. Text messages can only be
         successfully delivered, if the recipient has contacted the business within the
@@ -282,8 +284,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ContactMessageBody):
-            message = ContactMessageBody(**message)
+        message = self.validate_message_body(message, ContactMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "contact", message.dict(by_alias=True)
@@ -301,8 +302,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ButtonsMessageBody):
-            message = ButtonsMessageBody(**message)
+        message = self.validate_message_body(message, ButtonsMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/buttons",
@@ -321,8 +321,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ListMessageBody):
-            message = ListMessageBody(**message)
+        message = self.validate_message_body(message, ListMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/list",
@@ -341,8 +340,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, MultiProductMessageBody):
-            message = MultiProductMessageBody(**message)
+        message = self.validate_message_body(message, MultiProductMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/multi-product",

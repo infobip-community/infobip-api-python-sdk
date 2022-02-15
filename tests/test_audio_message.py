@@ -1,8 +1,8 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
+from infobip_channels.whatsapp.models.core import MessageBody
 from tests.conftest import AudioMessageBodyFactory, get_random_string
-from whatsapp.models.core import MessageBody
 
 
 def test_audio_message_body__is_an_instance_of_message_body():
