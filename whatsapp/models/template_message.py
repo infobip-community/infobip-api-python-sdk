@@ -55,17 +55,7 @@ class HeaderText(CamelCaseModel):
 
 
 class Placeholders(CamelCaseModel):
-    placeholders = List[str]
-
-    # class Config:
-    #     arbitrary_types_allowed = True
-
-    # @validator("placeholders")
-    # def validate_string_values(cls, value):
-    #     for s in value:
-    #         res = isinstance(s, str)
-    #         if not res:
-    #             raise ValueError("Placeholder value is not str")
+    placeholders: List[str]
 
 
 class TemplateData(CamelCaseModel):
