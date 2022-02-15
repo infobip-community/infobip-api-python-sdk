@@ -9,6 +9,7 @@ from tests.conftest import (
     ListMessageBodyFactory,
     LocationMessageBodyFactory,
     StickerMessageBodyFactory,
+    TemplateMessageBodyFactory,
     TextMessageBodyFactory,
     VideoMessageBodyFactory,
     get_response_error,
@@ -69,6 +70,11 @@ MESSAGE_TYPE_ATTRIBUTES = {
         "message_body_factory": ListMessageBodyFactory,
         "endpoint": "/whatsapp/1/message/interactive/list",
         "method_name": "send_interactive_list_message",
+    },
+    "template": {
+        "message_body_factory": TemplateMessageBodyFactory,
+        "endpoint": "/whatsapp/1/message/template",
+        "method_name": "send_template_message",
     },
 }
 

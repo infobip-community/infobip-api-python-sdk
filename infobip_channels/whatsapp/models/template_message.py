@@ -3,7 +3,11 @@ from typing import List, Literal, Optional, Union
 
 from pydantic import AnyHttpUrl, Field, confloat, constr, validator
 
-from whatsapp.models.core import CamelCaseModel, MessageBody, ValidateUrlLengthMixin
+from infobip_channels.whatsapp.models.core import (
+    CamelCaseModel,
+    MessageBody,
+    ValidateUrlLengthMixin,
+)
 
 
 class ButtonTypeEnum(str, Enum):

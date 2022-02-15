@@ -7,17 +7,18 @@ import requests
 from pydantic_factories import ModelFactory
 from werkzeug.wrappers.response import Response
 
-from whatsapp.models.audio_message import AudioMessageBody
-from whatsapp.models.buttons_message import ButtonsMessageBody
-from whatsapp.models.contact_message import ContactMessageBody
-from whatsapp.models.core import Authentication
-from whatsapp.models.document_message import DocumentMessageBody
-from whatsapp.models.image_message import ImageMessageBody
-from whatsapp.models.list_message import ListMessageBody
-from whatsapp.models.location_message import LocationMessageBody
-from whatsapp.models.sticker_message import StickerMessageBody
-from whatsapp.models.text_message import TextMessageBody
-from whatsapp.models.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.audio_message import AudioMessageBody
+from infobip_channels.whatsapp.models.buttons_message import ButtonsMessageBody
+from infobip_channels.whatsapp.models.contact_message import ContactMessageBody
+from infobip_channels.whatsapp.models.core import Authentication
+from infobip_channels.whatsapp.models.document_message import DocumentMessageBody
+from infobip_channels.whatsapp.models.image_message import ImageMessageBody
+from infobip_channels.whatsapp.models.list_message import ListMessageBody
+from infobip_channels.whatsapp.models.location_message import LocationMessageBody
+from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
+from infobip_channels.whatsapp.models.template_message import TemplateMassageBody
+from infobip_channels.whatsapp.models.text_message import TextMessageBody
+from infobip_channels.whatsapp.models.video_message import VideoMessageBody
 
 
 def get_random_string(length: int) -> str:
@@ -66,6 +67,10 @@ class ButtonsMessageBodyFactory(ModelFactory):
 
 class ListMessageBodyFactory(ModelFactory):
     __model__ = ListMessageBody
+
+
+class TemplateMessageBodyFactory(ModelFactory):
+    __model__ = TemplateMassageBody
 
 
 @pytest.fixture
