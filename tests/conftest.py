@@ -18,6 +18,7 @@ from infobip_channels.whatsapp.models.location_message import LocationMessageBod
 from infobip_channels.whatsapp.models.multi_product_message import (
     MultiProductMessageBody,
 )
+from infobip_channels.whatsapp.models.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
 from infobip_channels.whatsapp.models.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.video_message import VideoMessageBody
@@ -69,6 +70,10 @@ class ButtonsMessageBodyFactory(ModelFactory):
 
 class ListMessageBodyFactory(ModelFactory):
     __model__ = ListMessageBody
+
+
+class ProductMessageBodyFactory(ModelFactory):
+    __model__ = ProductMessageBody
 
 
 class MultiProductMessageBodyFactory(ModelFactory):
