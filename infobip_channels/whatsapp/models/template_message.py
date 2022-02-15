@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import List, Literal, Optional, Union
 
 from pydantic import AnyHttpUrl, Field, confloat, constr, validator
@@ -10,13 +9,13 @@ from infobip_channels.whatsapp.models.core import (
 )
 
 
-class ButtonTypeEnum(str, Enum):
-    QUICK_REPLY = "QUICK_REPLY"
-    URL = "URL"
+class ButtonQuickReply(CamelCaseModel):
+    type: Literal["QUICK_REPLY"]
+    parameter: constr(min_length=1, max_length=240)
 
 
-class Buttons(CamelCaseModel):
-    type: ButtonTypeEnum
+class ButtonUrl(CamelCaseModel):
+    type: Literal["URL"]
     parameter: str
 
 
@@ -67,13 +66,13 @@ class TemplateData(CamelCaseModel):
     header: Optional[
         Union[HeaderText, HeaderImage, HeaderDocument, HeaderVideo, HeaderLocation]
     ] = None
-    buttons: Optional[Buttons] = None
+    buttons: Optional[Union[ButtonUrl, ButtonQuickReply]] = None
 
 
 class Content(CamelCaseModel):
     template_name: constr(min_length=1, max_length=512)
     template_data: TemplateData
-    language: str
+    language: constr(min_length=1)
 
 
 class SmsFailover(CamelCaseModel):
