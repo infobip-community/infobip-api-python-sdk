@@ -18,6 +18,7 @@ from infobip_channels.whatsapp.models.document_message import DocumentMessageBod
 from infobip_channels.whatsapp.models.image_message import ImageMessageBody
 from infobip_channels.whatsapp.models.list_message import ListMessageBody
 from infobip_channels.whatsapp.models.location_message import LocationMessageBody
+from infobip_channels.whatsapp.models.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
 from infobip_channels.whatsapp.models.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.video_message import VideoMessageBody
@@ -281,8 +282,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ContactMessageBody):
-            message = ContactMessageBody(**message)
+        message = self.validate_message_body(message, ContactMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "contact", message.dict(by_alias=True)
@@ -300,8 +300,7 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ButtonsMessageBody):
-            message = ButtonsMessageBody(**message)
+        message = self.validate_message_body(message, ButtonsMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/buttons",
@@ -320,10 +319,28 @@ class WhatsAppChannel:
         :return:
         """
 
-        if not isinstance(message, ListMessageBody):
-            message = ListMessageBody(**message)
+        message = self.validate_message_body(message, ListMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/list",
+            message.dict(by_alias=True),
+        )
+
+    def send_interactive_product_message(
+        self, message: Union[ProductMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Send an interactive product message to a single recipient. Interactive
+        product messages can only be successfully delivered, if the recipient has
+        contacted the business within the last 24 hours, otherwise template message
+        should be used.
+
+        :param message:
+        :return:
+        """
+
+        message = self.validate_message_body(message, ProductMessageBody)
+
+        return self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "interactive/product",
             message.dict(by_alias=True),
         )
