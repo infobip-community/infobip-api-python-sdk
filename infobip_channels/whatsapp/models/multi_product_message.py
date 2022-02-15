@@ -12,7 +12,7 @@ class HeaderTypeEnum(str, Enum):
 
 class Section(CamelCaseModel):
     title: Optional[constr(max_length=24)]
-    product_retailer_ids: List[str]
+    product_retailer_ids: conlist(str, min_items=1)
 
 
 class Footer(CamelCaseModel):

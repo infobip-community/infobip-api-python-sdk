@@ -215,7 +215,7 @@ def test_when_action_sections_is_invalid__validation_error_is_raised(sections):
         )
 
 
-@pytest.mark.parametrize("product_retailer_id", [None, "", {}])
+@pytest.mark.parametrize("product_retailer_id", [None, "", {}, []])
 def test_when_action_product_retailer_id_is_invalid__validation_error_is_raised(
     product_retailer_id,
 ):
