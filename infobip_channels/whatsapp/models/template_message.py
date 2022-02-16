@@ -11,7 +11,7 @@ from infobip_channels.whatsapp.models.core import (
 
 class ButtonQuickReply(CamelCaseModel):
     type: Literal["QUICK_REPLY"]
-    parameter: constr(min_length=1, max_length=240)
+    parameter: constr(min_length=1, max_length=128)
 
 
 class ButtonUrl(CamelCaseModel):
@@ -20,6 +20,7 @@ class ButtonUrl(CamelCaseModel):
 
 
 class HeaderLocation(CamelCaseModel):
+    type: Literal["LOCATION"]
     latitude: confloat(ge=-90, le=90)
     longitude: confloat(ge=-180, le=180)
 
@@ -27,7 +28,7 @@ class HeaderLocation(CamelCaseModel):
 class HeaderDocument(ValidateUrlLengthMixin, CamelCaseModel):
     type: Literal["DOCUMENT"]
     media_url: AnyHttpUrl
-    filename: constr(max_length=240)
+    filename: constr(min_length=1, max_length=240)
 
     @validator("media_url", pre=True)
     def validate_url_length(cls, value: str) -> str:
@@ -87,4 +88,4 @@ class Message(MessageBody):
 
 class TemplateMassageBody(CamelCaseModel):
     messages: List[Message]
-    bulkId: Optional[constr(max_length=100)]
+    bulkId: Optional[constr(max_length=100)] = None

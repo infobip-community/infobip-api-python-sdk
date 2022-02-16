@@ -1,8 +1,14 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
+from pydantic_factories import ModelFactory
 
 from infobip_channels.whatsapp.models.core import MessageBody
-from tests.conftest import MessageBodyFactory, get_random_string
+from infobip_channels.whatsapp.models.template_message import Message
+from tests.conftest import get_random_string
+
+
+class MessageBodyFactory(ModelFactory):
+    __model__ = Message
 
 
 def test_template_message_body__is_an_instance_of_message_body():

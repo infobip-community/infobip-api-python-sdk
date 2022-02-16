@@ -338,8 +338,7 @@ class WhatsAppChannel:
         :return: Received response
         """
 
-        if not isinstance(message, TemplateMassageBody):
-            message = TemplateMassageBody(**message)
+        message = self.validate_message_body(message, TemplateMassageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "template",
