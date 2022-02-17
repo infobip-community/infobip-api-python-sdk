@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import conlist, constr
 
@@ -26,8 +26,8 @@ class Row(CamelCaseModel):
 
 
 class Section(CamelCaseModel):
-    title: constr(max_length=24) = None
-    rows: List[Row]
+    title: Optional[constr(max_length=24)] = None
+    rows: conlist(Row, min_items=1)
 
 
 class Action(CamelCaseModel):
