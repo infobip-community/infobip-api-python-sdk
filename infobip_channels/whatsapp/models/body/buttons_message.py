@@ -8,7 +8,7 @@ except ImportError:
 
 from pydantic import AnyHttpUrl, conlist, constr, validator
 
-from infobip_channels.whatsapp.models.core import (
+from infobip_channels.whatsapp.models.body.core import (
     CamelCaseModel,
     MessageBody,
     ValidateUrlLengthMixin,

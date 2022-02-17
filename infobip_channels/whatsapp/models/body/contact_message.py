@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from pydantic import validator
 
-from infobip_channels.whatsapp.models.core import CamelCaseModel, MessageBody
+from infobip_channels.whatsapp.models.body.core import CamelCaseModel, MessageBody
 
 
 class AddressTypeEnum(str, Enum):

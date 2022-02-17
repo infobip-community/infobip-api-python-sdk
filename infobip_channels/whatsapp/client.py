@@ -3,10 +3,10 @@ from typing import Any, Dict, Type, Union
 import requests
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.whatsapp.models.audio_message import AudioMessageBody
-from infobip_channels.whatsapp.models.buttons_message import ButtonsMessageBody
-from infobip_channels.whatsapp.models.contact_message import ContactMessageBody
-from infobip_channels.whatsapp.models.core import (
+from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
+from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
+from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
+from infobip_channels.whatsapp.models.body.core import (
     Authentication,
     MessageBody,
     RequestHeaders,
@@ -14,17 +14,21 @@ from infobip_channels.whatsapp.models.core import (
     WhatsAppResponseError,
     WhatsAppResponseOK,
 )
-from infobip_channels.whatsapp.models.document_message import DocumentMessageBody
-from infobip_channels.whatsapp.models.image_message import ImageMessageBody
-from infobip_channels.whatsapp.models.list_message import ListMessageBody
-from infobip_channels.whatsapp.models.location_message import LocationMessageBody
-from infobip_channels.whatsapp.models.multi_product_message import (
+from infobip_channels.whatsapp.models.body.document_message import DocumentMessageBody
+from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody
+from infobip_channels.whatsapp.models.body.list_message import ListMessageBody
+from infobip_channels.whatsapp.models.body.location_message import LocationMessageBody
+from infobip_channels.whatsapp.models.body.multi_product_message import (
     MultiProductMessageBody,
 )
-from infobip_channels.whatsapp.models.product_message import ProductMessageBody
-from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
-from infobip_channels.whatsapp.models.text_message import TextMessageBody
-from infobip_channels.whatsapp.models.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.body.product_message import ProductMessageBody
+from infobip_channels.whatsapp.models.body.sticker_message import StickerMessageBody
+from infobip_channels.whatsapp.models.body.templates import Sender
+from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
+from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.response.get_templates import (
+    WhatsAppTemplatesResponseOK,
+)
 
 
 class HttpClient:
@@ -50,10 +54,22 @@ class HttpClient:
 
         return self._construct_response(response)
 
+    def get(self, endpoint: str) -> Union[WhatsAppResponse, requests.Response]:
+        """Send an HTTP post request to base_url + endpoint.
+
+        :param endpoint: Which endpoint to hit
+        :return: Received response
+        """
+        url = self.auth.base_url + endpoint
+        response = requests.get(url=url, headers=self.headers.dict(by_alias=True))
+
+        return self._construct_response(response)
+
     def _construct_response(
         self, response: requests.Response
     ) -> Union[WhatsAppResponse, requests.Response]:
         try:
+
             response_class = self._get_response_class(response)
             return response_class(
                 **{
@@ -68,7 +84,15 @@ class HttpClient:
 
     @staticmethod
     def _get_response_class(response):
-        if 200 <= response.status_code < 300:
+        if 200 <= response.status_code < 300 and response.text.startswith('{"to":'):
+            return WhatsAppResponseOK
+
+        elif 200 <= response.status_code < 300 and response.text.startswith(
+            '{"templates":'
+        ):
+            return WhatsAppTemplatesResponseOK
+
+        elif 200 <= response.status_code < 300 and response.text.startswith('{"id":'):
             return WhatsAppResponseOK
 
         elif 400 <= response.status_code < 500:
@@ -81,6 +105,7 @@ class WhatsAppChannel:
     """Client used for interaction with the Infobip's WhatsApp API."""
 
     SEND_MESSAGE_URL_TEMPLATE = "/whatsapp/1/message/"
+    MANAGE_URL_TEMPLATE = "/whatsapp/1/senders/"
 
     def __init__(self, client: Union[HttpClient, Any]) -> None:
         self._client = client
@@ -362,3 +387,15 @@ class WhatsAppChannel:
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/multi-product",
             message.dict(by_alias=True),
         )
+
+    def get_templates(
+        self, parameter: Union[Sender, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Get all the templates and their statuses for a given sender.
+
+        :param parameter: Registered WhatsApp sender number.Must be in international
+        format
+        :return: Received response
+        """
+        sender = parameter.get("sender")
+        return self._client.get(self.MANAGE_URL_TEMPLATE + sender + "/templates")
