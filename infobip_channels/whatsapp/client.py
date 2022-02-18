@@ -23,9 +23,9 @@ from infobip_channels.whatsapp.models.body.multi_product_message import (
 )
 from infobip_channels.whatsapp.models.body.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.body.sticker_message import StickerMessageBody
-from infobip_channels.whatsapp.models.body.templates import Sender
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.query.get_templates import Sender
 from infobip_channels.whatsapp.models.response.get_templates import (
     WhatsAppTemplatesResponseOK,
 )
@@ -185,6 +185,26 @@ class WhatsAppChannel:
         :return: Class instance corresponding to the provided message body type
         """
         return message if isinstance(message, message_type) else message_type(**message)
+
+    @staticmethod
+    def validate_query_string(
+        parameter: Union[Sender, Dict], parameter_type: Type[Sender]
+    ) -> str:
+        """
+        Validate query string by trying to instantiate the provided class and
+        extract valid query string
+
+        :param parameter: Query string to validate
+        :param parameter_type: Qype of query string
+        :return: Returned query value
+        """
+        try:
+            parameter = parameter_type(**parameter)
+            sender = parameter.sender
+            return sender
+
+        except (ValueError, ValidationError):
+            raise ValueError("Wrong query parameter type")
 
     def send_text_message(
         self, message: Union[TextMessageBody, Dict]
@@ -397,5 +417,5 @@ class WhatsAppChannel:
         format
         :return: Received response
         """
-        sender = parameter.get("sender")
+        sender = self.validate_query_string(parameter, Sender)
         return self._client.get(self.MANAGE_URL_TEMPLATE + sender + "/templates")
