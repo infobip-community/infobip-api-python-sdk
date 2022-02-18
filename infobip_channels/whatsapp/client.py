@@ -14,6 +14,7 @@ from infobip_channels.whatsapp.models.body.core import (
     WhatsAppResponseError,
     WhatsAppResponseOK,
 )
+from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
 from infobip_channels.whatsapp.models.body.document_message import DocumentMessageBody
 from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody
 from infobip_channels.whatsapp.models.body.list_message import ListMessageBody
@@ -26,6 +27,9 @@ from infobip_channels.whatsapp.models.body.sticker_message import StickerMessage
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
 from infobip_channels.whatsapp.models.query.get_templates import Sender
+from infobip_channels.whatsapp.models.response.create_template import (
+    WhatsAppTemplateResponseOK,
+)
 from infobip_channels.whatsapp.models.response.get_templates import (
     WhatsAppTemplatesResponseOK,
 )
@@ -68,19 +72,19 @@ class HttpClient:
     def _construct_response(
         self, response: requests.Response
     ) -> Union[WhatsAppResponse, requests.Response]:
-        try:
+        # try:
 
-            response_class = self._get_response_class(response)
-            return response_class(
-                **{
-                    "status_code": response.status_code,
-                    "raw_response": response,
-                    **response.json(),
-                }
-            )
+        response_class = self._get_response_class(response)
+        return response_class(
+            **{
+                "status_code": response.status_code,
+                "raw_response": response,
+                **response.json(),
+            }
+        )
 
-        except (ValueError, ValidationError):
-            return response
+        # except (ValueError, ValidationError):
+        #     return response
 
     @staticmethod
     def _get_response_class(response):
@@ -93,7 +97,7 @@ class HttpClient:
             return WhatsAppTemplatesResponseOK
 
         elif 200 <= response.status_code < 300 and response.text.startswith('{"id":'):
-            return WhatsAppResponseOK
+            return WhatsAppTemplateResponseOK
 
         elif 400 <= response.status_code < 500:
             return WhatsAppResponseError
@@ -419,3 +423,25 @@ class WhatsAppChannel:
         """
         sender = self.validate_query_string(parameter, Sender)
         return self._client.get(self.MANAGE_URL_TEMPLATE + sender + "/templates")
+
+    def create_template(
+        self, parameter: Union[Sender, Dict], message: Union[CreateTemplate, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Create WhatsApp template. Created template will be submitted for
+        WhatsApp's review and approval. Once approved, template can be sent to
+        end-users. Refer to template guidelines for additional info.
+
+        :param parameter: Registered WhatsApp sender number.Must be in international
+        format
+        :param message: Body of the template to send
+        :return: Received response
+        """
+        if not isinstance(message, CreateTemplate):
+            message = CreateTemplate(**message)
+
+        sender = self.validate_query_string(parameter, Sender)
+
+        return self._client.post(
+            self.MANAGE_URL_TEMPLATE + sender + "/templates",
+            message.dict(by_alias=True),
+        )
