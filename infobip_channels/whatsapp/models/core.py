@@ -16,7 +16,7 @@ class CamelCaseModel(BaseModel):
         allow_population_by_field_name = True
 
 
-class ValidateUrlLengthMixin:
+class UrlLengthValidatorMixin:
     MAX_URL_LENGTH = 2048
 
     @classmethod
@@ -30,7 +30,7 @@ class ValidateUrlLengthMixin:
         return value
 
 
-class MessageBody(ValidateUrlLengthMixin, CamelCaseModel):
+class MessageBody(UrlLengthValidatorMixin, CamelCaseModel):
     from_number: constr(min_length=1, max_length=24) = Field(alias="from")
     to: constr(min_length=1, max_length=24)
     message_id: Optional[constr(max_length=50)] = None
