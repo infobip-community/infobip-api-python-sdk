@@ -6,9 +6,12 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-from pydantic import AnyHttpUrl, conlist, constr
+from pydantic import AnyHttpUrl, conlist, constr, validator
 
-from infobip_channels.whatsapp.models.body.core import CamelCaseModel
+from infobip_channels.whatsapp.models.body.core import (
+    CamelCaseModel,
+    ValidateUrlLengthMixin,
+)
 
 
 class LanguageEnum(str, Enum):
@@ -123,10 +126,14 @@ class ButtonPhoneNumber(CamelCaseModel):
     phone_number: str
 
 
-class ButtonUrl(CamelCaseModel):
+class ButtonUrl(ValidateUrlLengthMixin, CamelCaseModel):
     type: Literal["URL"]
     text: constr(max_length=200)
     url: AnyHttpUrl
+
+    @validator("url", pre=True)
+    def validate_url_length(cls, value: str) -> str:
+        return super().validate_url_length(value)
 
 
 class ButtonQuickReply(CamelCaseModel):

@@ -11,6 +11,7 @@ from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
 from infobip_channels.whatsapp.models.body.core import Authentication
+from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
 from infobip_channels.whatsapp.models.body.document_message import DocumentMessageBody
 from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody
 from infobip_channels.whatsapp.models.body.list_message import ListMessageBody
@@ -22,6 +23,7 @@ from infobip_channels.whatsapp.models.body.product_message import ProductMessage
 from infobip_channels.whatsapp.models.body.sticker_message import StickerMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.query.get_templates import Sender
 
 
 def get_random_string(length: int) -> str:
@@ -105,6 +107,14 @@ class MultiProductMessageBodyFactory(ModelFactory):
                 },
             }
         )
+
+
+class CreateTemplateBodyFactory(ModelFactory):
+    __model__ = CreateTemplate
+
+
+class SenderBodyFactory(ModelFactory):
+    __model__ = Sender
 
 
 @pytest.fixture

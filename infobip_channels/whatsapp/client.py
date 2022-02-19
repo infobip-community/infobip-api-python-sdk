@@ -72,19 +72,19 @@ class HttpClient:
     def _construct_response(
         self, response: requests.Response
     ) -> Union[WhatsAppResponse, requests.Response]:
-        # try:
+        try:
 
-        response_class = self._get_response_class(response)
-        return response_class(
-            **{
-                "status_code": response.status_code,
-                "raw_response": response,
-                **response.json(),
-            }
-        )
+            response_class = self._get_response_class(response)
+            return response_class(
+                **{
+                    "status_code": response.status_code,
+                    "raw_response": response,
+                    **response.json(),
+                }
+            )
 
-        # except (ValueError, ValidationError):
-        #     return response
+        except (ValueError, ValidationError):
+            return response
 
     @staticmethod
     def _get_response_class(response):
@@ -199,7 +199,7 @@ class WhatsAppChannel:
         extract valid query string
 
         :param parameter: Query string to validate
-        :param parameter_type: Qype of query string
+        :param parameter_type: Type of query string
         :return: Returned query value
         """
         try:
