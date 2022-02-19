@@ -154,11 +154,8 @@ def get_response_ok_invalid_content():
     }
 
 
-def get_response_ok():
-    def _get_response_ok(status_code, content):
-        return Response(json.dumps(content), status=status_code)
-
-    return _get_response_ok
+def get_response_object(status_code, content):
+    return Response(json.dumps(content), status=status_code)
 
 
 def get_response_error_content():
@@ -182,13 +179,6 @@ def get_response_error_invalid_content():
     return {
         "error": {"field_one": "error_one", "field_two": "error_two"},
     }
-
-
-def get_response_error():
-    def _get_response_error(status_code, content):
-        return Response(json.dumps(content), status=status_code)
-
-    return _get_response_error
 
 
 @pytest.fixture
