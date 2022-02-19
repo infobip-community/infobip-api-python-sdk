@@ -155,6 +155,16 @@ def test_when_action_title_is_invalid__validation_error_is_raised(title):
             {"title": "Title 1", "rows": [{"id": "myId", "title": "T"}]},
             {"title": "Title 2", "rows": [{"id": "myId", "title": "T"}]},
         ],
+        [
+            {
+                "title": "Title 1",
+                "rows": [{"id": f"myId{i}", "title": f"T{i}"} for i in range(7)],
+            },
+            {
+                "title": "Title 2",
+                "rows": [{"id": f"myId{i}", "title": f"T{i}"} for i in range(7, 11)],
+            },
+        ],
     ],
 )
 def test_when_action_sections_is_invalid__validation_error_is_raised(sections):

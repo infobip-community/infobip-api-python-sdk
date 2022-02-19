@@ -28,7 +28,8 @@ class Action(SectionTitleValidatorMixin, CamelCaseModel):
 
     @validator("sections")
     def validate_section_titles(cls, sections: List[Section]) -> List[SectionBase]:
-        return super().validate_section_titles(sections)
+        super().validate_section_titles(sections)
+        return sections
 
 
 class Header(CamelCaseModel):

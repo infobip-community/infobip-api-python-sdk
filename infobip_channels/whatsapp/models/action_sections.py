@@ -11,7 +11,7 @@ class SectionBase(CamelCaseModel):
 
 class SectionTitleValidatorMixin:
     @classmethod
-    def validate_section_titles(cls, sections: List[SectionBase]) -> List[SectionBase]:
+    def validate_section_titles(cls, sections: List[SectionBase]) -> None:
         if len(sections) > 1:
             for section in sections:
                 if not section.title:
@@ -19,5 +19,3 @@ class SectionTitleValidatorMixin:
                         "When there is more than one section, "
                         "each one of them needs to have a title"
                     )
-
-        return sections

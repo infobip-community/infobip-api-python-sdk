@@ -9,6 +9,8 @@ from infobip_channels.whatsapp.models.action_sections import (
 )
 from infobip_channels.whatsapp.models.core import CamelCaseModel, MessageBody
 
+MESSAGE_ROWS_MAXIMUM_NUMBER = 10
+
 
 class HeaderTypeEnum(str, Enum):
     TEXT = "TEXT"
@@ -39,9 +41,15 @@ class Action(SectionTitleValidatorMixin, CamelCaseModel):
     sections: conlist(Section, min_items=1, max_items=10)
 
     @validator("sections")
-    def validate_section_titles(cls, sections: List[Section]) -> List[SectionBase]:
+    def validate_sections(cls, sections: List[Section]) -> List[SectionBase]:
         super().validate_section_titles(sections)
+        cls._validate_section_rows(sections)
+        cls._validate_number_of_rows(sections)
 
+        return sections
+
+    @classmethod
+    def _validate_section_rows(cls, sections: List[Section]) -> None:
         row_ids = []
         for section in sections:
             for row in section.rows:
@@ -49,7 +57,16 @@ class Action(SectionTitleValidatorMixin, CamelCaseModel):
                     raise ValueError("Row ids must be unique across all sections")
                 row_ids.append(row.id)
 
-        return sections
+    @classmethod
+    def _validate_number_of_rows(cls, sections: List[Section]) -> None:
+        number_of_rows = 0
+        for section in sections:
+            number_of_rows += len(section.rows)
+
+        if number_of_rows > MESSAGE_ROWS_MAXIMUM_NUMBER:
+            raise ValueError(
+                f"Message must have a maximum of {MESSAGE_ROWS_MAXIMUM_NUMBER} rows"
+            )
 
 
 class Body(CamelCaseModel):
