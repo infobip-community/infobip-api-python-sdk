@@ -2,6 +2,7 @@ import pytest
 from pydantic.error_wrappers import ValidationError
 
 from infobip_channels.whatsapp.models.core import MessageBody
+from infobip_channels.whatsapp.models.list_message import ListMessageBody
 from tests.conftest import ListMessageBodyFactory, get_random_string
 
 
@@ -339,3 +340,36 @@ def test_when_footer_text_is_invalid__validation_error_is_raised(text):
                 }
             }
         )
+
+
+def test_when_input_data_is_valid__validation_error_is_not_raised():
+    try:
+        ListMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "content": {
+                    "body": {"text": "Body text"},
+                    "action": {
+                        "title": "Action title",
+                        "sections": [
+                            {
+                                "title": "section title",
+                                "rows": [
+                                    {
+                                        "id": "1",
+                                        "title": "row title",
+                                        "description": "row description",
+                                    }
+                                ],
+                            }
+                        ],
+                    },
+                    "header": {"type": "TEXT", "text": "header text"},
+                    "footer": {"text": "footer text"},
+                },
+            }
+        )
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
