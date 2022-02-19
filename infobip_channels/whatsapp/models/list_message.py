@@ -5,7 +5,7 @@ from pydantic import conlist, constr, validator
 
 from infobip_channels.whatsapp.models.action_sections import (
     SectionBase,
-    SectionValidatorMixin,
+    SectionTitleValidatorMixin,
 )
 from infobip_channels.whatsapp.models.core import CamelCaseModel, MessageBody
 
@@ -34,13 +34,22 @@ class Section(SectionBase):
     rows: conlist(Row, min_items=1)
 
 
-class Action(SectionValidatorMixin, CamelCaseModel):
+class Action(SectionTitleValidatorMixin, CamelCaseModel):
     title: constr(min_length=1, max_length=20)
     sections: conlist(Section, min_items=1, max_items=10)
 
     @validator("sections")
-    def validate_sections(cls, sections: List[Section]) -> List[SectionBase]:
-        return super().validate_sections(sections)
+    def validate_section_titles(cls, sections: List[Section]) -> List[SectionBase]:
+        super().validate_section_titles(sections)
+
+        row_ids = []
+        for section in sections:
+            for row in section.rows:
+                if row.id in row_ids:
+                    raise ValueError("Row ids must be unique across all sections")
+                row_ids.append(row.id)
+
+        return sections
 
 
 class Body(CamelCaseModel):

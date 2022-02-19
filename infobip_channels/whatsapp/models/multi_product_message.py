@@ -5,7 +5,7 @@ from pydantic import conlist, constr, validator
 
 from infobip_channels.whatsapp.models.action_sections import (
     SectionBase,
-    SectionValidatorMixin,
+    SectionTitleValidatorMixin,
 )
 from infobip_channels.whatsapp.models.core import CamelCaseModel, MessageBody
 
@@ -22,13 +22,13 @@ class Footer(CamelCaseModel):
     text: constr(min_length=1, max_length=60)
 
 
-class Action(SectionValidatorMixin, CamelCaseModel):
+class Action(SectionTitleValidatorMixin, CamelCaseModel):
     catalog_id: str
     sections: conlist(Section, min_items=1, max_items=10)
 
     @validator("sections")
-    def validate_sections(cls, sections: List[Section]) -> List[SectionBase]:
-        return super().validate_sections(sections)
+    def validate_section_titles(cls, sections: List[Section]) -> List[SectionBase]:
+        return super().validate_section_titles(sections)
 
 
 class Header(CamelCaseModel):

@@ -151,6 +151,10 @@ def test_when_action_title_is_invalid__validation_error_is_raised(title):
             {"title": None, "rows": [{"id": "myId", "title": "T"}]},
             {"title": "Title 1", "rows": [{"id": "myId 2", "title": "T"}]},
         ],
+        [
+            {"title": "Title 1", "rows": [{"id": "myId", "title": "T"}]},
+            {"title": "Title 2", "rows": [{"id": "myId", "title": "T"}]},
+        ],
     ],
 )
 def test_when_action_sections_is_invalid__validation_error_is_raised(sections):
@@ -192,7 +196,10 @@ def test_when_sections_title_is_invalid__validation_error_is_raised(sections_tit
         )
 
 
-@pytest.mark.parametrize("rows", [None, "", {}, [], [{}]])
+@pytest.mark.parametrize(
+    "rows",
+    [None, "", {}, [], [{}], [{"id": "12", "title": "T"}, {"id": "12", "title": "T"}]],
+)
 def test_when_sections_rows_is_invalid__validation_error_is_raised(rows):
     with pytest.raises(ValidationError):
         ListMessageBody(
