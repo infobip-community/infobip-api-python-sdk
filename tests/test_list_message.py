@@ -47,20 +47,32 @@ def test_list_message_body__is_an_instance_of_message_body():
 )
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(**{"content": content})
+        ListMessageBody(
+            **{"from": "441134960000", "to": "38598451987", "content": content}
+        )
 
 
 @pytest.mark.parametrize("body", [None, "", {}])
 def test_when_body_is_invalid__validation_error_is_raised(body, valid_action):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(**{"content": {"body": body, **valid_action}})
+        ListMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "content": {"body": body, **valid_action},
+            }
+        )
 
 
 @pytest.mark.parametrize("text", [None, "", {}, get_random_string(1025)])
 def test_when_body_text_is_invalid__validation_error_is_raised(text, valid_action):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
-            **{"content": {"body": {"text": text}, **valid_action}}
+        ListMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "content": {"body": {"text": text}, **valid_action},
+            }
         )
 
 
@@ -83,18 +95,24 @@ def test_when_body_text_is_invalid__validation_error_is_raised(text, valid_actio
 )
 def test_when_action_is_invalid__validation_error_is_raised(action):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
-            **{"content": {"body": {"text": "test"}, "action": action}}
+        ListMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "content": {"body": {"text": "test"}, "action": action},
+            }
         )
 
 
 @pytest.mark.parametrize("title", [None, "", {}, get_random_string(21)])
 def test_when_action_title_is_invalid__validation_error_is_raised(title):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
-                    "body": {"text": "Test"},
+                    "body": {"text": "test"},
                     "action": {
                         "title": title,
                         "sections": [
@@ -106,7 +124,7 @@ def test_when_action_title_is_invalid__validation_error_is_raised(title):
                             }
                         ],
                     },
-                }
+                },
             }
         )
 
@@ -125,16 +143,26 @@ def test_when_action_title_is_invalid__validation_error_is_raised(title):
             }
             for _ in range(11)
         ],
+        [
+            {"title": "", "rows": [{"id": "myId", "title": "T"}]},
+            {"title": "Title 1", "rows": [{"id": "myId 2", "title": "T"}]},
+        ],
+        [
+            {"title": None, "rows": [{"id": "myId", "title": "T"}]},
+            {"title": "Title 1", "rows": [{"id": "myId 2", "title": "T"}]},
+        ],
     ],
 )
 def test_when_action_sections_is_invalid__validation_error_is_raised(sections):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "body": {"text": "test"},
                     "action": {"title": "TEST", "sections": sections},
-                }
+                },
             }
         )
 
@@ -142,8 +170,10 @@ def test_when_action_sections_is_invalid__validation_error_is_raised(sections):
 @pytest.mark.parametrize("sections_title", [{}, get_random_string(25)])
 def test_when_sections_title_is_invalid__validation_error_is_raised(sections_title):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "body": {"text": "test"},
                     "action": {
@@ -152,15 +182,12 @@ def test_when_sections_title_is_invalid__validation_error_is_raised(sections_tit
                             {
                                 "title": sections_title,
                                 "rows": [
-                                    {
-                                        "id": "1",
-                                        "title": "row title",
-                                    }
+                                    {"id": "myId", "title": "T", "description": "Test"}
                                 ],
                             }
                         ],
                     },
-                }
+                },
             }
         )
 
@@ -168,15 +195,17 @@ def test_when_sections_title_is_invalid__validation_error_is_raised(sections_tit
 @pytest.mark.parametrize("rows", [None, "", {}, [], [{}]])
 def test_when_sections_rows_is_invalid__validation_error_is_raised(rows):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "body": {"text": "test"},
                     "action": {
                         "title": "TEST",
                         "sections": [{"title": "My title", "rows": rows}],
                     },
-                }
+                },
             }
         )
 
@@ -184,8 +213,10 @@ def test_when_sections_rows_is_invalid__validation_error_is_raised(rows):
 @pytest.mark.parametrize("row_id", [None, "", {}, get_random_string(201)])
 def test_when_row_id_is_invalid__validation_error_is_raised(row_id):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "body": {"text": "test"},
                     "action": {
@@ -194,15 +225,12 @@ def test_when_row_id_is_invalid__validation_error_is_raised(row_id):
                             {
                                 "title": "My title",
                                 "rows": [
-                                    {
-                                        "id": row_id,
-                                        "title": "TEST",
-                                    }
+                                    {"id": row_id, "title": "T", "description": "Test"}
                                 ],
                             }
                         ],
                     },
-                }
+                },
             }
         )
 
@@ -210,8 +238,10 @@ def test_when_row_id_is_invalid__validation_error_is_raised(row_id):
 @pytest.mark.parametrize("title", [None, "", {}, get_random_string(25)])
 def test_when_row_title_is_invalid__validation_error_is_raised(title):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "body": {"text": "test"},
                     "action": {
@@ -219,16 +249,11 @@ def test_when_row_title_is_invalid__validation_error_is_raised(title):
                         "sections": [
                             {
                                 "title": "My title",
-                                "rows": [
-                                    {
-                                        "id": "123",
-                                        "title": title,
-                                    }
-                                ],
+                                "rows": [{"id": "123", "title": title}],
                             }
                         ],
                     },
-                }
+                },
             }
         )
 
@@ -236,8 +261,10 @@ def test_when_row_title_is_invalid__validation_error_is_raised(title):
 @pytest.mark.parametrize("description", [{}, get_random_string(73)])
 def test_when_row_description_is_invalid__validation_error_is_raised(description):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "body": {"text": "test"},
                     "action": {
@@ -255,7 +282,7 @@ def test_when_row_description_is_invalid__validation_error_is_raised(description
                             }
                         ],
                     },
-                }
+                },
             }
         )
 
@@ -263,8 +290,10 @@ def test_when_row_description_is_invalid__validation_error_is_raised(description
 @pytest.mark.parametrize("header_type", [None, "", {}, "TEST"])
 def test_when_header_type_is_invalid__validation_error_is_raised(header_type):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "body": {"text": "test"},
                     "action": {
@@ -274,15 +303,15 @@ def test_when_header_type_is_invalid__validation_error_is_raised(header_type):
                                 "title": "My title",
                                 "rows": [
                                     {
-                                        "id": "1",
-                                        "title": "TEST",
+                                        "id": "123",
+                                        "title": "title",
                                     }
                                 ],
                             }
                         ],
                     },
                     "header": {"type": header_type, "text": "TEST"},
-                }
+                },
             }
         )
 
@@ -290,8 +319,10 @@ def test_when_header_type_is_invalid__validation_error_is_raised(header_type):
 @pytest.mark.parametrize("text", [None, "", {}, get_random_string(61)])
 def test_when_header_text_is_invalid__validation_error_is_raised(text):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "body": {"text": "test"},
                     "action": {
@@ -301,15 +332,15 @@ def test_when_header_text_is_invalid__validation_error_is_raised(text):
                                 "title": "My title",
                                 "rows": [
                                     {
-                                        "id": "1",
-                                        "title": "TEST",
+                                        "id": "123",
+                                        "title": "title",
                                     }
                                 ],
                             }
                         ],
                     },
                     "header": {"type": "TEXT", "text": text},
-                }
+                },
             }
         )
 
@@ -317,8 +348,10 @@ def test_when_header_text_is_invalid__validation_error_is_raised(text):
 @pytest.mark.parametrize("text", [None, "", {}, get_random_string(61)])
 def test_when_footer_text_is_invalid__validation_error_is_raised(text):
     with pytest.raises(ValidationError):
-        ListMessageBodyFactory.build(
+        ListMessageBody(
             **{
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "body": {"text": "test"},
                     "action": {
@@ -328,16 +361,16 @@ def test_when_footer_text_is_invalid__validation_error_is_raised(text):
                                 "title": "My title",
                                 "rows": [
                                     {
-                                        "id": "1",
-                                        "title": "TEST",
+                                        "id": "123",
+                                        "title": "title",
                                     }
                                 ],
                             }
                         ],
                     },
-                    "header": {"type": "TEXT", "text": "TEST"},
+                    "header": {"type": "TEXT", "text": "TEXT"},
                     "footer": {"text": text},
-                }
+                },
             }
         )
 

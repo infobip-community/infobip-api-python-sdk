@@ -1,8 +1,12 @@
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
-from pydantic import conlist, constr
+from pydantic import conlist, constr, validator
 
+from infobip_channels.whatsapp.models.action_sections import (
+    SectionBase,
+    SectionValidatorMixin,
+)
 from infobip_channels.whatsapp.models.core import CamelCaseModel, MessageBody
 
 
@@ -25,14 +29,18 @@ class Row(CamelCaseModel):
     description: Optional[constr(max_length=72)] = None
 
 
-class Section(CamelCaseModel):
+class Section(SectionBase):
     title: Optional[constr(max_length=24)] = None
     rows: conlist(Row, min_items=1)
 
 
-class Action(CamelCaseModel):
+class Action(SectionValidatorMixin, CamelCaseModel):
     title: constr(min_length=1, max_length=20)
     sections: conlist(Section, min_items=1, max_items=10)
+
+    @validator("sections")
+    def validate_sections(cls, sections: List[Section]) -> List[SectionBase]:
+        return super().validate_sections(sections)
 
 
 class Body(CamelCaseModel):

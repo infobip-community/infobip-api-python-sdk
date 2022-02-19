@@ -71,6 +71,47 @@ class ButtonsMessageBodyFactory(ModelFactory):
 class ListMessageBodyFactory(ModelFactory):
     __model__ = ListMessageBody
 
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return ListMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "content": {
+                    "body": {"text": "Body text"},
+                    "action": {
+                        "title": "Action title",
+                        "sections": [
+                            {
+                                "title": "section title",
+                                "rows": [
+                                    {
+                                        "id": "1",
+                                        "title": "row title",
+                                        "description": "row description",
+                                    }
+                                ],
+                            },
+                            {
+                                "title": "section title 2",
+                                "rows": [
+                                    {
+                                        "id": "2",
+                                        "title": "row title 2",
+                                        "description": "row description 2",
+                                    }
+                                ],
+                            },
+                        ],
+                    },
+                    "header": {"type": "TEXT", "text": "header text"},
+                    "footer": {"text": "footer text"},
+                },
+            }
+        )
+
 
 class ProductMessageBodyFactory(ModelFactory):
     __model__ = ProductMessageBody
@@ -84,8 +125,8 @@ class MultiProductMessageBodyFactory(ModelFactory):
         """Needed because factory classes don't play well with custom validation."""
         return MultiProductMessageBody(
             **{
-                "from": "1234",
-                "to": "6789",
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "header": {"type": "TEXT", "text": "Some text"},
                     "body": {"text": "Some text"},
