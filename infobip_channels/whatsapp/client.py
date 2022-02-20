@@ -1,6 +1,7 @@
 from typing import Any, Dict, Type, Union
 
 import requests
+from pydantic import AnyHttpUrl
 from pydantic.error_wrappers import ValidationError
 
 from infobip_channels.whatsapp.models.audio_message import AudioMessageBody
@@ -128,7 +129,7 @@ class WhatsAppChannel:
         return cls(client)
 
     @staticmethod
-    def validate_auth_params(base_url: str, api_key: str):
+    def validate_auth_params(base_url: AnyHttpUrl, api_key: str):
         """Validate the provided base_url and api_key. This validation is purely client
         side. If the parameters are validated successfully, an instance of the
         Authentication class is returned which holds the base_url and api_key values.
@@ -151,8 +152,9 @@ class WhatsAppChannel:
 
     @staticmethod
     def validate_message_body(
-        message: Union[MessageBody, Dict], message_type: Type[MessageBody]
-    ) -> MessageBody:
+        message: Union[MessageBody, TemplateMassageBody, Dict],
+        message_type: Type[MessageBody, TemplateMassageBody],
+    ) -> Union[MessageBody, TemplateMassageBody]:
         """Validate the message by trying to instantiate the provided type class.
         If the message passed is already of that type, just return it as is.
 
@@ -337,9 +339,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-
-        if not isinstance(message, TemplateMassageBody):
-            message = TemplateMassageBody(**message)
+        message = self.validate_message_body(message, TemplateMassageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "template",
@@ -357,7 +357,6 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-
         message = self.validate_message_body(message, ProductMessageBody)
 
         return self._client.post(
