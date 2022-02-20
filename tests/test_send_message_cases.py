@@ -13,10 +13,9 @@ from tests.conftest import (
     StickerMessageBodyFactory,
     TextMessageBodyFactory,
     VideoMessageBodyFactory,
-    get_response_error,
     get_response_error_content,
     get_response_error_invalid_content,
-    get_response_ok,
+    get_response_object,
     get_response_ok_content,
     get_response_ok_invalid_content,
 )
@@ -91,10 +90,10 @@ MESSAGE_TYPE_ATTRIBUTES = {
     message_body_type=("message_body_instance", "dict"),
     whatsapp_channel_instantiation_type=("auth_params", "auth_instance"),
     responses=(
-        (200, get_response_ok, get_response_ok_content),
-        (201, get_response_ok, get_response_ok_content),
-        (400, get_response_error, get_response_error_content),
-        (405, get_response_error, get_response_error_content),
+        (200, get_response_object, get_response_ok_content),
+        (201, get_response_object, get_response_ok_content),
+        (400, get_response_object, get_response_error_content),
+        (405, get_response_object, get_response_error_content),
     ),
 )
 def from_auth_params_or_instance_case__valid(
@@ -104,7 +103,7 @@ def from_auth_params_or_instance_case__valid(
         MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["method_name"],
-        responses[1](),
+        responses[1],
         responses[0],
         responses[2](),
         message_body_type,
@@ -118,8 +117,8 @@ def from_auth_params_or_instance_case__valid(
     message_body_type=("message_body_instance", "dict"),
     whatsapp_channel_instantiation_type=("auth_params", "auth_instance"),
     responses=(
-        (201, get_response_ok, get_response_ok_invalid_content),
-        (500, get_response_error, get_response_error_invalid_content),
+        (201, get_response_object, get_response_ok_invalid_content),
+        (500, get_response_object, get_response_error_invalid_content),
     ),
 )
 def from_auth_params_or_instance_case__invalid(
@@ -129,7 +128,7 @@ def from_auth_params_or_instance_case__invalid(
         MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["method_name"],
-        responses[1](),
+        responses[1],
         responses[0],
         responses[2](),
         message_body_type,
@@ -146,7 +145,7 @@ def from_provided_client_case(message_type, message_body_type):
         MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["method_name"],
-        get_response_ok(),
+        get_response_object,
         200,
         get_response_ok_content(),
         message_body_type,

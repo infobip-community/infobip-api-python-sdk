@@ -3,11 +3,11 @@ from pydantic import AnyHttpUrl, validator
 from infobip_channels.whatsapp.models.core import (
     CamelCaseModel,
     MessageBody,
-    ValidateUrlLengthMixin,
+    UrlLengthValidatorMixin,
 )
 
 
-class Content(ValidateUrlLengthMixin, CamelCaseModel):
+class Content(UrlLengthValidatorMixin, CamelCaseModel):
     media_url: AnyHttpUrl
 
     @validator("media_url", pre=True)

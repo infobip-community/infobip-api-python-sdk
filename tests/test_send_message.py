@@ -48,7 +48,7 @@ def send_message_request(
 
 
 @parametrize_with_cases(
-    "endpoint, message_body_factory, method_name, raw_response_fixture, status_code, "
+    "endpoint, message_body_factory, method_name, get_response_object, status_code, "
     "response_content, message_body_type, whatsapp_channel_instantiation_type",
     prefix="from_auth_params_or_instance",
     has_tag="valid_response_content",
@@ -58,7 +58,7 @@ def test_send_message_from_auth_params_or_instance__valid(
     endpoint,
     message_body_factory,
     method_name,
-    raw_response_fixture,
+    get_response_object,
     status_code,
     response_content,
     message_body_type,
@@ -71,7 +71,7 @@ def test_send_message_from_auth_params_or_instance__valid(
         http_server=httpserver,
         endpoint=endpoint,
         headers=get_expected_headers("secret"),
-        response=raw_response_fixture(status_code, response_content),
+        response=get_response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         message_body_type=message_body_type,
         method_name=method_name,
@@ -92,7 +92,7 @@ def test_send_message_from_auth_params_or_instance__valid(
 
 
 @parametrize_with_cases(
-    "endpoint, message_body_factory, method_name, raw_response_fixture, status_code, "
+    "endpoint, message_body_factory, method_name, get_response_object, status_code, "
     "response_content, message_body_type, whatsapp_channel_instantiation_type",
     prefix="from_auth_params_or_instance",
     has_tag="invalid_content_or_unexpected_response",
@@ -102,7 +102,7 @@ def test_send_message_from_auth_params_or_instance__invalid(
     endpoint,
     message_body_factory,
     method_name,
-    raw_response_fixture,
+    get_response_object,
     status_code,
     response_content,
     message_body_type,
@@ -114,7 +114,7 @@ def test_send_message_from_auth_params_or_instance__invalid(
         http_server=httpserver,
         endpoint=endpoint,
         headers=get_expected_headers("secret"),
-        response=raw_response_fixture(status_code, response_content),
+        response=get_response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         message_body_type=message_body_type,
         method_name=method_name,
@@ -127,7 +127,7 @@ def test_send_message_from_auth_params_or_instance__invalid(
 
 
 @parametrize_with_cases(
-    "endpoint, message_body_factory, method_name, raw_response_fixture, status_code, "
+    "endpoint, message_body_factory, method_name, get_response_object, status_code, "
     "response_content, message_body_type",
     prefix="from_provided_client",
 )
@@ -137,7 +137,7 @@ def test_send_message_from_provided_client(
     endpoint,
     message_body_factory,
     method_name,
-    raw_response_fixture,
+    get_response_object,
     status_code,
     response_content,
     message_body_type,
@@ -148,7 +148,7 @@ def test_send_message_from_provided_client(
         http_server=httpserver,
         endpoint=endpoint,
         headers=get_expected_headers("secret"),
-        response=raw_response_fixture(status_code, response_content),
+        response=get_response_object(status_code, response_content),
         instantiation_type="provided_client",
         message_body_type=message_body_type,
         method_name=method_name,
