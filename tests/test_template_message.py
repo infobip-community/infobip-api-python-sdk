@@ -3,16 +3,31 @@ from pydantic.error_wrappers import ValidationError
 from pydantic_factories import ModelFactory
 
 from infobip_channels.whatsapp.models.core import MessageBody
-from infobip_channels.whatsapp.models.template_message import Message
-from tests.conftest import get_random_string
+from infobip_channels.whatsapp.models.template_message import (
+    Message,
+    TemplateMessageBody,
+)
+from tests.conftest import TemplateMessageBodyFactory, get_random_string
 
 
 class MessageBodyFactory(ModelFactory):
     __model__ = Message
 
 
-def test_template_message_body__is_an_instance_of_message_body():
+def test_templates_message_body__is_an_instance_of_message_body():
     assert isinstance(MessageBodyFactory.build(), MessageBody) is True
+
+
+@pytest.mark.parametrize("messages", [None, {}, [{}]])
+def test_when_messages_is_invalid__validation_error_is_raised(messages):
+    with pytest.raises(ValidationError):
+        TemplateMessageBodyFactory.build(**{"messages": messages})
+
+
+@pytest.mark.parametrize("bulk_id", [{}, get_random_string(101)])
+def test_when_bulk_id_is_invalid__validation_error_is_raised(bulk_id):
+    with pytest.raises(ValidationError):
+        TemplateMessageBodyFactory.build(**{"bulkId": bulk_id})
 
 
 @pytest.mark.parametrize(
@@ -489,3 +504,53 @@ def test_when_sms_failover_text_is_invalid__validation_error_is_raised(text):
                 "smsFailover": {"from": "441134960000", "text": text},
             }
         )
+
+
+def test_when_input_data_is_valid__validation_error_is_not_raised():
+    try:
+        TemplateMessageBody(
+            **{
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                        "content": {
+                            "template_name": "template_name",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "IMAGE",
+                                    "media_url": "https://image.com",
+                                },
+                                "buttons": [
+                                    {"type": "QUICK_REPLY", "parameter": "button 1"},
+                                    {"type": "QUICK_REPLY", "parameter": "button 2"},
+                                ],
+                            },
+                            "language": "en",
+                        },
+                        "sms_failover": {"from_number": "38599543122", "text": "help!"},
+                    },
+                    {
+                        "from": "441134960000",
+                        "to": "38598311460",
+                        "content": {
+                            "templateName": "template_name_2",
+                            "templateData": {
+                                "body": {"placeholders": []},
+                                "header": {
+                                    "type": "TEXT",
+                                    "placeholder": "placeholder text",
+                                },
+                                "buttons": [{"type": "URL", "parameter": "url button"}],
+                            },
+                            "language": "en",
+                        },
+                    },
+                ],
+                "bulk_id": "123-456-786",
+            }
+        )
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")

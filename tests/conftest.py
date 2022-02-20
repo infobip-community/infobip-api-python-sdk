@@ -20,7 +20,7 @@ from infobip_channels.whatsapp.models.multi_product_message import (
 )
 from infobip_channels.whatsapp.models.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
-from infobip_channels.whatsapp.models.template_message import TemplateMassageBody
+from infobip_channels.whatsapp.models.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.video_message import VideoMessageBody
 
@@ -115,7 +115,7 @@ class ListMessageBodyFactory(ModelFactory):
 
 
 class TemplateMessageBodyFactory(ModelFactory):
-    __model__ = TemplateMassageBody
+    __model__ = TemplateMessageBody
 
 
 class ProductMessageBodyFactory(ModelFactory):

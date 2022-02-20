@@ -101,6 +101,6 @@ class Message(MessageBody):
     sms_failover: Optional[SmsFailover] = None
 
 
-class TemplateMassageBody(CamelCaseModel):
+class TemplateMessageBody(CamelCaseModel):
     messages: List[Message]
-    bulkId: Optional[constr(max_length=100)] = None
+    bulk_id: Optional[constr(max_length=100)] = None

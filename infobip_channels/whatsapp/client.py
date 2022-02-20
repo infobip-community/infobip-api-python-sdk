@@ -24,7 +24,7 @@ from infobip_channels.whatsapp.models.multi_product_message import (
 )
 from infobip_channels.whatsapp.models.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
-from infobip_channels.whatsapp.models.template_message import TemplateMassageBody
+from infobip_channels.whatsapp.models.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.video_message import VideoMessageBody
 
@@ -152,9 +152,9 @@ class WhatsAppChannel:
 
     @staticmethod
     def validate_message_body(
-        message: Union[MessageBody, TemplateMassageBody, Dict],
-        message_type: Union[Type[MessageBody], Type[TemplateMassageBody]],
-    ) -> Union[MessageBody, TemplateMassageBody]:
+        message: Union[MessageBody, TemplateMessageBody, Dict],
+        message_type: Union[Type[MessageBody], Type[TemplateMessageBody]],
+    ) -> Union[MessageBody, TemplateMessageBody]:
         """Validate the message by trying to instantiate the provided type class.
         If the message passed is already of that type, just return it as is.
 
@@ -330,7 +330,7 @@ class WhatsAppChannel:
         )
 
     def send_template_message(
-        self, message: Union[TemplateMassageBody, Dict]
+        self, message: Union[TemplateMessageBody, Dict]
     ) -> Union[WhatsAppResponse, Any]:
         """Send a single or multiple template messages to a one or more recipients.
         Template messages can be sent and delivered at anytime. Each template sent
@@ -339,7 +339,7 @@ class WhatsAppChannel:
         :param message: Body of the message to send
         :return: Received response
         """
-        message = self.validate_message_body(message, TemplateMassageBody)
+        message = self.validate_message_body(message, TemplateMessageBody)
 
         return self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "template",
