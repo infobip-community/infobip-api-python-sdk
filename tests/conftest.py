@@ -72,6 +72,47 @@ class ButtonsMessageBodyFactory(ModelFactory):
 class ListMessageBodyFactory(ModelFactory):
     __model__ = ListMessageBody
 
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return ListMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "content": {
+                    "body": {"text": "Body text"},
+                    "action": {
+                        "title": "Action title",
+                        "sections": [
+                            {
+                                "title": "section title",
+                                "rows": [
+                                    {
+                                        "id": "1",
+                                        "title": "row title",
+                                        "description": "row description",
+                                    }
+                                ],
+                            },
+                            {
+                                "title": "section title 2",
+                                "rows": [
+                                    {
+                                        "id": "2",
+                                        "title": "row title 2",
+                                        "description": "row description 2",
+                                    }
+                                ],
+                            },
+                        ],
+                    },
+                    "header": {"type": "TEXT", "text": "header text"},
+                    "footer": {"text": "footer text"},
+                },
+            }
+        )
+
 
 class TemplateMessageBodyFactory(ModelFactory):
     __model__ = TemplateMassageBody
@@ -89,8 +130,8 @@ class MultiProductMessageBodyFactory(ModelFactory):
         """Needed because factory classes don't play well with custom validation."""
         return MultiProductMessageBody(
             **{
-                "from": "1234",
-                "to": "6789",
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "header": {"type": "TEXT", "text": "Some text"},
                     "body": {"text": "Some text"},
@@ -159,11 +200,8 @@ def get_response_ok_invalid_content():
     }
 
 
-def get_response_ok():
-    def _get_response_ok(status_code, content):
-        return Response(json.dumps(content), status=status_code)
-
-    return _get_response_ok
+def get_response_object(status_code, content):
+    return Response(json.dumps(content), status=status_code)
 
 
 def get_response_error_content():
@@ -187,13 +225,6 @@ def get_response_error_invalid_content():
     return {
         "error": {"field_one": "error_one", "field_two": "error_two"},
     }
-
-
-def get_response_error():
-    def _get_response_error(status_code, content):
-        return Response(json.dumps(content), status=status_code)
-
-    return _get_response_error
 
 
 @pytest.fixture
