@@ -117,6 +117,34 @@ class ListMessageBodyFactory(ModelFactory):
 class TemplateMessageBodyFactory(ModelFactory):
     __model__ = TemplateMessageBody
 
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because pydantic_factories can't handle regex patterns."""
+        return TemplateMessageBody(
+            **{
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "template_name",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "VIDEO",
+                                    "media_url": "https://video.com",
+                                },
+                                "buttons": [
+                                    {"type": "QUICK_REPLY", "parameter": "button 1"},
+                                ],
+                            },
+                            "language": "en",
+                        },
+                    },
+                ],
+            }
+        )
+
 
 class ProductMessageBodyFactory(ModelFactory):
     __model__ = ProductMessageBody

@@ -86,7 +86,7 @@ class TemplateData(CamelCaseModel):
 
 
 class Content(CamelCaseModel):
-    template_name: constr(min_length=1, max_length=512)
+    template_name: constr(min_length=1, max_length=512, regex=r"^\w+$")  # noqa: F722
     template_data: TemplateData
     language: constr(min_length=1)
 

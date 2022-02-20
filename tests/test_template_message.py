@@ -1,33 +1,68 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
-from pydantic_factories import ModelFactory
 
 from infobip_channels.whatsapp.models.core import MessageBody
 from infobip_channels.whatsapp.models.template_message import (
     Message,
     TemplateMessageBody,
 )
-from tests.conftest import TemplateMessageBodyFactory, get_random_string
-
-
-class MessageBodyFactory(ModelFactory):
-    __model__ = Message
+from tests.conftest import get_random_string
 
 
 def test_templates_message_body__is_an_instance_of_message_body():
-    assert isinstance(MessageBodyFactory.build(), MessageBody) is True
+    assert (
+        isinstance(
+            Message(
+                **{
+                    "from": "441134960000",
+                    "to": "38595671032",
+                    "content": {
+                        "template_name": "template_name",
+                        "template_data": {
+                            "body": {"placeholders": ["value 1", "value 2"]},
+                            "buttons": [
+                                {"type": "QUICK_REPLY", "parameter": "button 1"},
+                                {"type": "QUICK_REPLY", "parameter": "button 2"},
+                            ],
+                        },
+                        "language": "en",
+                    },
+                    "sms_failover": {"from_number": "38599543122", "text": "help!"},
+                },
+            ),
+            MessageBody,
+        )
+        is True
+    )
 
 
 @pytest.mark.parametrize("messages", [None, {}, [{}]])
 def test_when_messages_is_invalid__validation_error_is_raised(messages):
     with pytest.raises(ValidationError):
-        TemplateMessageBodyFactory.build(**{"messages": messages})
+        TemplateMessageBody(**{"messages": messages})
 
 
 @pytest.mark.parametrize("bulk_id", [{}, get_random_string(101)])
 def test_when_bulk_id_is_invalid__validation_error_is_raised(bulk_id):
     with pytest.raises(ValidationError):
-        TemplateMessageBodyFactory.build(**{"bulkId": bulk_id})
+        TemplateMessageBody(
+            **{
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "template_name",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                            },
+                            "language": "en",
+                        },
+                    },
+                ],
+                "bulkId": bulk_id,
+            }
+        )
 
 
 @pytest.mark.parametrize(
@@ -52,25 +87,43 @@ def test_when_bulk_id_is_invalid__validation_error_is_raised(bulk_id):
 )
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(**{"content": content})
+        TemplateMessageBody(
+            **{
+                "messages": [
+                    {"from": "441134960000", "to": "38595671032", "content": content},
+                ],
+            }
+        )
 
 
-@pytest.mark.parametrize("template_name", [None, "", {}, get_random_string(513)])
+@pytest.mark.parametrize(
+    "template_name",
+    [
+        None,
+        "",
+        {},
+        get_random_string(513),
+        "template name !!",
+        "template_name_example 2",
+    ],
+)
 def test_when_template_name_is_invalid__validation_error_is_raised(template_name):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": template_name,
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": "https://test_file.png",
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": template_name,
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -87,13 +140,19 @@ def test_when_template_name_is_invalid__validation_error_is_raised(template_name
 )
 def test_when_template_data_is_invalid__validation_error_is_raised(template_data):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "Name",
-                    "templateData": template_data,
-                    "language": "en",
-                }
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": template_data,
+                            "language": "en",
+                        },
+                    },
+                ],
             }
         )
 
@@ -101,19 +160,21 @@ def test_when_template_data_is_invalid__validation_error_is_raised(template_data
 @pytest.mark.parametrize("language", [None, "", {}])
 def test_when_language_is_invalid__validation_error_is_raised(language):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": "https://test_file.png",
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                            },
+                            "language": language,
                         },
                     },
-                    "language": language,
-                }
+                ],
             }
         )
 
@@ -121,19 +182,19 @@ def test_when_language_is_invalid__validation_error_is_raised(language):
 @pytest.mark.parametrize("body", [None, "", {}])
 def test_when_body_is_invalid__validation_error_is_raised(body):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": body,
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": "https://test_file.png",
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {"body": body},
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -141,19 +202,19 @@ def test_when_body_is_invalid__validation_error_is_raised(body):
 @pytest.mark.parametrize("placeholders", [None, "", {}, [""], [None]])
 def test_when_placeholders_is_invalid__validation_error_is_raised(placeholders):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": placeholders},
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": "https://test_file.png",
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {"body": {"placeholders": placeholders}},
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -161,19 +222,25 @@ def test_when_placeholders_is_invalid__validation_error_is_raised(placeholders):
 @pytest.mark.parametrize("header_type", [None, "", {}, "INVALID"])
 def test_when_header_type_is_invalid__validation_error_is_raised(header_type):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": header_type,
-                            "mediaUrl": "https://test_file.png",
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": header_type,
+                                    "mediaUrl": "https://test_file.png",
+                                },
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -181,16 +248,22 @@ def test_when_header_type_is_invalid__validation_error_is_raised(header_type):
 @pytest.mark.parametrize("placeholder", [None, {}])
 def test_when_text_placeholder_is_invalid__validation_error_is_raised(placeholder):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {"type": "TEXT", "placeholder": placeholder},
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {"type": "TEXT", "placeholder": placeholder},
+                            },
+                            "language": "en",
+                        },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -208,20 +281,26 @@ def test_when_text_placeholder_is_invalid__validation_error_is_raised(placeholde
 )
 def test_when_document_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "DOCUMENT",
-                            "mediaUrl": media_url,
-                            "filename": "Test",
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "DOCUMENT",
+                                    "mediaUrl": media_url,
+                                    "filename": "Test",
+                                },
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -229,20 +308,26 @@ def test_when_document_media_url_is_invalid__validation_error_is_raised(media_ur
 @pytest.mark.parametrize("filename", [None, "", {}, get_random_string(241)])
 def test_when_document_filename_is_invalid__validation_error_is_raised(filename):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "DOCUMENT",
-                            "mediaUrl": "https://test_file.png",
-                            "filename": filename,
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "DOCUMENT",
+                                    "mediaUrl": "https://test_file.png",
+                                    "filename": filename,
+                                },
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -260,19 +345,25 @@ def test_when_document_filename_is_invalid__validation_error_is_raised(filename)
 )
 def test_when_image_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": media_url,
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "IMAGE",
+                                    "mediaUrl": media_url,
+                                },
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -290,19 +381,25 @@ def test_when_image_media_url_is_invalid__validation_error_is_raised(media_url):
 )
 def test_when_video_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "VIDEO",
-                            "mediaUrl": media_url,
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "VIDEO",
+                                    "mediaUrl": media_url,
+                                },
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -310,20 +407,26 @@ def test_when_video_media_url_is_invalid__validation_error_is_raised(media_url):
 @pytest.mark.parametrize("latitude", [None, "", {}, -91, 91])
 def test_when_location_latitude_is_invalid__validation_error_is_raised(latitude):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "LOCATION",
-                            "latitude": latitude,
-                            "longitude": 0,
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "LOCATION",
+                                    "latitude": latitude,
+                                    "longitude": 0,
+                                },
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -331,20 +434,26 @@ def test_when_location_latitude_is_invalid__validation_error_is_raised(latitude)
 @pytest.mark.parametrize("longitude", [None, "", {}, -181, 181])
 def test_when_location_longitude_is_invalid__validation_error_is_raised(longitude):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "LOCATION",
-                            "latitude": 0,
-                            "longitude": longitude,
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "LOCATION",
+                                    "latitude": 0,
+                                    "longitude": longitude,
+                                },
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -365,20 +474,26 @@ def test_when_location_longitude_is_invalid__validation_error_is_raised(longitud
 )
 def test_when_buttons_is_invalid__validation_error_is_raised(buttons):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": "https://test_file.png",
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "IMAGE",
+                                    "mediaUrl": "https://test_file.png",
+                                },
+                                "buttons": buttons,
+                            },
+                            "language": "en",
                         },
-                        "buttons": buttons,
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -386,23 +501,31 @@ def test_when_buttons_is_invalid__validation_error_is_raised(buttons):
 @pytest.mark.parametrize("buttons_type", [None, "", {}, "INVALID"])
 def test_when_buttons_type_is_invalid__validation_error_is_raised(buttons_type):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": "https://test_file.png",
-                        },
-                        "buttons": {
-                            "type": buttons_type,
-                            "parameter": "https://Test.com",
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "IMAGE",
+                                    "mediaUrl": "https://test_file.png",
+                                },
+                                "buttons": [
+                                    {
+                                        "type": buttons_type,
+                                        "parameter": "https://Test.com",
+                                    }
+                                ],
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -412,23 +535,31 @@ def test_when_quick_reply_button_parameter_is_invalid__validation_error_is_raise
     button_parameter,
 ):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": "https://test_file.png",
-                        },
-                        "buttons": {
-                            "type": "QUICK_REPLY",
-                            "parameter": button_parameter,
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "IMAGE",
+                                    "mediaUrl": "https://test_file.png",
+                                },
+                                "buttons": [
+                                    {
+                                        "type": "QUICK_REPLY",
+                                        "parameter": button_parameter,
+                                    }
+                                ],
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
@@ -438,38 +569,61 @@ def test_when_url_button_parameter_is_invalid__validation_error_is_raised(
     button_parameter,
 ):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {
-                        "body": {"placeholders": ["123456789"]},
-                        "header": {
-                            "type": "IMAGE",
-                            "mediaUrl": "https://test_file.png",
-                        },
-                        "buttons": {
-                            "type": "URL",
-                            "parameter": button_parameter,
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "IMAGE",
+                                    "mediaUrl": "https://test_file.png",
+                                },
+                                "buttons": [
+                                    {
+                                        "type": "URL",
+                                        "parameter": button_parameter,
+                                    }
+                                ],
+                            },
+                            "language": "en",
                         },
                     },
-                    "language": "en",
-                }
+                ],
             }
         )
 
 
-@pytest.mark.parametrize("sms_failover", [{}])
+@pytest.mark.parametrize(
+    "sms_failover",
+    [{}, {"from": "441134960000"}, {"text": "test text"}],
+)
 def test_when_sms_failover_is_invalid__validation_error_is_raised(sms_failover):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {"body": {"placeholders": ["123456789"]}},
-                    "language": "en",
-                },
-                "smsFailover": sms_failover,
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "IMAGE",
+                                    "mediaUrl": "https://test_file.png",
+                                },
+                            },
+                            "language": "en",
+                        },
+                        "smsFailover": sms_failover,
+                    },
+                ],
             }
         )
 
@@ -479,14 +633,22 @@ def test_when_sms_failover_from_is_invalid__validation_error_is_raised(
     sms_failover_from,
 ):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {"body": {"placeholders": ["123456789"]}},
-                    "language": "en",
-                },
-                "smsFailover": {"from": sms_failover_from, "text": "Test"},
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                            },
+                            "language": "en",
+                        },
+                        "smsFailover": {"from": sms_failover_from, "text": "Test"},
+                    },
+                ],
             }
         )
 
@@ -494,14 +656,22 @@ def test_when_sms_failover_from_is_invalid__validation_error_is_raised(
 @pytest.mark.parametrize("text", [None, "", {}, get_random_string(4097)])
 def test_when_sms_failover_text_is_invalid__validation_error_is_raised(text):
     with pytest.raises(ValidationError):
-        MessageBodyFactory.build(
+        TemplateMessageBody(
             **{
-                "content": {
-                    "templateName": "boarding_pass",
-                    "templateData": {"body": {"placeholders": ["123456789"]}},
-                    "language": "en",
-                },
-                "smsFailover": {"from": "441134960000", "text": text},
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "boarding_pass",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                            },
+                            "language": "en",
+                        },
+                        "smsFailover": {"from": "441134960000", "text": text},
+                    },
+                ],
             }
         )
 
