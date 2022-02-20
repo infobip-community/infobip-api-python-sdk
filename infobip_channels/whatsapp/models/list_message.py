@@ -43,13 +43,13 @@ class Action(SectionTitleValidatorMixin, CamelCaseModel):
     @validator("sections")
     def validate_sections(cls, sections: List[Section]) -> List[SectionBase]:
         super().validate_section_titles(sections)
-        cls._validate_section_rows(sections)
+        cls._validate_row_id_uniqueness(sections)
         cls._validate_number_of_rows(sections)
 
         return sections
 
     @classmethod
-    def _validate_section_rows(cls, sections: List[Section]) -> None:
+    def _validate_row_id_uniqueness(cls, sections: List[Section]) -> None:
         row_ids = []
         for section in sections:
             for row in section.rows:
