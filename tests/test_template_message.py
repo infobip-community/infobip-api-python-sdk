@@ -15,13 +15,32 @@ def test_template_message_body__is_an_instance_of_message_body():
     assert isinstance(MessageBodyFactory.build(), MessageBody) is True
 
 
-@pytest.mark.parametrize("content", [None, "", {}])
+@pytest.mark.parametrize(
+    "content",
+    [
+        None,
+        "",
+        {},
+        {"templateName": "name"},
+        {"templateData": {"body": {"placeholders": ["First Value"]}}},
+        {"language": "en"},
+        {
+            "templateName": "name",
+            "templateData": {"body": {"placeholders": ["First Value"]}},
+        },
+        {"templateName": "name", "language": "en"},
+        {
+            "language": "en",
+            "templateData": {"body": {"placeholders": ["First Value"]}},
+        },
+    ],
+)
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(**{"content": content})
 
 
-@pytest.mark.parametrize("template_name", [None, "", {}])
+@pytest.mark.parametrize("template_name", [None, "", {}, get_random_string(513)])
 def test_when_template_name_is_invalid__validation_error_is_raised(template_name):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
@@ -41,13 +60,22 @@ def test_when_template_name_is_invalid__validation_error_is_raised(template_name
         )
 
 
-@pytest.mark.parametrize("template_data", [None, "", {}])
+@pytest.mark.parametrize(
+    "template_data",
+    [
+        None,
+        "",
+        {},
+        {"header": {"type": "TEXT", "placeholder": "value"}},
+        {"buttons": [{"type": "QUICK_REPLY", "parameter": "test"}]},
+    ],
+)
 def test_when_template_data_is_invalid__validation_error_is_raised(template_data):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
             **{
                 "content": {
-                    "templateName": "",
+                    "templateName": "Name",
                     "templateData": template_data,
                     "language": "en",
                 }
@@ -95,7 +123,7 @@ def test_when_body_is_invalid__validation_error_is_raised(body):
         )
 
 
-@pytest.mark.parametrize("placeholders", [None, {}])
+@pytest.mark.parametrize("placeholders", [None, "", {}, [""], [None]])
 def test_when_placeholders_is_invalid__validation_error_is_raised(placeholders):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
@@ -115,7 +143,7 @@ def test_when_placeholders_is_invalid__validation_error_is_raised(placeholders):
         )
 
 
-@pytest.mark.parametrize("header_type", [None, "", {}])
+@pytest.mark.parametrize("header_type", [None, "", {}, "INVALID"])
 def test_when_header_type_is_invalid__validation_error_is_raised(header_type):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
@@ -152,7 +180,17 @@ def test_when_text_placeholder_is_invalid__validation_error_is_raised(placeholde
         )
 
 
-@pytest.mark.parametrize("media_url", [None, "", {}])
+@pytest.mark.parametrize(
+    "media_url",
+    [
+        None,
+        "",
+        {},
+        "www.missing-scheme.com",
+        "ftp://myfile.com",
+        f"http://myfile.com/{get_random_string(2031)}",
+    ],
+)
 def test_when_document_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
@@ -164,7 +202,7 @@ def test_when_document_media_url_is_invalid__validation_error_is_raised(media_ur
                         "header": {
                             "type": "DOCUMENT",
                             "mediaUrl": media_url,
-                            "fileName": "Test",
+                            "filename": "Test",
                         },
                     },
                     "language": "en",
@@ -173,7 +211,7 @@ def test_when_document_media_url_is_invalid__validation_error_is_raised(media_ur
         )
 
 
-@pytest.mark.parametrize("filename", [None, "", {}])
+@pytest.mark.parametrize("filename", [None, "", {}, get_random_string(241)])
 def test_when_document_filename_is_invalid__validation_error_is_raised(filename):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
@@ -185,7 +223,7 @@ def test_when_document_filename_is_invalid__validation_error_is_raised(filename)
                         "header": {
                             "type": "DOCUMENT",
                             "mediaUrl": "https://test_file.png",
-                            "fileName": filename,
+                            "filename": filename,
                         },
                     },
                     "language": "en",
@@ -194,7 +232,17 @@ def test_when_document_filename_is_invalid__validation_error_is_raised(filename)
         )
 
 
-@pytest.mark.parametrize("media_url", [None, "", {}])
+@pytest.mark.parametrize(
+    "media_url",
+    [
+        None,
+        "",
+        {},
+        "www.missing-scheme.com",
+        "ftp://myfile.com",
+        f"http://myfile.com/{get_random_string(2031)}",
+    ],
+)
 def test_when_image_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
@@ -214,7 +262,17 @@ def test_when_image_media_url_is_invalid__validation_error_is_raised(media_url):
         )
 
 
-@pytest.mark.parametrize("media_url", [None, "", {}])
+@pytest.mark.parametrize(
+    "media_url",
+    [
+        None,
+        "",
+        {},
+        "www.missing-scheme.com",
+        "ftp://myfile.com",
+        f"http://myfile.com/{get_random_string(2031)}",
+    ],
+)
 def test_when_video_media_url_is_invalid__validation_error_is_raised(media_url):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
@@ -276,7 +334,41 @@ def test_when_location_longitude_is_invalid__validation_error_is_raised(longitud
         )
 
 
-@pytest.mark.parametrize("buttons_type", [None, "", {}])
+@pytest.mark.parametrize(
+    "buttons",
+    [
+        [{"type": "QUICK_REPLY", "parameter": "test"} for _ in range(4)],
+        [
+            {"type": "QUICK_REPLY", "parameter": "test"},
+            {"type": "URL", "parameter": "test url"},
+        ],
+        [
+            {"type": "URL", "parameter": "test url 1"},
+            {"type": "URL", "parameter": "test url 2"},
+        ],
+    ],
+)
+def test_when_buttons_is_invalid__validation_error_is_raised(buttons):
+    with pytest.raises(ValidationError):
+        MessageBodyFactory.build(
+            **{
+                "content": {
+                    "templateName": "boarding_pass",
+                    "templateData": {
+                        "body": {"placeholders": ["123456789"]},
+                        "header": {
+                            "type": "IMAGE",
+                            "mediaUrl": "https://test_file.png",
+                        },
+                        "buttons": buttons,
+                    },
+                    "language": "en",
+                }
+            }
+        )
+
+
+@pytest.mark.parametrize("buttons_type", [None, "", {}, "INVALID"])
 def test_when_buttons_type_is_invalid__validation_error_is_raised(buttons_type):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
@@ -300,9 +392,9 @@ def test_when_buttons_type_is_invalid__validation_error_is_raised(buttons_type):
         )
 
 
-@pytest.mark.parametrize("buttons_parameter", [None, "", {}, get_random_string(241)])
-def test_when_buttons_parameter_is_invalid__validation_error_is_raised(
-    buttons_parameter,
+@pytest.mark.parametrize("button_parameter", [None, "", {}, get_random_string(129)])
+def test_when_quick_reply_button_parameter_is_invalid__validation_error_is_raised(
+    button_parameter,
 ):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(
@@ -317,7 +409,7 @@ def test_when_buttons_parameter_is_invalid__validation_error_is_raised(
                         },
                         "buttons": {
                             "type": "QUICK_REPLY",
-                            "parameter": buttons_parameter,
+                            "parameter": button_parameter,
                         },
                     },
                     "language": "en",
@@ -326,7 +418,48 @@ def test_when_buttons_parameter_is_invalid__validation_error_is_raised(
         )
 
 
-@pytest.mark.parametrize("sms_failover_from", [None, "", {}])
+@pytest.mark.parametrize("button_parameter", [None, {}])
+def test_when_url_button_parameter_is_invalid__validation_error_is_raised(
+    button_parameter,
+):
+    with pytest.raises(ValidationError):
+        MessageBodyFactory.build(
+            **{
+                "content": {
+                    "templateName": "boarding_pass",
+                    "templateData": {
+                        "body": {"placeholders": ["123456789"]},
+                        "header": {
+                            "type": "IMAGE",
+                            "mediaUrl": "https://test_file.png",
+                        },
+                        "buttons": {
+                            "type": "URL",
+                            "parameter": button_parameter,
+                        },
+                    },
+                    "language": "en",
+                }
+            }
+        )
+
+
+@pytest.mark.parametrize("sms_failover", [{}])
+def test_when_sms_failover_is_invalid__validation_error_is_raised(sms_failover):
+    with pytest.raises(ValidationError):
+        MessageBodyFactory.build(
+            **{
+                "content": {
+                    "templateName": "boarding_pass",
+                    "templateData": {"body": {"placeholders": ["123456789"]}},
+                    "language": "en",
+                },
+                "smsFailover": sms_failover,
+            }
+        )
+
+
+@pytest.mark.parametrize("sms_failover_from", [None, "", {}, get_random_string(25)])
 def test_when_sms_failover_from_is_invalid__validation_error_is_raised(
     sms_failover_from,
 ):
@@ -343,7 +476,7 @@ def test_when_sms_failover_from_is_invalid__validation_error_is_raised(
         )
 
 
-@pytest.mark.parametrize("text", [None, "", {}])
+@pytest.mark.parametrize("text", [None, "", {}, get_random_string(4097)])
 def test_when_sms_failover_text_is_invalid__validation_error_is_raised(text):
     with pytest.raises(ValidationError):
         MessageBodyFactory.build(

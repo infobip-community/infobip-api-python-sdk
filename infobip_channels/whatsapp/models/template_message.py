@@ -1,11 +1,16 @@
-from typing import List, Literal, Optional, Union
+from typing import List, Optional, Union
 
-from pydantic import AnyHttpUrl, Field, confloat, constr, validator
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
+from pydantic import AnyHttpUrl, Field, confloat, conlist, constr, validator
 
 from infobip_channels.whatsapp.models.core import (
     CamelCaseModel,
     MessageBody,
-    ValidateUrlLengthMixin,
+    UrlLengthValidatorMixin,
 )
 
 
@@ -25,7 +30,7 @@ class HeaderLocation(CamelCaseModel):
     longitude: confloat(ge=-180, le=180)
 
 
-class HeaderDocument(ValidateUrlLengthMixin, CamelCaseModel):
+class HeaderDocument(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["DOCUMENT"]
     media_url: AnyHttpUrl
     filename: constr(min_length=1, max_length=240)
@@ -35,7 +40,7 @@ class HeaderDocument(ValidateUrlLengthMixin, CamelCaseModel):
         return super().validate_url_length(value)
 
 
-class HeaderVideo(ValidateUrlLengthMixin, CamelCaseModel):
+class HeaderVideo(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["VIDEO"]
     media_url: AnyHttpUrl
 
@@ -44,7 +49,7 @@ class HeaderVideo(ValidateUrlLengthMixin, CamelCaseModel):
         return super().validate_url_length(value)
 
 
-class HeaderImage(ValidateUrlLengthMixin, CamelCaseModel):
+class HeaderImage(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["IMAGE"]
     media_url: AnyHttpUrl
 
@@ -61,13 +66,23 @@ class HeaderText(CamelCaseModel):
 class Placeholders(CamelCaseModel):
     placeholders: List[str]
 
+    @validator("placeholders", pre=True)
+    def validate_placeholders(cls, placeholders: List[str]) -> List[str]:
+        for placeholder in placeholders:
+            if not placeholder:
+                raise ValueError("Placeholder value must not be None or empty")
+
+        return placeholders
+
 
 class TemplateData(CamelCaseModel):
     body: Placeholders
     header: Optional[
         Union[HeaderText, HeaderImage, HeaderDocument, HeaderVideo, HeaderLocation]
     ] = None
-    buttons: Optional[Union[ButtonUrl, ButtonQuickReply]] = None
+    buttons: Optional[
+        Union[conlist(ButtonUrl, max_items=1), conlist(ButtonQuickReply, max_items=3)]
+    ] = None
 
 
 class Content(CamelCaseModel):
