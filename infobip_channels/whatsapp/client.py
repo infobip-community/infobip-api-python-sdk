@@ -153,7 +153,7 @@ class WhatsAppChannel:
     @staticmethod
     def validate_message_body(
         message: Union[MessageBody, TemplateMassageBody, Dict],
-        message_type: Type[MessageBody, TemplateMassageBody],
+        message_type: Union[Type[MessageBody], Type[TemplateMassageBody]],
     ) -> Union[MessageBody, TemplateMassageBody]:
         """Validate the message by trying to instantiate the provided type class.
         If the message passed is already of that type, just return it as is.
