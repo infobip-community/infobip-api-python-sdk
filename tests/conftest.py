@@ -220,6 +220,38 @@ def get_response_ok_content():
     }
 
 
+def get_template_message_response_ok_content():
+    return {
+        "messages": [
+            {
+                "to": "441134960001",
+                "messageCount": 1,
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "status": {
+                    "groupId": 1,
+                    "groupName": "PENDING",
+                    "id": 7,
+                    "name": "PENDING_ENROUTE",
+                    "description": "Message sent to next instance",
+                },
+            },
+            {
+                "to": "441631451112",
+                "messageCount": 1,
+                "messageId": "a2ga3hgc-sa7n-1ach-0df1-9b55aeb3a1na",
+                "status": {
+                    "groupId": 1,
+                    "groupName": "PENDING",
+                    "id": 7,
+                    "name": "PENDING_ENROUTE",
+                    "description": "Message sent to next instance",
+                },
+            },
+        ],
+        "bulkId": "2034072219640523073",
+    }
+
+
 def get_response_ok_invalid_content():
     return {
         "to": "441134960001",
