@@ -2,7 +2,10 @@ from typing import List, Optional
 
 from pydantic import AnyHttpUrl
 
-from infobip_channels.whatsapp.models.body.core import CamelCaseModel, WhatsAppResponse
+from infobip_channels.whatsapp.models.response.core import (
+    CamelCaseModel,
+    WhatsAppResponse,
+)
 
 
 class Button(CamelCaseModel):

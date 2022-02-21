@@ -10,7 +10,6 @@ from werkzeug.wrappers.response import Response
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
-from infobip_channels.whatsapp.models.body.core import Authentication
 from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
 from infobip_channels.whatsapp.models.body.document_message import DocumentMessageBody
 from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody
@@ -23,7 +22,10 @@ from infobip_channels.whatsapp.models.body.product_message import ProductMessage
 from infobip_channels.whatsapp.models.body.sticker_message import StickerMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
-from infobip_channels.whatsapp.models.query.get_templates import Sender
+from infobip_channels.whatsapp.models.path_parameters.get_templates import (
+    GetTemplatesPathParameters,
+)
+from infobip_channels.whatsapp.models.response.core import Authentication
 
 
 def get_random_string(length: int) -> str:
@@ -114,7 +116,7 @@ class CreateTemplateBodyFactory(ModelFactory):
 
 
 class SenderBodyFactory(ModelFactory):
-    __model__ = Sender
+    __model__ = GetTemplatesPathParameters
 
 
 @pytest.fixture

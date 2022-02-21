@@ -6,14 +6,6 @@ from pydantic.error_wrappers import ValidationError
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
-from infobip_channels.whatsapp.models.body.core import (
-    Authentication,
-    MessageBody,
-    RequestHeaders,
-    WhatsAppResponse,
-    WhatsAppResponseError,
-    WhatsAppResponseOK,
-)
 from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
 from infobip_channels.whatsapp.models.body.document_message import DocumentMessageBody
 from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody
@@ -26,7 +18,18 @@ from infobip_channels.whatsapp.models.body.product_message import ProductMessage
 from infobip_channels.whatsapp.models.body.sticker_message import StickerMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
-from infobip_channels.whatsapp.models.query.get_templates import Sender
+from infobip_channels.whatsapp.models.path_parameters.get_templates import (
+    GetTemplatesPathParameters,
+)
+from infobip_channels.whatsapp.models.response.core import (
+    Authentication,
+    MessageBody,
+    PathParameter,
+    RequestHeaders,
+    WhatsAppResponse,
+    WhatsAppResponseError,
+    WhatsAppResponseOK,
+)
 from infobip_channels.whatsapp.models.response.create_template import (
     WhatsAppTemplateResponseOK,
 )
@@ -59,7 +62,7 @@ class HttpClient:
         return self._construct_response(response)
 
     def get(self, endpoint: str) -> Union[WhatsAppResponse, requests.Response]:
-        """Send an HTTP post request to base_url + endpoint.
+        """Send an HTTP get request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
         :return: Received response
@@ -75,13 +78,14 @@ class HttpClient:
         try:
 
             response_class = self._get_response_class(response)
-            return response_class(
+            response_class(
                 **{
                     "status_code": response.status_code,
                     "raw_response": response,
                     **response.json(),
                 }
             )
+            return response_class.dict(exclude_unset=True)
 
         except (ValueError, ValidationError):
             return response
@@ -179,7 +183,8 @@ class WhatsAppChannel:
 
     @staticmethod
     def validate_message_body(
-        message: Union[MessageBody, Dict], message_type: Type[MessageBody]
+        message: Union[MessageBody, Dict],
+        message_type: Type[Union[CreateTemplate, MessageBody]],
     ) -> MessageBody:
         """Validate the message by trying to instantiate the provided type class.
         If the message passed is already of that type, just return it as is.
@@ -191,24 +196,22 @@ class WhatsAppChannel:
         return message if isinstance(message, message_type) else message_type(**message)
 
     @staticmethod
-    def validate_query_string(
-        parameter: Union[Sender, Dict], parameter_type: Type[Sender]
-    ) -> str:
+    def validate_path_parameter(
+        parameter: Union[PathParameter, Dict], parameter_type: Type[PathParameter]
+    ) -> PathParameter:
         """
-        Validate query string by trying to instantiate the provided class and
-        extract valid query string
+        Validate path parameter by trying to instantiate the provided class and
+        extract valid path parameter
 
-        :param parameter: Query string to validate
-        :param parameter_type: Type of query string
-        :return: Returned query value
+        :param parameter: Path parameter to validate
+        :param parameter_type: Type of path parameter
+        :return: Returned path parameter
         """
-        try:
-            parameter = parameter_type(**parameter)
-            sender = parameter.sender
-            return sender
-
-        except (ValueError, ValidationError):
-            raise ValueError("Wrong query parameter type")
+        return (
+            parameter
+            if isinstance(parameter, parameter_type)
+            else parameter_type(**parameter)
+        )
 
     def send_text_message(
         self, message: Union[TextMessageBody, Dict]
@@ -413,7 +416,7 @@ class WhatsAppChannel:
         )
 
     def get_templates(
-        self, parameter: Union[Sender, Dict]
+        self, parameter: Union[GetTemplatesPathParameters, Dict]
     ) -> Union[WhatsAppResponse, Any]:
         """Get all the templates and their statuses for a given sender.
 
@@ -421,11 +424,17 @@ class WhatsAppChannel:
         format
         :return: Received response
         """
-        sender = self.validate_query_string(parameter, Sender)
-        return self._client.get(self.MANAGE_URL_TEMPLATE + sender + "/templates")
+        path_parameter = self.validate_path_parameter(
+            parameter, GetTemplatesPathParameters
+        )
+        return self._client.get(
+            self.MANAGE_URL_TEMPLATE + path_parameter + "/templates"
+        )
 
     def create_template(
-        self, parameter: Union[Sender, Dict], message: Union[CreateTemplate, Dict]
+        self,
+        parameter: Union[GetTemplatesPathParameters, Dict],
+        message: Union[CreateTemplate, Dict],
     ) -> Union[WhatsAppResponse, Any]:
         """Create WhatsApp template. Created template will be submitted for
         WhatsApp's review and approval. Once approved, template can be sent to
@@ -436,12 +445,13 @@ class WhatsAppChannel:
         :param message: Body of the template to send
         :return: Received response
         """
-        if not isinstance(message, CreateTemplate):
-            message = CreateTemplate(**message)
 
-        sender = self.validate_query_string(parameter, Sender)
+        message = self.validate_message_body(message, CreateTemplate)
+        path_parameter = self.validate_path_parameter(
+            parameter, GetTemplatesPathParameters
+        )
 
         return self._client.post(
-            self.MANAGE_URL_TEMPLATE + sender + "/templates",
+            self.MANAGE_URL_TEMPLATE + path_parameter + "/templates",
             message.dict(by_alias=True),
         )

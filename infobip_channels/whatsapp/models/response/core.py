@@ -42,6 +42,10 @@ class MessageBody(ValidateUrlLengthMixin, CamelCaseModel):
         return super().validate_url_length(value)
 
 
+class PathParameter(CamelCaseModel):
+    path_parameter: str
+
+
 class WhatsAppResponse(CamelCaseModel):
     status_code: HTTPStatus
     raw_response: requests.Response

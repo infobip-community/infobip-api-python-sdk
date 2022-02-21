@@ -1,6 +1,6 @@
 from pydantic import AnyHttpUrl, validator
 
-from infobip_channels.whatsapp.models.body.core import (
+from infobip_channels.whatsapp.models.response.core import (
     CamelCaseModel,
     MessageBody,
     ValidateUrlLengthMixin,
