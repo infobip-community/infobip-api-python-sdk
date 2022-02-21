@@ -73,11 +73,15 @@ class ResponseOKStatus(CamelCaseModel):
     action: Optional[str] = None
 
 
-class WhatsAppResponseOK(WhatsAppResponse):
+class WhatsAppResponseOKPayload(CamelCaseModel):
     to: str
     message_count: int
     message_id: str
     status: ResponseOKStatus
+
+
+class WhatsAppResponseOK(WhatsAppResponseOKPayload, WhatsAppResponse):
+    pass
 
 
 def to_header_specific_case(string: str) -> str:

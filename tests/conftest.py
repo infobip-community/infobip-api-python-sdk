@@ -20,6 +20,7 @@ from infobip_channels.whatsapp.models.multi_product_message import (
 )
 from infobip_channels.whatsapp.models.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
+from infobip_channels.whatsapp.models.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.video_message import VideoMessageBody
 
@@ -113,6 +114,38 @@ class ListMessageBodyFactory(ModelFactory):
         )
 
 
+class TemplateMessageBodyFactory(ModelFactory):
+    __model__ = TemplateMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because pydantic_factories can't handle regex patterns."""
+        return TemplateMessageBody(
+            **{
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "template_name",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "VIDEO",
+                                    "media_url": "https://video.com",
+                                },
+                                "buttons": [
+                                    {"type": "QUICK_REPLY", "parameter": "button 1"},
+                                ],
+                            },
+                            "language": "en",
+                        },
+                    },
+                ],
+            }
+        )
+
+
 class ProductMessageBodyFactory(ModelFactory):
     __model__ = ProductMessageBody
 
@@ -184,6 +217,38 @@ def get_response_ok_content():
             "name": "PENDING_ENROUTE",
             "description": "Message sent to next instance",
         },
+    }
+
+
+def get_template_message_response_ok_content():
+    return {
+        "messages": [
+            {
+                "to": "441134960001",
+                "messageCount": 1,
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "status": {
+                    "groupId": 1,
+                    "groupName": "PENDING",
+                    "id": 7,
+                    "name": "PENDING_ENROUTE",
+                    "description": "Message sent to next instance",
+                },
+            },
+            {
+                "to": "441631451112",
+                "messageCount": 1,
+                "messageId": "a2ga3hgc-sa7n-1ach-0df1-9b55aeb3a1na",
+                "status": {
+                    "groupId": 1,
+                    "groupName": "PENDING",
+                    "id": 7,
+                    "name": "PENDING_ENROUTE",
+                    "description": "Message sent to next instance",
+                },
+            },
+        ],
+        "bulkId": "2034072219640523073",
     }
 
 
