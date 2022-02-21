@@ -168,8 +168,8 @@ class WhatsAppChannel:
         elif response.status_code in (
             HTTPStatus.BAD_REQUEST,
             HTTPStatus.UNAUTHORIZED,
-            HTTPStatus.TOO_MANY_REQUESTS,
             HTTPStatus.FORBIDDEN,
+            HTTPStatus.TOO_MANY_REQUESTS,
         ):
             return WhatsAppResponseError
 
