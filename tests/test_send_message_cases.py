@@ -36,25 +36,25 @@ MESSAGE_TYPE_ATTRIBUTES = {
         "endpoint": "/whatsapp/1/message/document",
         "method_name": "send_document_message",
     },
-    "audio": {
-        "message_body_factory": AudioMessageBodyFactory,
-        "endpoint": "/whatsapp/1/message/audio",
-        "method_name": "send_audio_message",
-    },
     "image": {
         "message_body_factory": ImageMessageBodyFactory,
         "endpoint": "/whatsapp/1/message/image",
         "method_name": "send_image_message",
     },
-    "sticker": {
-        "message_body_factory": StickerMessageBodyFactory,
-        "endpoint": "/whatsapp/1/message/sticker",
-        "method_name": "send_sticker_message",
+    "audio": {
+        "message_body_factory": AudioMessageBodyFactory,
+        "endpoint": "/whatsapp/1/message/audio",
+        "method_name": "send_audio_message",
     },
     "video": {
         "message_body_factory": VideoMessageBodyFactory,
         "endpoint": "/whatsapp/1/message/video",
         "method_name": "send_video_message",
+    },
+    "sticker": {
+        "message_body_factory": StickerMessageBodyFactory,
+        "endpoint": "/whatsapp/1/message/sticker",
+        "method_name": "send_sticker_message",
     },
     "location": {
         "message_body_factory": LocationMessageBodyFactory,
