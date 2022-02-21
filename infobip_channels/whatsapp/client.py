@@ -138,12 +138,13 @@ class WhatsAppChannel:
         """
         return message if isinstance(message, message_type) else message_type(**message)
 
-    @staticmethod
     def _construct_response(
+        self,
         response: Union[requests.Response, Any],
-        response_class: Type[WhatsAppResponse],
+        response_ok_model: Type[WhatsAppResponse] = WhatsAppResponseOK,
     ) -> Union[WhatsAppResponse, requests.Response, Any]:
         try:
+            response_class = self._get_response_class(response, response_ok_model)
             return response_class(
                 **{
                     "status_code": response.status_code,
@@ -158,7 +159,7 @@ class WhatsAppChannel:
     @staticmethod
     def _get_response_class(
         response: Union[requests.Response, Any],
-        response_ok_model: Type[WhatsAppResponse] = WhatsAppResponseOK,
+        response_ok_model: Type[WhatsAppResponse],
     ) -> Type[WhatsAppResponse]:
 
         if response.status_code in (HTTPStatus.OK, HTTPStatus.CREATED):
@@ -190,8 +191,7 @@ class WhatsAppChannel:
             self.SEND_MESSAGE_URL_TEMPLATE + "template",
             message.dict(by_alias=True),
         )
-        response_class = self._get_response_class(response, TemplateMessageResponseOK)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response, TemplateMessageResponseOK)
 
     def send_text_message(
         self, message: Union[TextMessageBody, Dict]
@@ -208,8 +208,7 @@ class WhatsAppChannel:
         response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "text", message.dict(by_alias=True)
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_document_message(
         self, message: Union[DocumentMessageBody, Dict]
@@ -226,8 +225,7 @@ class WhatsAppChannel:
         response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "document", message.dict(by_alias=True)
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_image_message(
         self, message: Union[ImageMessageBody, Dict]
@@ -245,8 +243,7 @@ class WhatsAppChannel:
         response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "image", message.dict(by_alias=True)
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_audio_message(
         self, message: Union[AudioMessageBody, Dict]
@@ -263,8 +260,7 @@ class WhatsAppChannel:
         response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "audio", message.dict(by_alias=True)
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_video_message(
         self, message: Union[VideoMessageBody, Dict]
@@ -281,8 +277,7 @@ class WhatsAppChannel:
         response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "video", message.dict(by_alias=True)
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_sticker_message(
         self, message: Union[StickerMessageBody, Dict]
@@ -299,8 +294,7 @@ class WhatsAppChannel:
         response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "sticker", message.dict(by_alias=True)
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_location_message(
         self, message: Union[LocationMessageBody, Dict]
@@ -317,8 +311,7 @@ class WhatsAppChannel:
         response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "location", message.dict(by_alias=True)
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_contact_message(
         self, message: Union[ContactMessageBody, Dict]
@@ -335,8 +328,7 @@ class WhatsAppChannel:
         response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "contact", message.dict(by_alias=True)
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_interactive_buttons_message(
         self, message: Union[ButtonsMessageBody, Dict]
@@ -355,8 +347,7 @@ class WhatsAppChannel:
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/buttons",
             message.dict(by_alias=True),
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_interactive_list_message(
         self, message: Union[ListMessageBody, Dict]
@@ -375,8 +366,7 @@ class WhatsAppChannel:
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/list",
             message.dict(by_alias=True),
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_interactive_product_message(
         self, message: Union[ProductMessageBody, Dict]
@@ -395,8 +385,7 @@ class WhatsAppChannel:
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/product",
             message.dict(by_alias=True),
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)
 
     def send_interactive_multi_product_message(
         self, message: Union[MultiProductMessageBody, Dict]
@@ -415,5 +404,4 @@ class WhatsAppChannel:
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/multi-product",
             message.dict(by_alias=True),
         )
-        response_class = self._get_response_class(response)
-        return self._construct_response(response, response_class)
+        return self._construct_response(response)

@@ -1,6 +1,6 @@
-from pytest_cases import case, parametrize
+from pytest_cases import parametrize
 
-from tests.conftest import (
+from tests.conftest import (  # TemplateMessageBodyFactory,
     AudioMessageBodyFactory,
     ButtonsMessageBodyFactory,
     ContactMessageBodyFactory,
@@ -11,7 +11,6 @@ from tests.conftest import (
     MultiProductMessageBodyFactory,
     ProductMessageBodyFactory,
     StickerMessageBodyFactory,
-    TemplateMessageBodyFactory,
     TextMessageBodyFactory,
     VideoMessageBodyFactory,
     get_response_error_content,
@@ -22,6 +21,11 @@ from tests.conftest import (
 )
 
 MESSAGE_TYPE_ATTRIBUTES = {
+    # "template": {
+    #     "message_body_factory": TemplateMessageBodyFactory,
+    #     "endpoint": "/whatsapp/1/message/template",
+    #     "method_name": "send_template_message",
+    # },
     "text": {
         "message_body_factory": TextMessageBodyFactory,
         "endpoint": "/whatsapp/1/message/text",
@@ -72,11 +76,6 @@ MESSAGE_TYPE_ATTRIBUTES = {
         "endpoint": "/whatsapp/1/message/interactive/list",
         "method_name": "send_interactive_list_message",
     },
-    "template": {
-        "message_body_factory": TemplateMessageBodyFactory,
-        "endpoint": "/whatsapp/1/message/template",
-        "method_name": "send_template_message",
-    },
     "product": {
         "message_body_factory": ProductMessageBodyFactory,
         "endpoint": "/whatsapp/1/message/interactive/product",
@@ -90,19 +89,18 @@ MESSAGE_TYPE_ATTRIBUTES = {
 }
 
 
-@case(tags="valid_response_content")
 @parametrize(
     message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
     message_body_type=("message_body_instance", "dict"),
-    whatsapp_channel_instantiation_type=("auth_params", "auth_instance"),
+    whatsapp_channel_instantiation_type=("auth_params", "auth_instance", "client"),
     responses=(
         (200, get_response_object, get_response_ok_content),
         (201, get_response_object, get_response_ok_content),
         (400, get_response_object, get_response_error_content),
-        (405, get_response_object, get_response_error_content),
+        (401, get_response_object, get_response_error_content),
     ),
 )
-def from_auth_params_or_instance_case__valid(
+def from_all_instantiation_types_case__valid_content(
     message_type, responses, message_body_type, whatsapp_channel_instantiation_type
 ):
     return (
@@ -117,17 +115,16 @@ def from_auth_params_or_instance_case__valid(
     )
 
 
-@case(tags="invalid_content_or_unexpected_response")
 @parametrize(
     message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
     message_body_type=("message_body_instance", "dict"),
-    whatsapp_channel_instantiation_type=("auth_params", "auth_instance"),
+    whatsapp_channel_instantiation_type=("auth_params", "auth_instance", "client"),
     responses=(
         (201, get_response_object, get_response_ok_invalid_content),
         (500, get_response_object, get_response_error_invalid_content),
     ),
 )
-def from_auth_params_or_instance_case__invalid(
+def from_all_instantiation_types_case__invalid_content(
     message_type, responses, message_body_type, whatsapp_channel_instantiation_type
 ):
     return (
@@ -139,20 +136,4 @@ def from_auth_params_or_instance_case__invalid(
         responses[2](),
         message_body_type,
         whatsapp_channel_instantiation_type,
-    )
-
-
-@parametrize(
-    message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
-    message_body_type=("message_body_instance", "dict"),
-)
-def from_provided_client_case(message_type, message_body_type):
-    return (
-        MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
-        MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
-        MESSAGE_TYPE_ATTRIBUTES[message_type]["method_name"],
-        get_response_object,
-        200,
-        get_response_ok_content(),
-        message_body_type,
     )
