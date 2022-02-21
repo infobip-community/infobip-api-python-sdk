@@ -37,7 +37,7 @@ def test_templates_message_body__is_an_instance_of_message_body():
 
 
 @pytest.mark.parametrize("messages", [None, {}, [{}]])
-def test_when_messages_is_invalid__validation_error_is_raised(messages):
+def test_when_messages_are_invalid__validation_error_is_raised(messages):
     with pytest.raises(ValidationError):
         TemplateMessageBody(**{"messages": messages})
 

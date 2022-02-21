@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Any, Dict, Type, Union
 
 import requests
@@ -24,7 +25,10 @@ from infobip_channels.whatsapp.models.multi_product_message import (
 )
 from infobip_channels.whatsapp.models.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
-from infobip_channels.whatsapp.models.template_message import TemplateMessageBody
+from infobip_channels.whatsapp.models.template_message import (
+    TemplateMessageBody,
+    TemplateMessageResponseOK,
+)
 from infobip_channels.whatsapp.models.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.video_message import VideoMessageBody
 
@@ -36,9 +40,7 @@ class HttpClient:
         self.auth = auth
         self.headers = RequestHeaders(authorization=self.auth.api_key)
 
-    def post(
-        self, endpoint: str, body: Dict
-    ) -> Union[WhatsAppResponse, requests.Response]:
+    def post(self, endpoint: str, body: Dict) -> requests.Response:
         """Send an HTTP post request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
@@ -46,37 +48,9 @@ class HttpClient:
         :return: Received response
         """
         url = self.auth.base_url + endpoint
-        response = requests.post(
+        return requests.post(
             url=url, json=body, headers=self.headers.dict(by_alias=True)
         )
-
-        return self._construct_response(response)
-
-    def _construct_response(
-        self, response: requests.Response
-    ) -> Union[WhatsAppResponse, requests.Response]:
-        try:
-            response_class = self._get_response_class(response)
-            return response_class(
-                **{
-                    "status_code": response.status_code,
-                    "raw_response": response,
-                    **response.json(),
-                }
-            )
-
-        except (ValueError, ValidationError):
-            return response
-
-    @staticmethod
-    def _get_response_class(response):
-        if 200 <= response.status_code < 300:
-            return WhatsAppResponseOK
-
-        elif 400 <= response.status_code < 500:
-            return WhatsAppResponseError
-
-        raise ValueError
 
 
 class WhatsAppChannel:
@@ -164,9 +138,64 @@ class WhatsAppChannel:
         """
         return message if isinstance(message, message_type) else message_type(**message)
 
+    @staticmethod
+    def _construct_response(
+        response: Union[requests.Response, Any],
+        response_class: Type[WhatsAppResponse],
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
+        try:
+            return response_class(
+                **{
+                    "status_code": response.status_code,
+                    "raw_response": response,
+                    **response.json(),
+                }
+            )
+
+        except (ValueError, ValidationError):
+            return response
+
+    @staticmethod
+    def _get_response_class(
+        response: Union[requests.Response, Any],
+        response_ok_model: Type[WhatsAppResponse] = WhatsAppResponseOK,
+    ) -> Type[WhatsAppResponse]:
+
+        if response.status_code in (HTTPStatus.OK, HTTPStatus.CREATED):
+            return response_ok_model
+
+        elif response.status_code in (
+            HTTPStatus.BAD_REQUEST,
+            HTTPStatus.UNAUTHORIZED,
+            HTTPStatus.TOO_MANY_REQUESTS,
+            HTTPStatus.FORBIDDEN,
+        ):
+            return WhatsAppResponseError
+
+        raise ValueError
+
+    def send_template_message(
+        self, message: Union[TemplateMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
+        """Send a single or multiple template messages to a one or more recipients.
+        Template messages can be sent and delivered at anytime. Each template sent
+        needs to be registered and pre-approved by WhatsApp.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        message = self.validate_message_body(message, TemplateMessageBody)
+
+        response = self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "template",
+            message.dict(by_alias=True),
+        )
+        response_class = self._get_response_class(response, TemplateMessageResponseOK)
+        return self._construct_response(response, response_class)
+
     def send_text_message(
         self, message: Union[TextMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """Send a text message to a single recipient. Text messages can only be
         successfully delivered, if the recipient has contacted the business within the
         last 24 hours, otherwise template message should be used.
@@ -176,13 +205,15 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, TextMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "text", message.dict(by_alias=True)
         )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
 
     def send_document_message(
         self, message: Union[DocumentMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """Send a document to a single recipient. Document messages can only be
         successfully delivered, if the recipient has contacted the business within the
         last 24 hours, otherwise template message should be used.
@@ -192,13 +223,15 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, DocumentMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "document", message.dict(by_alias=True)
         )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
 
     def send_image_message(
         self, message: Union[ImageMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """
         Send an image to a single recipient. Image messages can only be successfully
         delivered, if the recipient has contacted the business within the last 24
@@ -209,45 +242,15 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, ImageMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "image", message.dict(by_alias=True)
         )
-
-    def send_sticker_message(
-        self, message: Union[StickerMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
-        """Send a sticker to a single recipient. Sticker messages can only be
-        successfully delivered, if the recipient has contacted the business within
-        the last 24 hours, otherwise template message should be used.
-
-        :param message: Body of the message to send
-        :return: Received response
-        """
-        message = self.validate_message_body(message, StickerMessageBody)
-
-        return self._client.post(
-            self.SEND_MESSAGE_URL_TEMPLATE + "sticker", message.dict(by_alias=True)
-        )
-
-    def send_video_message(
-        self, message: Union[VideoMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
-        """Send a video to a single recipient. Video messages can only be
-        successfully delivered, if the recipient has contacted the business within
-        the last 24 hours, otherwise template message should be used.
-
-        :param message: Body of the message to send
-        :return: Received response
-        """
-        message = self.validate_message_body(message, VideoMessageBody)
-
-        return self._client.post(
-            self.SEND_MESSAGE_URL_TEMPLATE + "video", message.dict(by_alias=True)
-        )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
 
     def send_audio_message(
         self, message: Union[AudioMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """Send an audio to a single recipient. Audio messages can only be
         successfully delivered, if the recipient has contacted the business within
         the last 24 hours, otherwise template message should be used.
@@ -257,13 +260,51 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, AudioMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "audio", message.dict(by_alias=True)
         )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
+
+    def send_video_message(
+        self, message: Union[VideoMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
+        """Send a video to a single recipient. Video messages can only be
+        successfully delivered, if the recipient has contacted the business within
+        the last 24 hours, otherwise template message should be used.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        message = self.validate_message_body(message, VideoMessageBody)
+
+        response = self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "video", message.dict(by_alias=True)
+        )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
+
+    def send_sticker_message(
+        self, message: Union[StickerMessageBody, Dict]
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
+        """Send a sticker to a single recipient. Sticker messages can only be
+        successfully delivered, if the recipient has contacted the business within
+        the last 24 hours, otherwise template message should be used.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        message = self.validate_message_body(message, StickerMessageBody)
+
+        response = self._client.post(
+            self.SEND_MESSAGE_URL_TEMPLATE + "sticker", message.dict(by_alias=True)
+        )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
 
     def send_location_message(
         self, message: Union[LocationMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """Send a location to a single recipient. Location messages can only be
         successfully delivered, if the recipient has contacted the business within
         the last 24 hours, otherwise template message should be used.
@@ -273,13 +314,15 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, LocationMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "location", message.dict(by_alias=True)
         )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
 
     def send_contact_message(
         self, message: Union[ContactMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """Send a contact to a single recipient. Contact messages can only be
         successfully delivered, if the recipient has contacted the business within
         the last 24 hours, otherwise template message should be used.
@@ -289,13 +332,15 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, ContactMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "contact", message.dict(by_alias=True)
         )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
 
     def send_interactive_buttons_message(
         self, message: Union[ButtonsMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """Send an interactive buttons message to a single recipient. Interactive
         buttons messages can only be successfully delivered, if the recipient has
         contacted the business within the last 24 hours, otherwise template message
@@ -306,14 +351,16 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, ButtonsMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/buttons",
             message.dict(by_alias=True),
         )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
 
     def send_interactive_list_message(
         self, message: Union[ListMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """Send an interactive list message to a single recipient. Interactive list
         messages can only be successfully delivered, if the recipient has contacted
         the business within the last 24 hours, otherwise template message should be
@@ -324,31 +371,16 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, ListMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/list",
             message.dict(by_alias=True),
         )
-
-    def send_template_message(
-        self, message: Union[TemplateMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
-        """Send a single or multiple template messages to a one or more recipients.
-        Template messages can be sent and delivered at anytime. Each template sent
-        needs to be registered and pre-approved by WhatsApp.
-
-        :param message: Body of the message to send
-        :return: Received response
-        """
-        message = self.validate_message_body(message, TemplateMessageBody)
-
-        return self._client.post(
-            self.SEND_MESSAGE_URL_TEMPLATE + "template",
-            message.dict(by_alias=True),
-        )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
 
     def send_interactive_product_message(
         self, message: Union[ProductMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """Send an interactive product message to a single recipient. Interactive
         product messages can only be successfully delivered, if the recipient has
         contacted the business within the last 24 hours, otherwise template message
@@ -359,14 +391,16 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, ProductMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/product",
             message.dict(by_alias=True),
         )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
 
     def send_interactive_multi_product_message(
         self, message: Union[MultiProductMessageBody, Dict]
-    ) -> Union[WhatsAppResponse, Any]:
+    ) -> Union[WhatsAppResponse, requests.Response, Any]:
         """Send an interactive multi-product message to a single recipient.
         Interactive multi-product messages can only be successfully delivered,
         if the recipient has contacted the business within the last 24 hours,
@@ -377,7 +411,9 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, MultiProductMessageBody)
 
-        return self._client.post(
+        response = self._client.post(
             self.SEND_MESSAGE_URL_TEMPLATE + "interactive/multi-product",
             message.dict(by_alias=True),
         )
+        response_class = self._get_response_class(response)
+        return self._construct_response(response, response_class)
