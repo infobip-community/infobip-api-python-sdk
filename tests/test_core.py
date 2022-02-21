@@ -1,4 +1,5 @@
 import pytest
+from pydantic import AnyHttpUrl
 from pydantic.error_wrappers import ValidationError
 from pydantic_factories import ModelFactory
 
@@ -38,10 +39,12 @@ def test_base_url_in_different_forms__validation_passes(base_url):
         pytest.fail("Unexpected ValidationError raised")
 
 
-def test_validate_auth_params_returns_authentication_instance():
-    auth_object = WhatsAppChannel.validate_auth_params(
-        "https://123.api.infobip.com", "api_key"
-    )
+@pytest.mark.parametrize(
+    "base_url",
+    [AnyHttpUrl("123.api.infobip.com", scheme="http"), "https://123.api.infobip.com"],
+)
+def test_validate_auth_params_returns_authentication_instance(base_url):
+    auth_object = WhatsAppChannel.validate_auth_params(base_url, "api_key")
     assert isinstance(auth_object, Authentication) is True
 
 
