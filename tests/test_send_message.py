@@ -51,17 +51,17 @@ def send_message_request(
 
 
 @parametrize_with_cases(
-    "endpoint, message_body_factory, method_name, raw_response_fixture, status_code, "
+    "endpoint, message_body_factory, method_name, get_response_object, status_code, "
     "response_content, message_body_type, whatsapp_channel_instantiation_type",
-    prefix="from_auth_params_or_instance",
-    has_tag="valid_response_content",
+    prefix="from_all_instantiation_types_case__valid_content",
 )
-def test_send_message_from_auth_params_or_instance__valid(
+def test_send_message_from_all_instantiation_types_case__valid_content(
     httpserver,
+    http_test_client,
     endpoint,
     message_body_factory,
     method_name,
-    raw_response_fixture,
+    get_response_object,
     status_code,
     response_content,
     message_body_type,
@@ -74,11 +74,15 @@ def test_send_message_from_auth_params_or_instance__valid(
         http_server=httpserver,
         endpoint=endpoint,
         headers=get_expected_headers("secret"),
-        response=raw_response_fixture(status_code, response_content),
+        response=get_response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         message_body_type=message_body_type,
         method_name=method_name,
         server_url=httpserver.url_for("/"),
+        client=http_test_client(
+            url=httpserver.url_for("/"),
+            headers=WhatsAppChannel.build_request_headers("secret"),
+        ),
     )
 
     response_dict_cleaned = response.dict(by_alias=True, exclude_unset=True)
@@ -95,17 +99,17 @@ def test_send_message_from_auth_params_or_instance__valid(
 
 
 @parametrize_with_cases(
-    "endpoint, message_body_factory, method_name, raw_response_fixture, status_code, "
+    "endpoint, message_body_factory, method_name, get_response_object, status_code, "
     "response_content, message_body_type, whatsapp_channel_instantiation_type",
-    prefix="from_auth_params_or_instance",
-    has_tag="invalid_content_or_unexpected_response",
+    prefix="from_all_instantiation_types_case__invalid_content",
 )
-def test_send_message_from_auth_params_or_instance__invalid(
+def test_send_message_from_all_instantiation_types_case__invalid_content(
     httpserver,
+    http_test_client,
     endpoint,
     message_body_factory,
     method_name,
-    raw_response_fixture,
+    get_response_object,
     status_code,
     response_content,
     message_body_type,
@@ -117,44 +121,11 @@ def test_send_message_from_auth_params_or_instance__invalid(
         http_server=httpserver,
         endpoint=endpoint,
         headers=get_expected_headers("secret"),
-        response=raw_response_fixture(status_code, response_content),
+        response=get_response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         message_body_type=message_body_type,
         method_name=method_name,
         server_url=httpserver.url_for("/"),
-    )
-
-    assert isinstance(response, WhatsAppResponse) is False
-    assert response.status_code == status_code
-    assert response.json() == response_content
-
-
-@parametrize_with_cases(
-    "endpoint, message_body_factory, method_name, raw_response_fixture, status_code, "
-    "response_content, message_body_type",
-    prefix="from_provided_client",
-)
-def test_send_message_from_provided_client(
-    httpserver,
-    http_test_client,
-    endpoint,
-    message_body_factory,
-    method_name,
-    raw_response_fixture,
-    status_code,
-    response_content,
-    message_body_type,
-    get_expected_headers,
-):
-    response = send_message_request(
-        factory=message_body_factory,
-        http_server=httpserver,
-        endpoint=endpoint,
-        headers=get_expected_headers("secret"),
-        response=raw_response_fixture(status_code, response_content),
-        instantiation_type="provided_client",
-        message_body_type=message_body_type,
-        method_name=method_name,
         client=http_test_client(
             url=httpserver.url_for("/"),
             headers=WhatsAppChannel.build_request_headers("secret"),

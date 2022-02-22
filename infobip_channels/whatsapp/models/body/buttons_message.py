@@ -11,7 +11,7 @@ from pydantic import AnyHttpUrl, conlist, constr, validator
 from infobip_channels.whatsapp.models.response.core import (
     CamelCaseModel,
     MessageBody,
-    ValidateUrlLengthMixin,
+    UrlLengthValidatorMixin,
 )
 
 
@@ -23,7 +23,7 @@ class Footer(CamelCaseModel):
     text: constr(min_length=1, max_length=60)
 
 
-class HeaderDocument(ValidateUrlLengthMixin, CamelCaseModel):
+class HeaderDocument(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["DOCUMENT"]
     media_url: AnyHttpUrl
     filename: Optional[constr(max_length=240)] = None
@@ -33,7 +33,7 @@ class HeaderDocument(ValidateUrlLengthMixin, CamelCaseModel):
         return super().validate_url_length(value)
 
 
-class HeaderVideo(ValidateUrlLengthMixin, CamelCaseModel):
+class HeaderVideo(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["VIDEO"]
     media_url: AnyHttpUrl
 
@@ -42,7 +42,7 @@ class HeaderVideo(ValidateUrlLengthMixin, CamelCaseModel):
         return super().validate_url_length(value)
 
 
-class HeaderImage(ValidateUrlLengthMixin, CamelCaseModel):
+class HeaderImage(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["IMAGE"]
     media_url: AnyHttpUrl
 

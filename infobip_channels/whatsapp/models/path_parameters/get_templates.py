@@ -1,5 +1,5 @@
-from infobip_channels.whatsapp.models.response.core import PathParameter
+from infobip_channels.whatsapp.models.path_parameters.core import PathParameters
 
 
-class GetTemplatesPathParameters(PathParameter):
+class GetTemplatesPathParameters(PathParameters):
     pass

@@ -10,7 +10,7 @@ from pydantic import AnyHttpUrl, conlist, constr, validator
 
 from infobip_channels.whatsapp.models.response.core import (
     CamelCaseModel,
-    ValidateUrlLengthMixin,
+    UrlLengthValidatorMixin,
 )
 
 
@@ -126,7 +126,7 @@ class ButtonPhoneNumber(CamelCaseModel):
     phone_number: str
 
 
-class ButtonUrl(ValidateUrlLengthMixin, CamelCaseModel):
+class ButtonUrl(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["URL"]
     text: constr(max_length=200)
     url: AnyHttpUrl

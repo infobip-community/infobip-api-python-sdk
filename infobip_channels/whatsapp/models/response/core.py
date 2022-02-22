@@ -16,7 +16,7 @@ class CamelCaseModel(BaseModel):
         allow_population_by_field_name = True
 
 
-class ValidateUrlLengthMixin:
+class UrlLengthValidatorMixin:
     MAX_URL_LENGTH = 2048
 
     @classmethod
@@ -30,7 +30,7 @@ class ValidateUrlLengthMixin:
         return value
 
 
-class MessageBody(ValidateUrlLengthMixin, CamelCaseModel):
+class MessageBody(UrlLengthValidatorMixin, CamelCaseModel):
     from_number: constr(min_length=1, max_length=24) = Field(alias="from")
     to: constr(min_length=1, max_length=24)
     message_id: Optional[constr(max_length=50)] = None
@@ -40,10 +40,6 @@ class MessageBody(ValidateUrlLengthMixin, CamelCaseModel):
     @validator("notify_url", pre=True)
     def validate_url_length(cls, value: str) -> str:
         return super().validate_url_length(value)
-
-
-class PathParameter(CamelCaseModel):
-    path_parameter: str
 
 
 class WhatsAppResponse(CamelCaseModel):
@@ -77,11 +73,15 @@ class ResponseOKStatus(CamelCaseModel):
     action: Optional[str] = None
 
 
-class WhatsAppResponseOK(WhatsAppResponse):
+class WhatsAppResponseOKPayload(CamelCaseModel):
     to: str
     message_count: int
     message_id: str
     status: ResponseOKStatus
+
+
+class WhatsAppResponseOK(WhatsAppResponseOKPayload, WhatsAppResponse):
+    pass
 
 
 def to_header_specific_case(string: str) -> str:

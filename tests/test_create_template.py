@@ -3,7 +3,7 @@ from pydantic.error_wrappers import ValidationError
 
 from tests.conftest import (
     CreateTemplateBodyFactory,
-    SenderBodyFactory,
+    CreateTemplatesPathParametersFactory,
     get_random_string,
 )
 
@@ -11,7 +11,7 @@ from tests.conftest import (
 @pytest.mark.parametrize("sender", [None, {}])
 def test_when_sender_is_invalid__validation_error_is_raised(sender):
     with pytest.raises(ValidationError):
-        SenderBodyFactory.build(**{"sender": sender})
+        CreateTemplatesPathParametersFactory.build(**{"sender": sender})
 
 
 @pytest.mark.parametrize("name", [None, {}])

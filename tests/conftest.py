@@ -20,6 +20,7 @@ from infobip_channels.whatsapp.models.body.multi_product_message import (
 )
 from infobip_channels.whatsapp.models.body.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.body.sticker_message import StickerMessageBody
+from infobip_channels.whatsapp.models.body.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
 from infobip_channels.whatsapp.models.path_parameters.get_templates import (
@@ -75,6 +76,79 @@ class ButtonsMessageBodyFactory(ModelFactory):
 class ListMessageBodyFactory(ModelFactory):
     __model__ = ListMessageBody
 
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return ListMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "content": {
+                    "body": {"text": "Body text"},
+                    "action": {
+                        "title": "Action title",
+                        "sections": [
+                            {
+                                "title": "section title",
+                                "rows": [
+                                    {
+                                        "id": "1",
+                                        "title": "row title",
+                                        "description": "row description",
+                                    }
+                                ],
+                            },
+                            {
+                                "title": "section title 2",
+                                "rows": [
+                                    {
+                                        "id": "2",
+                                        "title": "row title 2",
+                                        "description": "row description 2",
+                                    }
+                                ],
+                            },
+                        ],
+                    },
+                    "header": {"type": "TEXT", "text": "header text"},
+                    "footer": {"text": "footer text"},
+                },
+            }
+        )
+
+
+class TemplateMessageBodyFactory(ModelFactory):
+    __model__ = TemplateMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because pydantic_factories can't handle regex patterns."""
+        return TemplateMessageBody(
+            **{
+                "messages": [
+                    {
+                        "from": "441134960000",
+                        "to": "38595671032",
+                        "content": {
+                            "template_name": "template_name",
+                            "template_data": {
+                                "body": {"placeholders": ["value 1", "value 2"]},
+                                "header": {
+                                    "type": "VIDEO",
+                                    "media_url": "https://video.com",
+                                },
+                                "buttons": [
+                                    {"type": "QUICK_REPLY", "parameter": "button 1"},
+                                ],
+                            },
+                            "language": "en",
+                        },
+                    },
+                ],
+            }
+        )
+
 
 class ProductMessageBodyFactory(ModelFactory):
     __model__ = ProductMessageBody
@@ -88,8 +162,8 @@ class MultiProductMessageBodyFactory(ModelFactory):
         """Needed because factory classes don't play well with custom validation."""
         return MultiProductMessageBody(
             **{
-                "from": "1234",
-                "to": "6789",
+                "from": "441134960000",
+                "to": "38598451987",
                 "content": {
                     "header": {"type": "TEXT", "text": "Some text"},
                     "body": {"text": "Some text"},
@@ -115,7 +189,7 @@ class CreateTemplateBodyFactory(ModelFactory):
     __model__ = CreateTemplate
 
 
-class SenderBodyFactory(ModelFactory):
+class CreateTemplatesPathParametersFactory(ModelFactory):
     __model__ = GetTemplatesPathParameters
 
 
@@ -158,6 +232,38 @@ def get_response_ok_content():
     }
 
 
+def get_template_message_response_ok_content():
+    return {
+        "messages": [
+            {
+                "to": "441134960001",
+                "messageCount": 1,
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "status": {
+                    "groupId": 1,
+                    "groupName": "PENDING",
+                    "id": 7,
+                    "name": "PENDING_ENROUTE",
+                    "description": "Message sent to next instance",
+                },
+            },
+            {
+                "to": "441631451112",
+                "messageCount": 1,
+                "messageId": "a2ga3hgc-sa7n-1ach-0df1-9b55aeb3a1na",
+                "status": {
+                    "groupId": 1,
+                    "groupName": "PENDING",
+                    "id": 7,
+                    "name": "PENDING_ENROUTE",
+                    "description": "Message sent to next instance",
+                },
+            },
+        ],
+        "bulkId": "2034072219640523073",
+    }
+
+
 def get_response_ok_invalid_content():
     return {
         "to": "441134960001",
@@ -166,11 +272,8 @@ def get_response_ok_invalid_content():
     }
 
 
-def get_response_ok():
-    def _get_response_ok(status_code, content):
-        return Response(json.dumps(content), status=status_code)
-
-    return _get_response_ok
+def get_response_object(status_code, content):
+    return Response(json.dumps(content), status=status_code)
 
 
 def get_response_error_content():
@@ -194,13 +297,6 @@ def get_response_error_invalid_content():
     return {
         "error": {"field_one": "error_one", "field_two": "error_two"},
     }
-
-
-def get_response_error():
-    def _get_response_error(status_code, content):
-        return Response(json.dumps(content), status=status_code)
-
-    return _get_response_error
 
 
 @pytest.fixture

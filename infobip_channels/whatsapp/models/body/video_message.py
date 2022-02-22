@@ -5,11 +5,11 @@ from pydantic import AnyHttpUrl, constr, validator
 from infobip_channels.whatsapp.models.response.core import (
     CamelCaseModel,
     MessageBody,
-    ValidateUrlLengthMixin,
+    UrlLengthValidatorMixin,
 )
 
 
-class Content(ValidateUrlLengthMixin, CamelCaseModel):
+class Content(UrlLengthValidatorMixin, CamelCaseModel):
     media_url: AnyHttpUrl
     caption: Optional[constr(max_length=3000)] = None
 
