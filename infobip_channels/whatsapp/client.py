@@ -103,7 +103,7 @@ class WhatsAppChannel:
         return cls(client)
 
     @staticmethod
-    def validate_auth_params(base_url: AnyHttpUrl, api_key: str):
+    def validate_auth_params(base_url: Union[AnyHttpUrl, str], api_key: str):
         """Validate the provided base_url and api_key. This validation is purely client
         side. If the parameters are validated successfully, an instance of the
         Authentication class is returned which holds the base_url and api_key values.
