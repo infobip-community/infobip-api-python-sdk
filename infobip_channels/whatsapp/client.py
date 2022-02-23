@@ -36,6 +36,12 @@ from infobip_channels.whatsapp.models.response.core import (
     WhatsAppResponseError,
     WhatsAppResponseOK,
 )
+from infobip_channels.whatsapp.models.response.create_template import (
+    WhatsAppTemplateResponseOK,
+)
+from infobip_channels.whatsapp.models.response.get_templates import (
+    WhatsAppTemplatesResponseOK,
+)
 
 
 class HttpClient:
@@ -457,7 +463,7 @@ class WhatsAppChannel:
         response = self._client.get(
             self.MANAGE_URL_TEMPLATE + path_parameter.sender + "/templates"
         )
-        return self._construct_response(response)
+        return self._construct_response(response, WhatsAppTemplatesResponseOK)
 
     def create_template(
         self,
@@ -482,4 +488,4 @@ class WhatsAppChannel:
             self.MANAGE_URL_TEMPLATE + path_parameter.sender + "/templates",
             message.dict(by_alias=True),
         )
-        return self._construct_response(response)
+        return self._construct_response(response, WhatsAppTemplateResponseOK)
