@@ -15,7 +15,7 @@ class HeaderTypeEnum(str, Enum):
 
 
 class Section(SectionBase):
-    product_retailer_ids: conlist(str, min_items=1)
+    product_retailer_ids: List[str]
 
 
 class Footer(CamelCaseModel):
