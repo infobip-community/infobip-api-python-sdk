@@ -1,5 +1,5 @@
 from infobip_channels.whatsapp.models.response.core import CamelCaseModel
 
 
-class PathParameters(CamelCaseModel):
+class PathParameter(CamelCaseModel):
     sender: str

@@ -24,7 +24,7 @@ from infobip_channels.whatsapp.models.body.template_message import (
 )
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
-from infobip_channels.whatsapp.models.path_parameters.core import PathParameters
+from infobip_channels.whatsapp.models.path_parameters.core import PathParameter
 from infobip_channels.whatsapp.models.path_parameters.get_templates import (
     GetTemplatesPathParameters,
 )
@@ -164,8 +164,8 @@ class WhatsAppChannel:
 
     @staticmethod
     def validate_path_parameter(
-        parameter: Union[PathParameters, Dict], parameter_type: Type[PathParameters]
-    ) -> PathParameters:
+        parameter: Union[PathParameter, Dict], parameter_type: Type[PathParameter]
+    ) -> PathParameter:
         """
         Validate path parameter by trying to instantiate the provided class and
         extract valid path parameter
