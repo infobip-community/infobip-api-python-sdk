@@ -105,6 +105,7 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
         get_random_string(513),
         "template name !!",
         "template_name_example 2",
+        "Template_Name_Example",
     ],
 )
 def test_when_template_name_is_invalid__validation_error_is_raised(template_name):
