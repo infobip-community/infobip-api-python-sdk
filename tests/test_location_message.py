@@ -2,6 +2,7 @@ import pytest
 from pydantic.error_wrappers import ValidationError
 
 from infobip_channels.whatsapp.models.core import MessageBody
+from infobip_channels.whatsapp.models.location_message import LocationMessageBody
 from tests.conftest import LocationMessageBodyFactory, get_random_string
 
 
@@ -60,3 +61,23 @@ def test_when_content_address_is_invalid__validation_error_is_raised(address):
                 }
             }
         )
+
+
+def test_when_input_data_is_valid__validation_error_is_not_raised():
+    try:
+        LocationMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "content": {
+                    "latitude": 83,
+                    "longitude": -103,
+                    "name": "test",
+                    "address": "test",
+                },
+                "callbackData": "Callback data",
+            }
+        )
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
