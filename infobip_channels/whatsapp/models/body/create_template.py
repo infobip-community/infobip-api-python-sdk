@@ -124,16 +124,12 @@ class Button(CamelCaseModel):
     text: constr(max_length=200)
 
 
-class ButtonCallToAction(Button):
-    pass
-
-
-class ButtonPhoneNumber(ButtonCallToAction):
+class ButtonPhoneNumber(Button):
     type: Literal["PHONE_NUMBER"]
     phone_number: str
 
 
-class ButtonUrl(ValidateUrlLengthMixin, ButtonCallToAction):
+class ButtonUrl(ValidateUrlLengthMixin, Button):
     type: Literal["URL"]
     url: AnyHttpUrl
 
@@ -154,7 +150,7 @@ class Structure(CamelCaseModel):
     footer: Optional[constr(max_length=60)] = None
     buttons: Optional[
         Union[
-            conlist(ButtonCallToAction, max_items=2),
+            conlist(Union[ButtonPhoneNumber, ButtonUrl], max_items=2),
             conlist(ButtonQuickReply, max_items=3),
         ]
     ] = None
@@ -163,7 +159,7 @@ class Structure(CamelCaseModel):
     def validate_buttons(cls, buttons: List[Button]) -> List[Button]:
         if (
             not buttons
-            or not isinstance(buttons[0], ButtonCallToAction)
+            or not isinstance(buttons[0], ButtonQuickReply)
             or len(buttons) == 1
         ):
             return buttons
