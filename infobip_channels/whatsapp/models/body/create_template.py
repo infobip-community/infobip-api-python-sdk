@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 try:
     from typing import Literal
@@ -120,15 +120,18 @@ class CategoryEnum(str, Enum):
     AUTO_REPLY = "AUTO_REPLY"
 
 
-class ButtonPhoneNumber(CamelCaseModel):
-    type: Literal["PHONE_NUMBER"]
+class Button(CamelCaseModel):
     text: constr(max_length=200)
+
+
+class ButtonPhoneNumber(Button):
+    type: Literal["PHONE_NUMBER"]
     phone_number: str
+
 
 
 class ButtonUrl(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["URL"]
-    text: constr(max_length=200)
     url: AnyHttpUrl
 
     @validator("url", pre=True)
@@ -136,9 +139,8 @@ class ButtonUrl(UrlLengthValidatorMixin, CamelCaseModel):
         return super().validate_url_length(value)
 
 
-class ButtonQuickReply(CamelCaseModel):
+class ButtonQuickReply(Button):
     type: Literal["QUICK_REPLY"]
-    text: constr(max_length=200)
 
 
 class Structure(CamelCaseModel):
@@ -148,12 +150,21 @@ class Structure(CamelCaseModel):
     body: str
     footer: Optional[constr(max_length=60)] = None
     buttons: Optional[
-        conlist(
-            Union[ButtonPhoneNumber, ButtonUrl, ButtonQuickReply],
-            min_items=1,
-            max_items=3,
-        )
-    ]
+        Union[
+            conlist(Union[ButtonPhoneNumber, ButtonUrl], max_items=2),
+            conlist(ButtonQuickReply, max_items=3),
+        ]
+    ] = None
+
+    @validator("buttons")
+    def validate_buttons(cls, buttons: List[Button]) -> List[Button]:
+        if not buttons or isinstance(buttons[0], ButtonQuickReply) or len(buttons) == 1:
+            return buttons
+
+        if buttons[0].type == buttons[1].type:
+            raise ValueError("Call to action buttons must be unique in type")
+
+        return buttons
 
 
 class CreateTemplate(CamelCaseModel):
