@@ -157,11 +157,7 @@ class Structure(CamelCaseModel):
 
     @validator("buttons")
     def validate_buttons(cls, buttons: List[Button]) -> List[Button]:
-        if (
-            not buttons
-            or not isinstance(buttons[0], ButtonQuickReply)
-            or len(buttons) == 1
-        ):
+        if not buttons or isinstance(buttons[0], ButtonQuickReply) or len(buttons) == 1:
             return buttons
 
         if buttons[0].type == buttons[1].type:
