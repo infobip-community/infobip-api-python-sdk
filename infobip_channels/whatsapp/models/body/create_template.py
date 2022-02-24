@@ -8,9 +8,9 @@ except ImportError:
 
 from pydantic import AnyHttpUrl, conlist, constr, validator
 
-from infobip_channels.whatsapp.models.body.core import (
+from infobip_channels.whatsapp.models.response.core import (
     CamelCaseModel,
-    ValidateUrlLengthMixin,
+    UrlLengthValidatorMixin,
 )
 
 
@@ -129,7 +129,8 @@ class ButtonPhoneNumber(Button):
     phone_number: str
 
 
-class ButtonUrl(ValidateUrlLengthMixin, Button):
+
+class ButtonUrl(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["URL"]
     url: AnyHttpUrl
 

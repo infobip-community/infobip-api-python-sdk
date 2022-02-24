@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import constr
 
-from infobip_channels.whatsapp.models.body.core import CamelCaseModel, MessageBody
+from infobip_channels.whatsapp.models.response.core import CamelCaseModel, MessageBody
 
 
 class Action(CamelCaseModel):
