@@ -32,7 +32,7 @@ def test_when_language_is_invalid__validation_error_is_raised(language):
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
-                "name": "exampleName",
+                "name": "examplename",
                 "language": language,
                 "category": "ACCOUNT_UPDATE",
                 "structure": {"body": "example {{1}} body"},
@@ -45,7 +45,7 @@ def test_when_category_is_invalid__validation_error_is_raised(category):
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
-                "name": "exampleName",
+                "name": "examplename",
                 "language": "en",
                 "category": category,
                 "structure": {"body": "example {{1}} body"},
@@ -58,7 +58,7 @@ def test_when_structure_is_invalid__validation_error_is_raised(structure):
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
-                "name": "exampleName",
+                "name": "examplename",
                 "language": "en",
                 "category": "ACCOUNT_UPDATE",
                 "structure": structure,
@@ -71,27 +71,11 @@ def test_when_header_format_is_invalid__validation_error_is_raised(header_format
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
-                "name": "exampleName",
+                "name": "examplename",
                 "language": "en",
                 "category": "ACCOUNT_UPDATE",
                 "structure": {
                     "header": {"format": header_format, "text": "Text example"},
-                    "body": "example {{1}} body",
-                },
-            }
-        )
-
-
-@pytest.mark.parametrize("text", [None, {}])
-def test_when_header_text_is_invalid__validation_error_is_raised(text):
-    with pytest.raises(ValidationError):
-        CreateTemplateBodyFactory.build(
-            **{
-                "name": "exampleName",
-                "language": "en",
-                "category": "ACCOUNT_UPDATE",
-                "structure": {
-                    "header": {"format": "TEXT", "text": text},
                     "body": "example {{1}} body",
                 },
             }
@@ -103,7 +87,7 @@ def test_when_body_is_invalid__validation_error_is_raised(body):
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
-                "name": "exampleName",
+                "name": "examplename",
                 "language": "en",
                 "category": "ACCOUNT_UPDATE",
                 "structure": {
@@ -119,7 +103,7 @@ def test_when_buttons_text_is_invalid__validation_error_is_raised(text):
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
-                "name": "exampleName",
+                "name": "examplename",
                 "language": "en",
                 "category": "ACCOUNT_UPDATE",
                 "structure": {
@@ -145,7 +129,7 @@ def test_when_buttons_url_is_invalid__validation_error_is_raised(url):
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
-                "name": "exampleName",
+                "name": "examplename",
                 "language": "en",
                 "category": "ACCOUNT_UPDATE",
                 "structure": {
@@ -162,7 +146,7 @@ def test_when_buttons_phone_number_is_invalid__validation_error_is_raised(phone_
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
-                "name": "exampleName",
+                "name": "examplename",
                 "language": "en",
                 "category": "ACCOUNT_UPDATE",
                 "structure": {
@@ -188,7 +172,7 @@ def test_when_buttons_number_is_invalid__validation_error_is_raised(buttons_numb
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
-                "name": "exampleName",
+                "name": "examplename",
                 "language": "en",
                 "category": "ACCOUNT_UPDATE",
                 "structure": {

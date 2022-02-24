@@ -157,7 +157,7 @@ class Structure(CamelCaseModel):
 
 
 class CreateTemplate(CamelCaseModel):
-    name: str
+    name: constr(regex=r"^[a-z0-9_]+$")  # noqa: F722
     language: LanguageEnum
     category: CategoryEnum
     structure: Structure
