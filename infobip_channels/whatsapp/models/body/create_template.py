@@ -129,7 +129,6 @@ class ButtonPhoneNumber(Button):
     phone_number: str
 
 
-
 class ButtonUrl(UrlLengthValidatorMixin, CamelCaseModel):
     type: Literal["URL"]
     url: AnyHttpUrl
