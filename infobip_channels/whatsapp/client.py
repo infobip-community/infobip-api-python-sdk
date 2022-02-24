@@ -151,7 +151,7 @@ class WhatsAppChannel:
         message_type: Union[
             Type[MessageBody], Type[TemplateMessageBody], Type[CreateTemplate]
         ],
-    ) -> Union[MessageBody, TemplateMessageBody]:
+    ) -> Union[MessageBody, TemplateMessageBody, CreateTemplate]:
 
         """Validate the message by trying to instantiate the provided type class.
         If the message passed is already of that type, just return it as is.
