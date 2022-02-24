@@ -9,7 +9,16 @@ def test_location_message_body__is_an_instance_of_message_body():
     assert isinstance(LocationMessageBodyFactory.build(), MessageBody) is True
 
 
-@pytest.mark.parametrize("content", [None, "", {}])
+@pytest.mark.parametrize(
+    "content",
+    [
+        None,
+        "",
+        {},
+        {"latitude": 42, "name": "test", "address": "address one"},
+        {"longitude": 120, "name": "test", "address": "address one"},
+    ],
+)
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
         LocationMessageBodyFactory.build(**{"content": content})
@@ -19,7 +28,7 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
 def test_when_content_latitude_is_invalid__validation_error_is_raised(latitude):
     with pytest.raises(ValidationError):
         LocationMessageBodyFactory.build(
-            **{"content": {"latitude": latitude}, "longitude": 120.53}
+            **{"content": {"latitude": latitude, "longitude": 120.53}}
         )
 
 
