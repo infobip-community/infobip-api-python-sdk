@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import conlist, constr, validator
 
-from infobip_channels.whatsapp.models.action_sections import (
+from infobip_channels.whatsapp.models.body.action_sections import (
     SectionBase,
     SectionTitleValidatorMixin,
 )
@@ -15,7 +15,7 @@ class HeaderTypeEnum(str, Enum):
 
 
 class Section(SectionBase):
-    product_retailer_ids: conlist(str, min_items=1)
+    product_retailer_ids: List[str]
 
 
 class Footer(CamelCaseModel):

@@ -479,7 +479,6 @@ class WhatsAppChannel:
         :param message: Body of the template to send
         :return: Received response
         """
-
         message = self.validate_message_body(message, CreateTemplate)
         path_parameter = self.validate_path_parameter(
             parameter, GetTemplatesPathParameters
