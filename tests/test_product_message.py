@@ -1,6 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
+from infobip_channels.whatsapp.models.body.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.response.core import MessageBody
 from tests.conftest import ProductMessageBodyFactory, get_random_string
 
@@ -9,13 +10,32 @@ def test_product_message_body__is_an_instance_of_message_body():
     assert isinstance(ProductMessageBodyFactory.build(), MessageBody) is True
 
 
-@pytest.mark.parametrize("content", [None, "", {}])
+@pytest.mark.parametrize(
+    "content",
+    [
+        None,
+        "",
+        {},
+        {"body": {"text": "test"}},
+        {"footer": {"text": "footer"}},
+        {"body": {"text": "test"}, "footer": {"text": "footer"}},
+    ],
+)
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
         ProductMessageBodyFactory.build(**{"content": content})
 
 
-@pytest.mark.parametrize("action", [None, "", {}])
+@pytest.mark.parametrize(
+    "action",
+    [
+        None,
+        "",
+        {},
+        {"catalogId": "1"},
+        {"productRetailerId": "2"},
+    ],
+)
 def test_when_action_is_invalid__validation_error_is_raised(action):
     with pytest.raises(ValidationError):
         ProductMessageBodyFactory.build(**{"content": {"action": action}})
@@ -50,6 +70,19 @@ def test_when_action_product_retailer_id_is_invalid__validation_error_is_raised(
         )
 
 
+@pytest.mark.parametrize("body", ["", {}])
+def test_when_body_is_invalid__validation_error_is_raised(body):
+    with pytest.raises(ValidationError):
+        ProductMessageBodyFactory.build(
+            **{
+                "content": {
+                    "action": {"catalogId": "1", "productRetailerId": "2"},
+                    "body": body,
+                }
+            }
+        )
+
+
 @pytest.mark.parametrize("text", [None, "", {}, get_random_string(1025)])
 def test_when_body_text_is_invalid__validation_error_is_raised(text):
     with pytest.raises(ValidationError):
@@ -58,6 +91,19 @@ def test_when_body_text_is_invalid__validation_error_is_raised(text):
                 "content": {
                     "action": {"catalogId": "1", "productRetailerId": "2"},
                     "body": {"text": text},
+                }
+            }
+        )
+
+
+@pytest.mark.parametrize("footer", ["", {}])
+def test_when_footer_is_invalid__validation_error_is_raised(footer):
+    with pytest.raises(ValidationError):
+        ProductMessageBodyFactory.build(
+            **{
+                "content": {
+                    "action": {"catalogId": "1", "productRetailerId": "2"},
+                    "footer": footer,
                 }
             }
         )
@@ -74,3 +120,24 @@ def test_when_footer_text_is_invalid__validation_error_is_raised(text):
                 }
             }
         )
+
+
+def test_when_input_data_is_valid__validation_error_is_not_raised():
+    try:
+        ProductMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "content": {
+                    "body": {"text": "Body text"},
+                    "action": {
+                        "catalogId": "1",
+                        "productRetailerId": "2",
+                    },
+                    "footer": {"text": "footer text"},
+                },
+            }
+        )
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
