@@ -5,10 +5,30 @@ import requests
 from pydantic import AnyHttpUrl
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.whatsapp.models.audio_message import AudioMessageBody
-from infobip_channels.whatsapp.models.buttons_message import ButtonsMessageBody
-from infobip_channels.whatsapp.models.contact_message import ContactMessageBody
-from infobip_channels.whatsapp.models.core import (
+from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
+from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
+from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
+from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
+from infobip_channels.whatsapp.models.body.document_message import DocumentMessageBody
+from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody
+from infobip_channels.whatsapp.models.body.list_message import ListMessageBody
+from infobip_channels.whatsapp.models.body.location_message import LocationMessageBody
+from infobip_channels.whatsapp.models.body.multi_product_message import (
+    MultiProductMessageBody,
+)
+from infobip_channels.whatsapp.models.body.product_message import ProductMessageBody
+from infobip_channels.whatsapp.models.body.sticker_message import StickerMessageBody
+from infobip_channels.whatsapp.models.body.template_message import (
+    TemplateMessageBody,
+    TemplateMessageResponseOK,
+)
+from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
+from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.path_parameters.core import PathParameter
+from infobip_channels.whatsapp.models.path_parameters.get_templates import (
+    GetTemplatesPathParameters,
+)
+from infobip_channels.whatsapp.models.response.core import (
     Authentication,
     MessageBody,
     RequestHeaders,
@@ -16,21 +36,12 @@ from infobip_channels.whatsapp.models.core import (
     WhatsAppResponseError,
     WhatsAppResponseOK,
 )
-from infobip_channels.whatsapp.models.document_message import DocumentMessageBody
-from infobip_channels.whatsapp.models.image_message import ImageMessageBody
-from infobip_channels.whatsapp.models.list_message import ListMessageBody
-from infobip_channels.whatsapp.models.location_message import LocationMessageBody
-from infobip_channels.whatsapp.models.multi_product_message import (
-    MultiProductMessageBody,
+from infobip_channels.whatsapp.models.response.create_template import (
+    WhatsAppTemplateResponseOK,
 )
-from infobip_channels.whatsapp.models.product_message import ProductMessageBody
-from infobip_channels.whatsapp.models.sticker_message import StickerMessageBody
-from infobip_channels.whatsapp.models.template_message import (
-    TemplateMessageBody,
-    TemplateMessageResponseOK,
+from infobip_channels.whatsapp.models.response.get_templates import (
+    WhatsAppTemplatesResponseOK,
 )
-from infobip_channels.whatsapp.models.text_message import TextMessageBody
-from infobip_channels.whatsapp.models.video_message import VideoMessageBody
 
 
 class HttpClient:
@@ -52,11 +63,21 @@ class HttpClient:
             url=url, json=body, headers=self.headers.dict(by_alias=True)
         )
 
+    def get(self, endpoint: str) -> requests.Response:
+        """Send an HTTP get request to base_url + endpoint.
+
+        :param endpoint: Which endpoint to hit
+        :return: Received response
+        """
+        url = self.auth.base_url + endpoint
+        return requests.get(url=url, headers=self.headers.dict(by_alias=True))
+
 
 class WhatsAppChannel:
     """Client used for interaction with the Infobip's WhatsApp API."""
 
     SEND_MESSAGE_URL_TEMPLATE = "/whatsapp/1/message/"
+    MANAGE_URL_TEMPLATE = "/whatsapp/1/senders/"
 
     def __init__(self, client: Union[HttpClient, Any]) -> None:
         self._client = client
@@ -126,9 +147,12 @@ class WhatsAppChannel:
 
     @staticmethod
     def validate_message_body(
-        message: Union[MessageBody, TemplateMessageBody, Dict],
-        message_type: Union[Type[MessageBody], Type[TemplateMessageBody]],
-    ) -> Union[MessageBody, TemplateMessageBody]:
+        message: Union[MessageBody, TemplateMessageBody, CreateTemplate, Dict],
+        message_type: Union[
+            Type[MessageBody], Type[TemplateMessageBody], Type[CreateTemplate]
+        ],
+    ) -> Union[MessageBody, TemplateMessageBody, CreateTemplate]:
+
         """Validate the message by trying to instantiate the provided type class.
         If the message passed is already of that type, just return it as is.
 
@@ -137,6 +161,24 @@ class WhatsAppChannel:
         :return: Class instance corresponding to the provided message body type
         """
         return message if isinstance(message, message_type) else message_type(**message)
+
+    @staticmethod
+    def validate_path_parameter(
+        parameter: Union[PathParameter, Dict], parameter_type: Type[PathParameter]
+    ) -> PathParameter:
+        """
+        Validate path parameter by trying to instantiate the provided class and
+        extract valid path parameter
+
+        :param parameter: Path parameter to validate
+        :param parameter_type: Type of path parameter
+        :return: Returned path parameter
+        """
+        return (
+            parameter
+            if isinstance(parameter, parameter_type)
+            else parameter_type(**parameter)
+        )
 
     def _construct_response(
         self,
@@ -405,3 +447,44 @@ class WhatsAppChannel:
             message.dict(by_alias=True),
         )
         return self._construct_response(response)
+
+    def get_templates(
+        self, parameter: Union[GetTemplatesPathParameters, Dict]
+    ) -> Union[WhatsAppResponse, Any]:
+        """Get all the templates and their statuses for a given sender.
+
+        :param parameter: Registered WhatsApp sender number.Must be in international
+        format
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, GetTemplatesPathParameters
+        )
+        response = self._client.get(
+            self.MANAGE_URL_TEMPLATE + path_parameter.sender + "/templates"
+        )
+        return self._construct_response(response, WhatsAppTemplatesResponseOK)
+
+    def create_template(
+        self,
+        parameter: Union[GetTemplatesPathParameters, Dict],
+        message: Union[CreateTemplate, Dict],
+    ) -> Union[WhatsAppResponse, Any]:
+        """Create WhatsApp template. Created template will be submitted for
+        WhatsApp's review and approval. Once approved, template can be sent to
+        end-users. Refer to template guidelines for additional info.
+
+        :param parameter: Registered WhatsApp sender number.Must be in international
+        format
+        :param message: Body of the template to send
+        :return: Received response
+        """
+        message = self.validate_message_body(message, CreateTemplate)
+        path_parameter = self.validate_path_parameter(
+            parameter, GetTemplatesPathParameters
+        )
+        response = self._client.post(
+            self.MANAGE_URL_TEMPLATE + path_parameter.sender + "/templates",
+            message.dict(by_alias=True),
+        )
+        return self._construct_response(response, WhatsAppTemplateResponseOK)
