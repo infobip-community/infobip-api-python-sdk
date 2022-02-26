@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import AnyHttpUrl, constr, validator
 
-from infobip_channels.whatsapp.models.core import (
+from infobip_channels.whatsapp.models.response.core import (
     CamelCaseModel,
     MessageBody,
     UrlLengthValidatorMixin,
@@ -18,5 +18,5 @@ class Content(UrlLengthValidatorMixin, CamelCaseModel):
         return super().validate_url_length(value)
 
 
-class VideoMessageBody(MessageBody):
+class ImageMessageBody(MessageBody):
     content: Content

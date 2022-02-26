@@ -1,7 +1,8 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.whatsapp.models.core import MessageBody
+from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
+from infobip_channels.whatsapp.models.response.core import MessageBody
 from tests.conftest import ContactMessageBodyFactory
 
 
@@ -15,8 +16,26 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
         ContactMessageBodyFactory.build(**{"content": content})
 
 
-@pytest.mark.parametrize("contacts", [None, "", {}])
-def test_when_contacts_type_is_invalid__validation_error_is_raised(contacts):
+@pytest.mark.parametrize(
+    "contacts",
+    [
+        None,
+        "",
+        {},
+        [{}],
+        [
+            {
+                "addresses": [{"street": "street"}],
+                "birthday": "1992-02-22",
+                "emails": [{"email": "some_email@gmail.com"}],
+                "org": {"company": "company"},
+                "phones": [{"phone": "38598765123"}],
+                "urls": [{"url": "https://url.com"}],
+            }
+        ],
+    ],
+)
+def test_when_contacts_is_invalid__validation_error_is_raised(contacts):
     with pytest.raises(ValidationError):
         ContactMessageBodyFactory.build(**{"content": {"contacts": contacts}})
 
@@ -61,7 +80,9 @@ def test_when_emails_type_is_invalid__validation_error_is_raised(test_type):
         )
 
 
-@pytest.mark.parametrize("name", [None, {}])
+@pytest.mark.parametrize(
+    "name", [None, {}, {"firstName": "test"}, {"formattedName": "text"}]
+)
 def test_when_name_is_invalid__validation_error_is_raised(name):
     with pytest.raises(ValidationError):
         ContactMessageBodyFactory.build(**{"content": {"contacts": [{"name": name}]}})
@@ -165,3 +186,82 @@ def test_when_birthday_is_invalid__validation_error_is_raised(birthday):
                 }
             }
         )
+
+
+def test_when_input_data_is_valid__validation_error_is_not_raised():
+    try:
+        ContactMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "content": {
+                    "contacts": [
+                        {
+                            "addresses": [
+                                {
+                                    "street": "Istarska",
+                                    "city": "Vodnjan",
+                                    "zip": "52215",
+                                    "country": "Croatia",
+                                    "countryCode": "HR",
+                                    "type": "WORK",
+                                },
+                                {
+                                    "street": "Istarska",
+                                    "city": "Vodnjan",
+                                    "zip": "52215",
+                                    "country": "Croatia",
+                                    "countryCode": "HR",
+                                    "type": "HOME",
+                                },
+                            ],
+                            "birthday": "2010-01-01",
+                            "emails": [
+                                {"email": "John.Smith@example.com", "type": "WORK"},
+                                {
+                                    "email": "John.Smith.priv@example.com",
+                                    "type": "HOME",
+                                },
+                            ],
+                            "name": {
+                                "firstName": "John",
+                                "lastName": "Smith",
+                                "middleName": "B",
+                                "namePrefix": "Mr.",
+                                "formattedName": "Mr. John Smith",
+                            },
+                            "org": {
+                                "company": "Company Name",
+                                "department": "Department",
+                                "title": "Director",
+                            },
+                            "phones": [
+                                {
+                                    "phone": "+441134960019",
+                                    "type": "HOME",
+                                    "waId": "441134960019",
+                                },
+                                {
+                                    "phone": "+441134960000",
+                                    "type": "WORK",
+                                    "waId": "441134960000",
+                                },
+                            ],
+                            "urls": [
+                                {
+                                    "url": "http://example.com/John.Smith",
+                                    "type": "WORK",
+                                },
+                                {
+                                    "url": "http://example.com/home/John.Smith",
+                                    "type": "HOME",
+                                },
+                            ],
+                        }
+                    ],
+                },
+            }
+        )
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
