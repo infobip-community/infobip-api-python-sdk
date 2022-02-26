@@ -38,5 +38,5 @@ class Template(CamelCaseModel):
     structure: Structure
 
 
-class WhatsAppTemplatesResponseOK(WhatsAppResponse):
+class GetTemplatesResponseOK(WhatsAppResponse):
     templates: List[Template]

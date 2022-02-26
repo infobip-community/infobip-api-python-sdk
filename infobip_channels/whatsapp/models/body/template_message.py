@@ -11,8 +11,6 @@ from infobip_channels.whatsapp.models.response.core import (
     CamelCaseModel,
     MessageBody,
     UrlLengthValidatorMixin,
-    WhatsAppResponse,
-    WhatsAppResponseOKPayload,
 )
 
 
@@ -108,8 +106,3 @@ class Message(MessageBody):
 class TemplateMessageBody(CamelCaseModel):
     messages: List[Message]
     bulk_id: Optional[constr(max_length=100)] = None
-
-
-class TemplateMessageResponseOK(WhatsAppResponse):
-    messages: List[WhatsAppResponseOKPayload]
-    bulk_id: Optional[str] = None
