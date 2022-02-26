@@ -8,6 +8,7 @@ from pydantic.error_wrappers import ValidationError
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
+from infobip_channels.whatsapp.models.body.core import Authentication, MessageBody
 from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
 from infobip_channels.whatsapp.models.body.document_message import DocumentMessageBody
 from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody
@@ -21,14 +22,12 @@ from infobip_channels.whatsapp.models.body.sticker_message import StickerMessage
 from infobip_channels.whatsapp.models.body.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.headers.core import RequestHeaders
 from infobip_channels.whatsapp.models.path_parameters.core import PathParameter
 from infobip_channels.whatsapp.models.path_parameters.get_templates import (
     GetTemplatesPathParameters,
 )
 from infobip_channels.whatsapp.models.response.core import (
-    Authentication,
-    MessageBody,
-    RequestHeaders,
     WhatsAppResponse,
     WhatsAppResponseError,
     WhatsAppResponseOK,
