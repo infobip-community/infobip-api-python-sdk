@@ -1,6 +1,8 @@
-from pydantic import AnyHttpUrl, validator
+from typing import Optional
 
-from infobip_channels.whatsapp.models.core import (
+from pydantic import AnyHttpUrl, constr, validator
+
+from infobip_channels.whatsapp.models.response.core import (
     CamelCaseModel,
     MessageBody,
     UrlLengthValidatorMixin,
@@ -9,11 +11,12 @@ from infobip_channels.whatsapp.models.core import (
 
 class Content(UrlLengthValidatorMixin, CamelCaseModel):
     media_url: AnyHttpUrl
+    caption: Optional[constr(max_length=3000)] = None
 
     @validator("media_url", pre=True)
     def validate_url_length(cls, value: str) -> str:
         return super().validate_url_length(value)
 
 
-class StickerMessageBody(MessageBody):
+class VideoMessageBody(MessageBody):
     content: Content
