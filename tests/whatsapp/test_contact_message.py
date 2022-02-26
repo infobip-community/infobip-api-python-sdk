@@ -3,7 +3,7 @@ from pydantic.error_wrappers import ValidationError
 
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
 from infobip_channels.whatsapp.models.body.core import MessageBody
-from tests.conftest import ContactMessageBodyFactory
+from tests.whatsapp.conftest import ContactMessageBodyFactory
 
 
 def test_contact_message_body__is_an_instance_of_message_body():
