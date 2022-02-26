@@ -1,6 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
+from infobip_channels.whatsapp.models.body.location_message import LocationMessageBody
 from infobip_channels.whatsapp.models.response.core import MessageBody
 from tests.conftest import LocationMessageBodyFactory, get_random_string
 
@@ -9,7 +10,16 @@ def test_location_message_body__is_an_instance_of_message_body():
     assert isinstance(LocationMessageBodyFactory.build(), MessageBody) is True
 
 
-@pytest.mark.parametrize("content", [None, "", {}])
+@pytest.mark.parametrize(
+    "content",
+    [
+        None,
+        "",
+        {},
+        {"latitude": 42, "name": "test", "address": "address one"},
+        {"longitude": 120, "name": "test", "address": "address one"},
+    ],
+)
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
         LocationMessageBodyFactory.build(**{"content": content})
@@ -19,7 +29,7 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
 def test_when_content_latitude_is_invalid__validation_error_is_raised(latitude):
     with pytest.raises(ValidationError):
         LocationMessageBodyFactory.build(
-            **{"content": {"latitude": latitude}, "longitude": 120.53}
+            **{"content": {"latitude": latitude, "longitude": 120.53}}
         )
 
 
@@ -51,3 +61,23 @@ def test_when_content_address_is_invalid__validation_error_is_raised(address):
                 }
             }
         )
+
+
+def test_when_input_data_is_valid__validation_error_is_not_raised():
+    try:
+        LocationMessageBody(
+            **{
+                "from": "441134960000",
+                "to": "38598451987",
+                "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
+                "content": {
+                    "latitude": 83,
+                    "longitude": -103,
+                    "name": "test",
+                    "address": "test",
+                },
+                "callbackData": "Callback data",
+            }
+        )
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
