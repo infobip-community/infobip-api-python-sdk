@@ -2,11 +2,11 @@ from typing import Optional
 
 from pydantic import AnyHttpUrl, constr, validator
 
-from infobip_channels.whatsapp.models.response.core import (
-    CamelCaseModel,
+from infobip_channels.whatsapp.models.body.core import (
     MessageBody,
     UrlLengthValidatorMixin,
 )
+from infobip_channels.whatsapp.models.core import CamelCaseModel
 
 
 class Content(UrlLengthValidatorMixin, CamelCaseModel):

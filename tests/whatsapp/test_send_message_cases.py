@@ -1,6 +1,6 @@
 from pytest_cases import parametrize
 
-from tests.conftest import (
+from tests.whatsapp.conftest import (
     AudioMessageBodyFactory,
     ButtonsMessageBodyFactory,
     ContactMessageBodyFactory,

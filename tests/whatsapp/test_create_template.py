@@ -1,7 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from tests.conftest import (
+from tests.whatsapp.conftest import (
     CreateTemplateBodyFactory,
     CreateTemplatesPathParametersFactory,
     get_random_string,
