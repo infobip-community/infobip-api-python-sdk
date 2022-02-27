@@ -44,7 +44,7 @@ from infobip_channels.whatsapp.models.response.template_message import (
 )
 
 
-class HttpClient:
+class _HttpClient:
     """Default HTTP client used by the WhatsAppChannel for making HTTP requests."""
 
     def __init__(self, auth: Authentication):
@@ -80,7 +80,7 @@ class WhatsAppChannel:
     SEND_MESSAGE_URL_TEMPLATE = "/whatsapp/1/message/"
     MANAGE_URL_TEMPLATE = "/whatsapp/1/senders/"
 
-    def __init__(self, client: Union[HttpClient, Any]) -> None:
+    def __init__(self, client: Union[_HttpClient, Any]) -> None:
         self._client = client
 
     @classmethod
@@ -94,7 +94,7 @@ class WhatsAppChannel:
         :param auth_params: Dictionary containing "base_url" and "api_key"
         :return: Instance of this class
         """
-        client = HttpClient(Authentication(**auth_params))
+        client = _HttpClient(Authentication(**auth_params))
         return cls(client)
 
     @classmethod
@@ -106,7 +106,7 @@ class WhatsAppChannel:
         :param auth_instance: Authentication class instance
         :return: Instance of this class
         """
-        client = HttpClient(auth_instance)
+        client = _HttpClient(auth_instance)
         return cls(client)
 
     @classmethod
