@@ -125,7 +125,9 @@ class WhatsAppChannel:
         return cls(client)
 
     @staticmethod
-    def validate_auth_params(base_url: Union[AnyHttpUrl, str], api_key: str):
+    def validate_auth_params(
+        base_url: Union[AnyHttpUrl, str], api_key: str
+    ) -> Authentication:
         """Validate the provided base_url and api_key. This validation is purely client
         side. If the parameters are validated successfully, an instance of the
         Authentication class is returned which holds the base_url and api_key values.
@@ -137,7 +139,7 @@ class WhatsAppChannel:
         return Authentication(base_url=base_url, api_key=api_key)
 
     @staticmethod
-    def build_post_request_headers(api_key: str):
+    def build_post_request_headers(api_key: str) -> Dict:
         """Build the request headers dictionary which has to be used for each of the
         WhatsAppChannel post requests.
 
@@ -147,7 +149,7 @@ class WhatsAppChannel:
         return PostHeaders(authorization=api_key).dict(by_alias=True)
 
     @staticmethod
-    def build_get_request_headers(api_key: str):
+    def build_get_request_headers(api_key: str) -> Dict:
         """Build the request headers dictionary which has to be used for each of the
         WhatsAppChannel get requests.
 
