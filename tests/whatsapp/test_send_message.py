@@ -64,14 +64,14 @@ def test_send_message_from_all_instantiation_types_case__valid_content(
     response_content,
     message_body_type,
     whatsapp_channel_instantiation_type,
-    get_expected_headers,
+    get_expected_post_headers,
 ):
 
     response = send_message_request(
         factory=message_body_factory,
         http_server=httpserver,
         endpoint=endpoint,
-        headers=get_expected_headers("secret"),
+        headers=get_expected_post_headers("secret"),
         response=get_response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         message_body_type=message_body_type,
@@ -79,7 +79,7 @@ def test_send_message_from_all_instantiation_types_case__valid_content(
         server_url=httpserver.url_for("/"),
         client=http_test_client(
             url=httpserver.url_for("/"),
-            headers=WhatsAppChannel.build_request_headers("secret"),
+            headers=WhatsAppChannel.build_post_request_headers("secret"),
         ),
     )
 
@@ -112,13 +112,13 @@ def test_send_message_from_all_instantiation_types_case__invalid_content(
     response_content,
     message_body_type,
     whatsapp_channel_instantiation_type,
-    get_expected_headers,
+    get_expected_post_headers,
 ):
     response = send_message_request(
         factory=message_body_factory,
         http_server=httpserver,
         endpoint=endpoint,
-        headers=get_expected_headers("secret"),
+        headers=get_expected_post_headers("secret"),
         response=get_response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         message_body_type=message_body_type,
@@ -126,7 +126,7 @@ def test_send_message_from_all_instantiation_types_case__invalid_content(
         server_url=httpserver.url_for("/"),
         client=http_test_client(
             url=httpserver.url_for("/"),
-            headers=WhatsAppChannel.build_request_headers("secret"),
+            headers=WhatsAppChannel.build_post_request_headers("secret"),
         ),
     )
 
