@@ -102,7 +102,7 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
         None,
         "",
         {},
-        get_random_string(513),
+        f"template_{504 * 'a'}",
         "template name !!",
         "template_name_example 2",
         "Template_Name_Example",

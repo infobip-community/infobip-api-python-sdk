@@ -452,7 +452,7 @@ class WhatsAppChannel:
     ) -> Union[WhatsAppResponse, Any]:
         """Get all the templates and their statuses for a given sender.
 
-        :param parameter: Registered WhatsApp sender number.Must be in international
+        :param parameter: Registered WhatsApp sender number. Must be in international
         format
         :return: Received response
         """
