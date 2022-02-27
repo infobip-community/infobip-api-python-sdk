@@ -7,6 +7,7 @@ import requests
 from pydantic_factories import ModelFactory
 from werkzeug.wrappers.response import Response
 
+from infobip_channels import WhatsAppChannel
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
@@ -208,6 +209,9 @@ class HttpTestClient:
             url=f"{self.url}" + endpoint, json=body, headers=self.headers
         )
 
+    def get(self, endpoint):
+        return requests.get(url=f"{self.url}" + endpoint, headers=self.headers)
+
 
 @pytest.fixture
 def http_test_client():
@@ -309,3 +313,17 @@ def get_expected_post_headers():
         }
 
     return _get_expected_post_headers
+
+
+def get_whatsapp_channel_instance(instantiation_type, **kwargs):
+    if instantiation_type == "auth_params":
+        return WhatsAppChannel.from_auth_params(
+            {"base_url": kwargs["server_url"], "api_key": "secret"}
+        )
+
+    elif instantiation_type == "auth_instance":
+        return WhatsAppChannel.from_auth_instance(
+            Authentication(base_url=kwargs["server_url"], api_key="secret")
+        )
+
+    return WhatsAppChannel.from_provided_client(kwargs["client"])

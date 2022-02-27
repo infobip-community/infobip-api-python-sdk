@@ -3,22 +3,8 @@ from http import HTTPStatus
 from pytest_cases import parametrize_with_cases
 
 from infobip_channels.whatsapp.channel import WhatsAppChannel
-from infobip_channels.whatsapp.models.body.core import Authentication
 from infobip_channels.whatsapp.models.response.core import WhatsAppResponse
-
-
-def get_whatsapp_channel_instance(instantiation_type, **kwargs):
-    if instantiation_type == "auth_params":
-        return WhatsAppChannel.from_auth_params(
-            {"base_url": kwargs["server_url"], "api_key": "secret"}
-        )
-
-    elif instantiation_type == "auth_instance":
-        return WhatsAppChannel.from_auth_instance(
-            Authentication(base_url=kwargs["server_url"], api_key="secret")
-        )
-
-    return WhatsAppChannel.from_provided_client(kwargs["client"])
+from tests.whatsapp.conftest import get_whatsapp_channel_instance
 
 
 def send_message_request(
@@ -83,8 +69,8 @@ def test_send_message_from_all_instantiation_types_case__valid_content(
         ),
     )
 
-    response_dict_cleaned = response.dict(by_alias=True, exclude_unset=True)
-    raw_response = response_dict_cleaned.pop("rawResponse")
+    response_dict = WhatsAppChannel.convert_model_to_dict(response)
+    raw_response = response_dict.pop("rawResponse")
     expected_response_dict = {
         **response_content,
         "statusCode": HTTPStatus(status_code),
@@ -92,7 +78,7 @@ def test_send_message_from_all_instantiation_types_case__valid_content(
 
     assert isinstance(response, WhatsAppResponse) is True
     assert response.status_code == status_code
-    assert response_dict_cleaned == expected_response_dict
+    assert response_dict == expected_response_dict
     assert raw_response is not None
 
 
