@@ -85,6 +85,7 @@ def from_all_instantiation_types_case__valid_content(
     responses=(
         [201, get_response_object, get_response_ok_invalid_content()],
         [202, get_response_object, get_response_ok_content()],
+        [403, get_response_object, get_response_error_invalid_content()],
         [405, get_response_object, get_response_error_content()],
         [500, get_response_object, get_response_error_invalid_content()],
     ),
