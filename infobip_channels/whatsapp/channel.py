@@ -24,8 +24,8 @@ from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
 from infobip_channels.whatsapp.models.headers.core import RequestHeaders
 from infobip_channels.whatsapp.models.path_parameters.core import PathParameter
-from infobip_channels.whatsapp.models.path_parameters.get_templates import (
-    GetTemplatesPathParameters,
+from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
+    ManageTemplatesPathParameters,
 )
 from infobip_channels.whatsapp.models.response.core import (
     WhatsAppResponse,
@@ -448,16 +448,16 @@ class WhatsAppChannel:
         return self._construct_response(response)
 
     def get_templates(
-        self, parameter: Union[GetTemplatesPathParameters, Dict]
+        self, parameter: Union[ManageTemplatesPathParameters, Dict]
     ) -> Union[WhatsAppResponse, Any]:
         """Get all the templates and their statuses for a given sender.
 
-        :param parameter: Registered WhatsApp sender number.Must be in international
+        :param parameter: Registered WhatsApp sender number. Must be in international
         format
         :return: Received response
         """
         path_parameter = self.validate_path_parameter(
-            parameter, GetTemplatesPathParameters
+            parameter, ManageTemplatesPathParameters
         )
         response = self._client.get(
             self.MANAGE_URL_TEMPLATE + path_parameter.sender + "/templates"
@@ -466,7 +466,7 @@ class WhatsAppChannel:
 
     def create_template(
         self,
-        parameter: Union[GetTemplatesPathParameters, Dict],
+        parameter: Union[ManageTemplatesPathParameters, Dict],
         message: Union[CreateTemplate, Dict],
     ) -> Union[WhatsAppResponse, Any]:
         """Create WhatsApp template. Created template will be submitted for
@@ -480,7 +480,7 @@ class WhatsAppChannel:
         """
         message = self.validate_message_body(message, CreateTemplate)
         path_parameter = self.validate_path_parameter(
-            parameter, GetTemplatesPathParameters
+            parameter, ManageTemplatesPathParameters
         )
         response = self._client.post(
             self.MANAGE_URL_TEMPLATE + path_parameter.sender + "/templates",

@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from pytest_cases import parametrize_with_cases
 
-from infobip_channels.whatsapp.client import WhatsAppChannel
+from infobip_channels.whatsapp.channel import WhatsAppChannel
 from infobip_channels.whatsapp.models.body.core import Authentication
 from infobip_channels.whatsapp.models.response.core import WhatsAppResponse
 
