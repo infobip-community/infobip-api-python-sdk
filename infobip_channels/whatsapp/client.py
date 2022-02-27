@@ -8,6 +8,7 @@ from pydantic.error_wrappers import ValidationError
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
+from infobip_channels.whatsapp.models.body.core import Authentication, MessageBody
 from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
 from infobip_channels.whatsapp.models.body.document_message import DocumentMessageBody
 from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody
@@ -18,29 +19,27 @@ from infobip_channels.whatsapp.models.body.multi_product_message import (
 )
 from infobip_channels.whatsapp.models.body.product_message import ProductMessageBody
 from infobip_channels.whatsapp.models.body.sticker_message import StickerMessageBody
-from infobip_channels.whatsapp.models.body.template_message import (
-    TemplateMessageBody,
-    TemplateMessageResponseOK,
-)
+from infobip_channels.whatsapp.models.body.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.headers.core import RequestHeaders
 from infobip_channels.whatsapp.models.path_parameters.core import PathParameter
 from infobip_channels.whatsapp.models.path_parameters.get_templates import (
     GetTemplatesPathParameters,
 )
 from infobip_channels.whatsapp.models.response.core import (
-    Authentication,
-    MessageBody,
-    RequestHeaders,
     WhatsAppResponse,
     WhatsAppResponseError,
     WhatsAppResponseOK,
 )
 from infobip_channels.whatsapp.models.response.create_template import (
-    WhatsAppTemplateResponseOK,
+    CreateTemplateResponseOK,
 )
 from infobip_channels.whatsapp.models.response.get_templates import (
-    WhatsAppTemplatesResponseOK,
+    GetTemplatesResponseOK,
+)
+from infobip_channels.whatsapp.models.response.template_message import (
+    TemplateMessageResponseOK,
 )
 
 
@@ -463,7 +462,7 @@ class WhatsAppChannel:
         response = self._client.get(
             self.MANAGE_URL_TEMPLATE + path_parameter.sender + "/templates"
         )
-        return self._construct_response(response, WhatsAppTemplatesResponseOK)
+        return self._construct_response(response, GetTemplatesResponseOK)
 
     def create_template(
         self,
@@ -487,4 +486,4 @@ class WhatsAppChannel:
             self.MANAGE_URL_TEMPLATE + path_parameter.sender + "/templates",
             message.dict(by_alias=True),
         )
-        return self._construct_response(response, WhatsAppTemplateResponseOK)
+        return self._construct_response(response, CreateTemplateResponseOK)

@@ -1,9 +1,9 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
+from infobip_channels.whatsapp.models.body.core import MessageBody
 from infobip_channels.whatsapp.models.body.sticker_message import StickerMessageBody
-from infobip_channels.whatsapp.models.response.core import MessageBody
-from tests.conftest import StickerMessageBodyFactory, get_random_string
+from tests.whatsapp.conftest import StickerMessageBodyFactory, get_random_string
 
 
 def test_sticker_message_body__is_an_instance_of_message_body():

@@ -1,9 +1,9 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
+from infobip_channels.whatsapp.models.body.core import MessageBody
 from infobip_channels.whatsapp.models.body.list_message import ListMessageBody
-from infobip_channels.whatsapp.models.response.core import MessageBody
-from tests.conftest import ListMessageBodyFactory, get_random_string
+from tests.whatsapp.conftest import ListMessageBodyFactory, get_random_string
 
 
 @pytest.fixture

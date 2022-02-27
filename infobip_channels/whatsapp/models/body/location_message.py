@@ -2,7 +2,8 @@ from typing import Optional
 
 from pydantic import confloat, constr
 
-from infobip_channels.whatsapp.models.response.core import CamelCaseModel, MessageBody
+from infobip_channels.whatsapp.models.body.core import MessageBody
+from infobip_channels.whatsapp.models.core import CamelCaseModel
 
 
 class Content(CamelCaseModel):

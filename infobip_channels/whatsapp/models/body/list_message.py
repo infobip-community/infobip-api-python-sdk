@@ -7,7 +7,8 @@ from infobip_channels.whatsapp.models.body.action_sections import (
     SectionBase,
     SectionTitleValidatorMixin,
 )
-from infobip_channels.whatsapp.models.response.core import CamelCaseModel, MessageBody
+from infobip_channels.whatsapp.models.body.core import MessageBody
+from infobip_channels.whatsapp.models.core import CamelCaseModel
 
 MESSAGE_ROWS_MAXIMUM_NUMBER = 10
 

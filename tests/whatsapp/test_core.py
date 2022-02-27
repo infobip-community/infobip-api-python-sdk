@@ -4,8 +4,8 @@ from pydantic.error_wrappers import ValidationError
 from pydantic_factories import ModelFactory
 
 from infobip_channels.whatsapp.client import WhatsAppChannel
-from infobip_channels.whatsapp.models.response.core import Authentication, MessageBody
-from tests.conftest import get_random_string
+from infobip_channels.whatsapp.models.body.core import Authentication, MessageBody
+from tests.whatsapp.conftest import get_random_string
 
 
 class MessageBodyFactory(ModelFactory):
