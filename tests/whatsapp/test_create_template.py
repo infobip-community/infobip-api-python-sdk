@@ -1,6 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
+from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
 from tests.whatsapp.conftest import (
     CreateTemplateBodyFactory,
     CreateTemplatesPathParametersFactory,
@@ -278,3 +279,29 @@ def test_when_url_button_url_is_invalid__validation_error_is_raised(url):
                 },
             }
         )
+
+
+def test_when_input_data_is_valid__validation_error_is_not_raised():
+    try:
+        CreateTemplate(
+            **{
+                "name": "exampl_ename",
+                "language": "en",
+                "category": "ACCOUNT_UPDATE",
+                "structure": {
+                    "header": {"format": "TEXT", "text": "Text example"},
+                    "body": "example {{1}} body",
+                    "footer": "some footer",
+                    "buttons": [
+                        {"type": "URL", "text": "url", "url": "http://url.com"},
+                        {
+                            "type": "PHONE_NUMBER",
+                            "text": "number",
+                            "phone_number": "38595873341",
+                        },
+                    ],
+                },
+            }
+        )
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
