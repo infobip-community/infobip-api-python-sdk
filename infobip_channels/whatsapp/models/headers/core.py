@@ -9,7 +9,6 @@ def to_header_specific_case(string: str) -> str:
 
 class RequestHeaders(BaseModel):
     authorization: str
-    content_type: Optional[str] = "application/json"
     accept: Optional[str] = "application/json"
 
     class Config:
