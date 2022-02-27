@@ -506,7 +506,7 @@ class WhatsAppChannel:
         WhatsApp's review and approval. Once approved, template can be sent to
         end-users. Refer to template guidelines for additional info.
 
-        :param parameter: Registered WhatsApp sender number.Must be in international
+        :param parameter: Registered WhatsApp sender number. Must be in international
         format
         :param message: Body of the template to send
         :return: Received response

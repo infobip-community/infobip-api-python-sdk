@@ -24,7 +24,7 @@ def get_response_ok_content():
                     "type": "MEDIA",
                     "buttons": [
                         {
-                            "type": "phoneNumber",
+                            "type": "PHONE_NUMBER",
                             "text": "phone",
                             "phoneNumber": "38598340098",
                         }
@@ -49,7 +49,7 @@ def get_response_ok_invalid_content():
             "footer": "exampleFooter",
             "type": "MEDIA",
             "buttons": [
-                {"type": "phoneNumber", "text": "phone", "phoneNumber": "38598340098"}
+                {"type": "PHONE_NUMBER", "text": "phone", "phoneNumber": "38598340098"}
             ],
         },
     }
