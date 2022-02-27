@@ -22,7 +22,8 @@ from infobip_channels.whatsapp.models.body.sticker_message import StickerMessage
 from infobip_channels.whatsapp.models.body.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
-from infobip_channels.whatsapp.models.headers.core import RequestHeaders
+from infobip_channels.whatsapp.models.headers.get import GetHeaders
+from infobip_channels.whatsapp.models.headers.post import PostHeaders
 from infobip_channels.whatsapp.models.path_parameters.core import PathParameter
 from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
     ManageTemplatesPathParameters,
@@ -43,12 +44,13 @@ from infobip_channels.whatsapp.models.response.template_message import (
 )
 
 
-class HttpClient:
+class _HttpClient:
     """Default HTTP client used by the WhatsAppChannel for making HTTP requests."""
 
     def __init__(self, auth: Authentication):
         self.auth = auth
-        self.headers = RequestHeaders(authorization=self.auth.api_key)
+        self.post_headers = PostHeaders(authorization=self.auth.api_key)
+        self.get_headers = GetHeaders(authorization=self.auth.api_key)
 
     def post(self, endpoint: str, body: Dict) -> requests.Response:
         """Send an HTTP post request to base_url + endpoint.
@@ -59,7 +61,7 @@ class HttpClient:
         """
         url = self.auth.base_url + endpoint
         return requests.post(
-            url=url, json=body, headers=self.headers.dict(by_alias=True)
+            url=url, json=body, headers=self.post_headers.dict(by_alias=True)
         )
 
     def get(self, endpoint: str) -> requests.Response:
@@ -69,7 +71,7 @@ class HttpClient:
         :return: Received response
         """
         url = self.auth.base_url + endpoint
-        return requests.get(url=url, headers=self.headers.dict(by_alias=True))
+        return requests.get(url=url, headers=self.get_headers.dict(by_alias=True))
 
 
 class WhatsAppChannel:
@@ -78,7 +80,7 @@ class WhatsAppChannel:
     SEND_MESSAGE_URL_TEMPLATE = "/whatsapp/1/message/"
     MANAGE_URL_TEMPLATE = "/whatsapp/1/senders/"
 
-    def __init__(self, client: Union[HttpClient, Any]) -> None:
+    def __init__(self, client: Union[_HttpClient, Any]) -> None:
         self._client = client
 
     @classmethod
@@ -92,7 +94,7 @@ class WhatsAppChannel:
         :param auth_params: Dictionary containing "base_url" and "api_key"
         :return: Instance of this class
         """
-        client = HttpClient(Authentication(**auth_params))
+        client = _HttpClient(Authentication(**auth_params))
         return cls(client)
 
     @classmethod
@@ -104,7 +106,7 @@ class WhatsAppChannel:
         :param auth_instance: Authentication class instance
         :return: Instance of this class
         """
-        client = HttpClient(auth_instance)
+        client = _HttpClient(auth_instance)
         return cls(client)
 
     @classmethod
@@ -123,7 +125,9 @@ class WhatsAppChannel:
         return cls(client)
 
     @staticmethod
-    def validate_auth_params(base_url: Union[AnyHttpUrl, str], api_key: str):
+    def validate_auth_params(
+        base_url: Union[AnyHttpUrl, str], api_key: str
+    ) -> Authentication:
         """Validate the provided base_url and api_key. This validation is purely client
         side. If the parameters are validated successfully, an instance of the
         Authentication class is returned which holds the base_url and api_key values.
@@ -135,14 +139,24 @@ class WhatsAppChannel:
         return Authentication(base_url=base_url, api_key=api_key)
 
     @staticmethod
-    def build_request_headers(api_key: str):
+    def build_post_request_headers(api_key: str) -> Dict:
         """Build the request headers dictionary which has to be used for each of the
-        WhatsAppChannel requests.
+        WhatsAppChannel post requests.
 
         :param api_key: Key used for populating Authorization header
-        :return: Dictionary of headers to be used for WhatsAppChannel requests
+        :return: Dictionary of headers to be used for WhatsAppChannel post requests
         """
-        return RequestHeaders(authorization=api_key).dict(by_alias=True)
+        return PostHeaders(authorization=api_key).dict(by_alias=True)
+
+    @staticmethod
+    def build_get_request_headers(api_key: str) -> Dict:
+        """Build the request headers dictionary which has to be used for each of the
+        WhatsAppChannel get requests.
+
+        :param api_key: Key used for populating Authorization header
+        :return: Dictionary of headers to be used for WhatsAppChannel get requests
+        """
+        return GetHeaders(authorization=api_key).dict(by_alias=True)
 
     @staticmethod
     def validate_message_body(

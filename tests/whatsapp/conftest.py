@@ -300,12 +300,12 @@ def get_response_error_invalid_content():
 
 
 @pytest.fixture
-def get_expected_headers():
-    def _get_expected_headers(api_key):
+def get_expected_post_headers():
+    def _get_expected_post_headers(api_key):
         return {
             "Authorization": f"App {api_key}",
             "Content-Type": "application/json",
             "Accept": "application/json",
         }
 
-    return _get_expected_headers
+    return _get_expected_post_headers
