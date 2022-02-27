@@ -8,10 +8,8 @@ except ImportError:
 
 from pydantic import AnyHttpUrl, conlist, constr, validator
 
-from infobip_channels.whatsapp.models.response.core import (
-    CamelCaseModel,
-    UrlLengthValidatorMixin,
-)
+from infobip_channels.whatsapp.models.body.core import UrlLengthValidatorMixin
+from infobip_channels.whatsapp.models.core import CamelCaseModel
 
 
 class LanguageEnum(str, Enum):

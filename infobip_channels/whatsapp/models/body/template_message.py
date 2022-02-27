@@ -7,13 +7,11 @@ except ImportError:
 
 from pydantic import AnyHttpUrl, Field, confloat, conlist, constr, validator
 
-from infobip_channels.whatsapp.models.response.core import (
-    CamelCaseModel,
+from infobip_channels.whatsapp.models.body.core import (
     MessageBody,
     UrlLengthValidatorMixin,
-    WhatsAppResponse,
-    WhatsAppResponseOKPayload,
 )
+from infobip_channels.whatsapp.models.core import CamelCaseModel
 
 
 class ButtonQuickReply(CamelCaseModel):
@@ -108,8 +106,3 @@ class Message(MessageBody):
 class TemplateMessageBody(CamelCaseModel):
     messages: List[Message]
     bulk_id: Optional[constr(max_length=100)] = None
-
-
-class TemplateMessageResponseOK(WhatsAppResponse):
-    messages: List[WhatsAppResponseOKPayload]
-    bulk_id: Optional[str] = None
