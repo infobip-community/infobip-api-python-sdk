@@ -2,7 +2,7 @@ from http import HTTPStatus
 from typing import Any, Dict, Type, Union
 
 import requests
-from pydantic import AnyHttpUrl
+from pydantic import AnyHttpUrl, BaseModel
 from pydantic.error_wrappers import ValidationError
 
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
@@ -181,17 +181,36 @@ class WhatsAppChannel:
     ) -> PathParameter:
         """
         Validate path parameter by trying to instantiate the provided class and
-        extract valid path parameter
+        extract valid path parameter.
 
         :param parameter: Path parameter to validate
         :param parameter_type: Type of path parameter
-        :return: Returned path parameter
+        :return: Class instance corresponding to the provided parameter type
         """
         return (
             parameter
             if isinstance(parameter, parameter_type)
             else parameter_type(**parameter)
         )
+
+    @staticmethod
+    def convert_model_to_dict(
+        model: BaseModel, by_alias: bool = True, exclude_unset: bool = True, **kwargs
+    ) -> Dict:
+        """
+        Convert the Pydantic model into a Python dictionary. By default, model is
+        converted with by_alias=True and exclude_unset=True flags. The former changes
+        model fields to camel case and the latter omits the fields which were not
+        received from the server originally.
+        For additional flags, check Pydantic's documentation on exporting models:
+        https://pydantic-docs.helpmanual.io/usage/exporting_models/.
+
+        :param model: Pydantic model to convert
+        :param by_alias: Whether the model should be converted with aliased fields
+        :param exclude_unset: Whether the model's unset values should be omitted
+        :return: Dictionary of the converted model
+        """
+        return model.dict(by_alias=by_alias, exclude_unset=exclude_unset, **kwargs)
 
     def _construct_response(
         self,
@@ -487,7 +506,7 @@ class WhatsAppChannel:
         WhatsApp's review and approval. Once approved, template can be sent to
         end-users. Refer to template guidelines for additional info.
 
-        :param parameter: Registered WhatsApp sender number.Must be in international
+        :param parameter: Registered WhatsApp sender number. Must be in international
         format
         :param message: Body of the template to send
         :return: Received response
