@@ -158,6 +158,13 @@ class WhatsAppChannel:
         """
         return GetHeaders(authorization=api_key).dict(by_alias=True)
 
+    def lamo(self, x):
+        if 2 > x:
+            return "kralju"
+        if 8 > x:
+            return "meeeejde"
+        return "sinko"
+
     @staticmethod
     def validate_message_body(
         message: Union[MessageBody, TemplateMessageBody, CreateTemplate, Dict],
