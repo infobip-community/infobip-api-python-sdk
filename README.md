@@ -48,6 +48,9 @@ Make sure you have the latest version of PyPA's
 python -m pip install --upgrade build
 ```
 
+Update the `version` in the  `setup.cfg` file to the desired one.
+
+
 Now run this command from the same directory where pyproject.toml is located:
 ```
 python -m build
