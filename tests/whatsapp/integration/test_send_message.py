@@ -4,7 +4,11 @@ from pytest_cases import parametrize_with_cases
 
 from infobip_channels.whatsapp.channel import WhatsAppChannel
 from infobip_channels.whatsapp.models.response.core import WhatsAppResponse
-from tests.whatsapp.conftest import get_whatsapp_channel_instance
+from tests.whatsapp.conftest import (
+    get_response_object,
+    get_response_object_unofficial,
+    get_whatsapp_channel_instance,
+)
 
 
 def send_message_request(
@@ -35,7 +39,7 @@ def send_message_request(
 
 
 @parametrize_with_cases(
-    "endpoint, message_body_factory, method_name, get_response_object, status_code, "
+    "endpoint, message_body_factory, method_name, status_code, "
     "response_content, message_body_type, whatsapp_channel_instantiation_type",
     prefix="from_all_instantiation_types_case__valid_content",
 )
@@ -45,7 +49,6 @@ def test_send_message_from_all_instantiation_types_case__valid_content(
     endpoint,
     message_body_factory,
     method_name,
-    get_response_object,
     status_code,
     response_content,
     message_body_type,
@@ -83,39 +86,49 @@ def test_send_message_from_all_instantiation_types_case__valid_content(
 
 
 @parametrize_with_cases(
-    "endpoint, message_body_factory, method_name, get_response_object, status_code, "
+    "endpoint, message_body_factory, method_name, status_code, "
     "response_content, message_body_type, whatsapp_channel_instantiation_type",
     prefix="from_all_instantiation_types_case__invalid_content",
 )
 def test_send_message_from_all_instantiation_types_case__invalid_content(
     httpserver,
     http_test_client,
+    http_test_client_unofficial,
     endpoint,
     message_body_factory,
     method_name,
-    get_response_object,
     status_code,
     response_content,
     message_body_type,
     whatsapp_channel_instantiation_type,
     get_expected_post_headers,
 ):
+    if whatsapp_channel_instantiation_type == "client_unofficial":
+        client = http_test_client_unofficial
+        response_object = get_response_object_unofficial
+    else:
+        client = http_test_client
+        response_object = get_response_object
+
     response = send_message_request(
         factory=message_body_factory,
         http_server=httpserver,
         endpoint=endpoint,
         headers=get_expected_post_headers("secret"),
-        response=get_response_object(status_code, response_content),
+        response=response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         message_body_type=message_body_type,
         method_name=method_name,
         server_url=httpserver.url_for("/"),
-        client=http_test_client(
+        client=client(
             url=httpserver.url_for("/"),
             headers=WhatsAppChannel.build_post_request_headers("secret"),
         ),
     )
 
     assert isinstance(response, WhatsAppResponse) is False
-    assert response.status_code == status_code
-    assert response.json() == response_content
+    assert response is not None
+
+    if whatsapp_channel_instantiation_type != "client_unofficial":
+        assert response.status_code == status_code
+        assert response.json() == response_content
