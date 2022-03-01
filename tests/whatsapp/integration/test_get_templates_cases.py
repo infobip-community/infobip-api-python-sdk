@@ -3,7 +3,6 @@ from pytest_cases import parametrize
 from tests.whatsapp.conftest import (
     get_response_error_content,
     get_response_error_invalid_content,
-    get_response_object,
 )
 
 
@@ -59,21 +58,20 @@ def get_response_ok_invalid_content():
     path_parameters_type=("path_parameter_instance", "dict"),
     whatsapp_channel_instantiation_type=("auth_params", "auth_instance", "client"),
     responses=(
-        [200, get_response_object, get_response_ok_content()],
-        [201, get_response_object, get_response_ok_content()],
-        [400, get_response_object, get_response_error_content()],
-        [401, get_response_object, get_response_error_content()],
-        [403, get_response_object, get_response_error_content()],
-        [429, get_response_object, get_response_error_content()],
+        [200, get_response_ok_content()],
+        [201, get_response_ok_content()],
+        [400, get_response_error_content()],
+        [401, get_response_error_content()],
+        [403, get_response_error_content()],
+        [429, get_response_error_content()],
     ),
 )
 def from_all_instantiation_types_case__valid_content(
     responses, path_parameters_type, whatsapp_channel_instantiation_type
 ):
     return (
-        responses[1],
         responses[0],
-        responses[2],
+        responses[1],
         path_parameters_type,
         whatsapp_channel_instantiation_type,
     )
@@ -81,22 +79,26 @@ def from_all_instantiation_types_case__valid_content(
 
 @parametrize(
     path_parameters_type=("path_parameter_instance", "dict"),
-    whatsapp_channel_instantiation_type=("auth_params", "auth_instance", "client"),
+    whatsapp_channel_instantiation_type=(
+        "auth_params",
+        "auth_instance",
+        "client",
+        "client_unofficial",
+    ),
     responses=(
-        [201, get_response_object, get_response_ok_invalid_content()],
-        [202, get_response_object, get_response_ok_content()],
-        [403, get_response_object, get_response_error_invalid_content()],
-        [405, get_response_object, get_response_error_content()],
-        [500, get_response_object, get_response_error_invalid_content()],
+        [201, get_response_ok_invalid_content()],
+        [202, get_response_ok_content()],
+        [403, get_response_error_invalid_content()],
+        [405, get_response_error_content()],
+        [500, get_response_error_invalid_content()],
     ),
 )
 def from_all_instantiation_types_case__invalid_content(
     responses, path_parameters_type, whatsapp_channel_instantiation_type
 ):
     return (
-        responses[1],
         responses[0],
-        responses[2],
+        responses[1],
         path_parameters_type,
         whatsapp_channel_instantiation_type,
     )
