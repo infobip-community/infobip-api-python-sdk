@@ -227,7 +227,7 @@ class WhatsAppChannel:
                 }
             )
 
-        except (ValueError, ValidationError):
+        except (AttributeError, ValueError, ValidationError):
             return response
 
     @staticmethod

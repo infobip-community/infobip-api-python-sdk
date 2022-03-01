@@ -16,7 +16,6 @@ from tests.whatsapp.conftest import (
     VideoMessageBodyFactory,
     get_response_error_content,
     get_response_error_invalid_content,
-    get_response_object,
     get_response_ok_content,
     get_response_ok_invalid_content,
     get_template_message_response_ok_content,
@@ -96,18 +95,18 @@ MESSAGE_TYPE_ATTRIBUTES = {
     message_body_type=("message_body_instance", "dict"),
     whatsapp_channel_instantiation_type=("auth_params", "auth_instance", "client"),
     responses=(
-        [200, get_response_object, get_response_ok_content],
-        [201, get_response_object, get_response_ok_content],
-        [400, get_response_object, get_response_error_content],
-        [401, get_response_object, get_response_error_content],
-        [403, get_response_object, get_response_error_content],
-        [429, get_response_object, get_response_error_content],
+        [200, get_response_ok_content],
+        [201, get_response_ok_content],
+        [400, get_response_error_content],
+        [401, get_response_error_content],
+        [403, get_response_error_content],
+        [429, get_response_error_content],
     ),
 )
 def from_all_instantiation_types_case__valid_content(
     message_type, responses, message_body_type, whatsapp_channel_instantiation_type
 ):
-    response_content = responses[2]
+    response_content = responses[1]
 
     if message_type == "template" and responses[0] in (200, 201):
         response_content = get_template_message_response_ok_content
@@ -116,7 +115,6 @@ def from_all_instantiation_types_case__valid_content(
         MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["method_name"],
-        responses[1],
         responses[0],
         response_content(),
         message_body_type,
@@ -127,19 +125,24 @@ def from_all_instantiation_types_case__valid_content(
 @parametrize(
     message_type=MESSAGE_TYPE_ATTRIBUTES.keys(),
     message_body_type=("message_body_instance", "dict"),
-    whatsapp_channel_instantiation_type=("auth_params", "auth_instance", "client"),
+    whatsapp_channel_instantiation_type=(
+        "auth_params",
+        "auth_instance",
+        "client",
+        "client_unofficial",
+    ),
     responses=(
-        [201, get_response_object, get_response_ok_invalid_content],
-        [202, get_response_object, get_response_ok_content],
-        [403, get_response_object, get_response_error_invalid_content],
-        [405, get_response_object, get_response_error_content],
-        [500, get_response_object, get_response_error_invalid_content],
+        [201, get_response_ok_invalid_content],
+        [202, get_response_ok_content],
+        [403, get_response_error_invalid_content],
+        [405, get_response_error_content],
+        [500, get_response_error_invalid_content],
     ),
 )
 def from_all_instantiation_types_case__invalid_content(
     message_type, responses, message_body_type, whatsapp_channel_instantiation_type
 ):
-    response_content = responses[2]
+    response_content = responses[1]
 
     if message_type == "template" and responses[0] == 202:
         response_content = get_template_message_response_ok_content
@@ -148,7 +151,6 @@ def from_all_instantiation_types_case__invalid_content(
         MESSAGE_TYPE_ATTRIBUTES[message_type]["endpoint"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["message_body_factory"],
         MESSAGE_TYPE_ATTRIBUTES[message_type]["method_name"],
-        responses[1],
         responses[0],
         response_content(),
         message_body_type,

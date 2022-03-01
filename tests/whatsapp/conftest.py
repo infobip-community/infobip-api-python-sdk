@@ -4,6 +4,7 @@ from string import ascii_letters
 
 import pytest
 import requests
+import urllib3
 from pydantic_factories import ModelFactory
 from werkzeug.wrappers.response import Response
 
@@ -213,12 +214,40 @@ class HttpTestClient:
         return requests.get(url=f"{self.url}" + endpoint, headers=self.headers)
 
 
+class HttpTestClientUnofficial:
+    def __init__(self, url, headers):
+        self.pool = urllib3.PoolManager()
+        self.url = url
+        self.headers = headers
+
+    def post(self, endpoint, body):
+        return self.pool.request(
+            "POST",
+            url=f"{self.url}" + endpoint,
+            body=json.dumps(body),
+            headers=self.headers,
+        )
+
+    def get(self, endpoint):
+        return self.pool.request(
+            "GET", url=f"{self.url}" + endpoint, headers=self.headers
+        )
+
+
 @pytest.fixture
 def http_test_client():
     def _get_http_test_client(url, headers):
         return HttpTestClient(url, headers)
 
     return _get_http_test_client
+
+
+@pytest.fixture
+def http_test_client_unofficial():
+    def _get_http_test_client_unofficial(url, headers):
+        return HttpTestClientUnofficial(url, headers)
+
+    return _get_http_test_client_unofficial
 
 
 def get_response_ok_content():
@@ -277,7 +306,17 @@ def get_response_ok_invalid_content():
 
 
 def get_response_object(status_code, content):
-    return Response(json.dumps(content), status=status_code)
+    return Response(json.dumps(content), status_code)
+
+
+class ResponseUnofficial:
+    def __init__(self, status, content):
+        self.status = status
+        self.content = content
+
+
+def get_response_object_unofficial(status_code, content):
+    return ResponseUnofficial(status_code, json.dumps(content))
 
 
 def get_response_error_content():
