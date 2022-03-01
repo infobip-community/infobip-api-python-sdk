@@ -1,4 +1,4 @@
-# infobip-python-whatsapp-client
+# infobip-python-channels
 Python client for Infobip's channels API.
 
 ## Testing
