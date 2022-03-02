@@ -4,7 +4,7 @@ Python client for Infobip's  API channels.
 #### Table of contents:
 
 - [General Info](#general-info)
-- [Licence](#license)
+- [License](#license)
 - [Installation](#installation)
 - [Code example](#code-example)
 - [Testing](#testing)
@@ -35,8 +35,8 @@ pip install infobip-api-python-sdk
 To use the package you'll need an Infobip account.
 If you don't already have one, you can create a free trial account [here](https://www.infobip.com/signup).
 
-In this example we will show how to send WhatsApp text mesage.
-First stem is to import necessay channel, in this case WhatsApp channel.
+In this example we will show how to send WhatsApp text message.
+First step is to import necessary channel, in this case WhatsApp channel.
 
 ```
 from infobip_channels import WhatsAppChannel
@@ -51,12 +51,12 @@ c = WhatsAppChannel.from_auth_params({
 })
 ```
 After that you can access all the methods from `WhatsAppChannel`.
-To sent text message you can use `send_image_message`method and add correct payload:
+To send text message you can use `send_text_message` method and add correct payload:
 ```
-response = c.send_image_message(
+response = c.send_text_message(
     {
       "from": "<WhatsApp sender number from your Infobib account>",
-      "to": "<Numbe that will receive WhatsApp message>",
+      "to": "<Number that will receive WhatsApp message>",
       "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
       "content": {
         "text": "Some text"
@@ -65,10 +65,9 @@ response = c.send_image_message(
       "notifyUrl": "https://www.example.com/whatsapp"
     }
 )
-print(response)
 ```
 ## Testing
-To run tests position yourself in the project's root while your virual environment
+To run tests position yourself in the project's root while your virtual environment
 is active and run:
 ```
 python -m pytest
@@ -93,7 +92,7 @@ To check installation run:
 pre-commit --version
 ```
 If installation was successful you will see version number.
-Pre-commit configuration you can find in `.pre-commit-config.yaml`.
+You can find the Pre-commit configuration in `.pre-commit-config.yaml`.
 Install the git hook scripts:
 ```
 pre-commit install
@@ -102,9 +101,9 @@ Run against all files:
 ```
 pre-commit run --all-files
 ```
-If setup was successful pre-commit will run will now run on every commit.
-Every time you clone a project using pre-commit running `pre-commit install`
-should always be the first thing you do.
+If setup was successful pre-commit will run on every commit.
+Every time you clone a project that uses pre-commit, running `pre-commit install`
+should be the first thing you do.
 
 
 ## Generating distribution package
