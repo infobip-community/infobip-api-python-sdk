@@ -5,6 +5,7 @@ import requests
 from pydantic import AnyHttpUrl, BaseModel
 from pydantic.error_wrappers import ValidationError
 
+from infobip_channels.http_client import _HttpClient
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
@@ -42,36 +43,6 @@ from infobip_channels.whatsapp.models.response.get_templates import (
 from infobip_channels.whatsapp.models.response.template_message import (
     TemplateMessageResponseOK,
 )
-
-
-class _HttpClient:
-    """Default HTTP client used by the WhatsAppChannel for making HTTP requests."""
-
-    def __init__(self, auth: Authentication):
-        self.auth = auth
-        self.post_headers = PostHeaders(authorization=self.auth.api_key)
-        self.get_headers = GetHeaders(authorization=self.auth.api_key)
-
-    def post(self, endpoint: str, body: Dict) -> requests.Response:
-        """Send an HTTP post request to base_url + endpoint.
-
-        :param endpoint: Which endpoint to hit
-        :param body: Body to send with the request
-        :return: Received response
-        """
-        url = self.auth.base_url + endpoint
-        return requests.post(
-            url=url, json=body, headers=self.post_headers.dict(by_alias=True)
-        )
-
-    def get(self, endpoint: str) -> requests.Response:
-        """Send an HTTP get request to base_url + endpoint.
-
-        :param endpoint: Which endpoint to hit
-        :return: Received response
-        """
-        url = self.auth.base_url + endpoint
-        return requests.get(url=url, headers=self.get_headers.dict(by_alias=True))
 
 
 class WhatsAppChannel:
