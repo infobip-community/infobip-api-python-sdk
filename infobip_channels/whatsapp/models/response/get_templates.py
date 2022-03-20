@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import AnyHttpUrl
 
-from infobip_channels.whatsapp.models.core import CamelCaseModel
+from infobip_channels.core.models import CamelCaseModel
 from infobip_channels.whatsapp.models.response.core import WhatsAppResponse
 
 

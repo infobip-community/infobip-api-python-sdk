@@ -1,22 +1,8 @@
 from typing import Optional
 
-from pydantic import AnyHttpUrl, BaseModel, Field, constr, validator
+from pydantic import AnyHttpUrl, Field, constr, validator
 
-from infobip_channels.whatsapp.models.core import CamelCaseModel
-
-
-class UrlLengthValidatorMixin:
-    MAX_URL_LENGTH = 2048
-
-    @classmethod
-    def validate_url_length(cls, value: str) -> str:
-        if not isinstance(value, str):
-            return value
-
-        if len(value) > cls.MAX_URL_LENGTH:
-            raise ValueError(f"Url length must be less than {cls.MAX_URL_LENGTH}")
-
-        return value
+from infobip_channels.core.models import CamelCaseModel, UrlLengthValidatorMixin
 
 
 class MessageBody(UrlLengthValidatorMixin, CamelCaseModel):
@@ -29,18 +15,3 @@ class MessageBody(UrlLengthValidatorMixin, CamelCaseModel):
     @validator("notify_url", pre=True)
     def validate_url_length(cls, value: str) -> str:
         return super().validate_url_length(value)
-
-
-class Authentication(BaseModel):
-    base_url: AnyHttpUrl
-    api_key: constr(min_length=1)
-
-    @validator("base_url", pre=True)
-    def validate_scheme(cls, value: str) -> str:
-        if not isinstance(value, str):
-            return value
-
-        if value.startswith(("http://", "https://")):
-            return value
-
-        return f"https://{value}"

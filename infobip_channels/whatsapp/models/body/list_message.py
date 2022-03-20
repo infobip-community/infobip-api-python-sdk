@@ -3,12 +3,12 @@ from typing import List, Optional
 
 from pydantic import conlist, constr, validator
 
+from infobip_channels.core.models import CamelCaseModel
 from infobip_channels.whatsapp.models.body.action_sections import (
     SectionBase,
     SectionTitleValidatorMixin,
 )
 from infobip_channels.whatsapp.models.body.core import MessageBody
-from infobip_channels.whatsapp.models.core import CamelCaseModel
 
 MESSAGE_ROWS_MAXIMUM_NUMBER = 10
 

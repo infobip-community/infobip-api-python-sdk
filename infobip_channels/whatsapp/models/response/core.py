@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 
 import requests
 
-from infobip_channels.whatsapp.models.core import CamelCaseModel
+from infobip_channels.core.models import CamelCaseModel
 
 
 class WhatsAppResponse(CamelCaseModel):
