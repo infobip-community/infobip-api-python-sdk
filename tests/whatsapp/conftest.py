@@ -9,10 +9,10 @@ from pydantic_factories import ModelFactory
 from werkzeug.wrappers.response import Response
 
 from infobip_channels import WhatsAppChannel
+from infobip_channels.core.models import Authentication
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
-from infobip_channels.whatsapp.models.body.core import Authentication
 from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
 from infobip_channels.whatsapp.models.body.document_message import DocumentMessageBody
 from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody

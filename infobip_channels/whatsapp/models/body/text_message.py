@@ -2,8 +2,8 @@ from typing import Optional
 
 from pydantic import StrictBool, constr
 
+from infobip_channels.core.models import CamelCaseModel
 from infobip_channels.whatsapp.models.body.core import MessageBody
-from infobip_channels.whatsapp.models.core import CamelCaseModel
 
 
 class Content(CamelCaseModel):

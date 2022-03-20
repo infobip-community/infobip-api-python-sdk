@@ -1,4 +1,4 @@
-from infobip_channels.whatsapp.models.core import CamelCaseModel
+from infobip_channels.core.models import CamelCaseModel
 
 
 class PathParameter(CamelCaseModel):

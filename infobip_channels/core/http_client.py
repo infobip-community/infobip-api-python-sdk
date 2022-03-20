@@ -2,9 +2,7 @@ from typing import Dict
 
 import requests
 
-from infobip_channels.whatsapp.models.body.core import Authentication
-from infobip_channels.whatsapp.models.headers.get import GetHeaders
-from infobip_channels.whatsapp.models.headers.post import PostHeaders
+from infobip_channels.core.models import Authentication, GetHeaders, PostHeaders
 
 
 class _HttpClient:
