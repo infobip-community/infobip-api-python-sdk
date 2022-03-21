@@ -7,7 +7,11 @@ except ImportError:
 
 from pydantic import AnyHttpUrl, Field, confloat, conlist, constr, validator
 
-from infobip_channels.core.models import CamelCaseModel, UrlLengthValidatorMixin
+from infobip_channels.core.models import (
+    CamelCaseModel,
+    MessageBodyBase,
+    UrlLengthValidatorMixin,
+)
 from infobip_channels.whatsapp.models.body.core import MessageBody
 
 
@@ -100,6 +104,6 @@ class Message(MessageBody):
     sms_failover: Optional[SmsFailover] = None
 
 
-class TemplateMessageBody(CamelCaseModel):
+class TemplateMessageBody(MessageBodyBase):
     messages: List[Message]
     bulk_id: Optional[constr(max_length=100)] = None

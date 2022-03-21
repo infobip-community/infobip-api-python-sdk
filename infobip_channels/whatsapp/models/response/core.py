@@ -1,17 +1,6 @@
-from http import HTTPStatus
 from typing import Dict, List, Optional
 
-import requests
-
-from infobip_channels.core.models import CamelCaseModel
-
-
-class WhatsAppResponse(CamelCaseModel):
-    status_code: HTTPStatus
-    raw_response: requests.Response
-
-    class Config(CamelCaseModel.Config):
-        arbitrary_types_allowed = True
+from infobip_channels.core.models import CamelCaseModel, ResponseBase
 
 
 class ServiceException(CamelCaseModel):
@@ -24,7 +13,7 @@ class RequestError(CamelCaseModel):
     service_exception: ServiceException
 
 
-class WhatsAppResponseError(WhatsAppResponse):
+class WhatsAppResponseError(ResponseBase):
     request_error: RequestError
 
 
@@ -44,5 +33,5 @@ class WhatsAppResponseOKPayload(CamelCaseModel):
     status: ResponseOKStatus
 
 
-class WhatsAppResponseOK(WhatsAppResponseOKPayload, WhatsAppResponse):
+class WhatsAppResponseOK(WhatsAppResponseOKPayload, ResponseBase):
     pass

@@ -8,7 +8,11 @@ except ImportError:
 
 from pydantic import AnyHttpUrl, conlist, constr, validator
 
-from infobip_channels.core.models import CamelCaseModel, UrlLengthValidatorMixin
+from infobip_channels.core.models import (
+    CamelCaseModel,
+    MessageBodyBase,
+    UrlLengthValidatorMixin,
+)
 
 
 class LanguageEnum(str, Enum):
@@ -163,7 +167,7 @@ class Structure(CamelCaseModel):
         return buttons
 
 
-class CreateTemplate(CamelCaseModel):
+class CreateTemplate(MessageBodyBase):
     name: constr(regex=r"^[a-z0-9_]+$")  # noqa: F722
     language: LanguageEnum
     category: CategoryEnum

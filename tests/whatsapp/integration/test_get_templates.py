@@ -3,11 +3,11 @@ from http import HTTPStatus
 import pytest
 from pytest_cases import parametrize_with_cases
 
+from infobip_channels.core.models import ResponseBase
 from infobip_channels.whatsapp.channel import WhatsAppChannel
 from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
     ManageTemplatesPathParameters,
 )
-from infobip_channels.whatsapp.models.response.core import WhatsAppResponse
 from tests.whatsapp.conftest import (
     get_response_object,
     get_response_object_unofficial,
@@ -85,7 +85,7 @@ def test_get_templates_from_all_instantiation_types_case__valid_content(
         "statusCode": HTTPStatus(status_code),
     }
 
-    assert isinstance(response, WhatsAppResponse) is True
+    assert isinstance(response, ResponseBase) is True
     assert response.status_code == status_code
     assert response_dict == expected_response_dict
     assert raw_response is not None
@@ -126,7 +126,7 @@ def test_get_templates_from_all_instantiation_types_case__invalid_content(
         ),
     )
 
-    assert isinstance(response, WhatsAppResponse) is False
+    assert isinstance(response, ResponseBase) is False
     assert response is not None
 
     if whatsapp_channel_instantiation_type != "client_unofficial":
