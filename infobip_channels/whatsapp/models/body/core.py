@@ -2,10 +2,10 @@ from typing import Optional
 
 from pydantic import AnyHttpUrl, Field, constr, validator
 
-from infobip_channels.core.models import CamelCaseModel, UrlLengthValidatorMixin
+from infobip_channels.core.models import MessageBodyBase, UrlLengthValidatorMixin
 
 
-class MessageBody(UrlLengthValidatorMixin, CamelCaseModel):
+class MessageBody(UrlLengthValidatorMixin, MessageBodyBase):
     from_number: constr(min_length=1, max_length=24) = Field(alias="from")
     to: constr(min_length=1, max_length=24)
     message_id: Optional[constr(max_length=50)] = None

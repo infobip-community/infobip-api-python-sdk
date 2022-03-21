@@ -1,5 +1,7 @@
+from http import HTTPStatus
 from typing import Optional
 
+import requests
 from pydantic import AnyHttpUrl, BaseModel, constr, validator
 
 
@@ -45,6 +47,18 @@ class CamelCaseModel(BaseModel):
     class Config:
         alias_generator = to_camel_case
         allow_population_by_field_name = True
+
+
+class MessageBodyBase(CamelCaseModel):
+    pass
+
+
+class ResponseBase(CamelCaseModel):
+    status_code: HTTPStatus
+    raw_response: requests.Response
+
+    class Config(CamelCaseModel.Config):
+        arbitrary_types_allowed = True
 
 
 class RequestHeaders(BaseModel):

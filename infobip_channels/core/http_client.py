@@ -6,7 +6,7 @@ from infobip_channels.core.models import Authentication, GetHeaders, PostHeaders
 
 
 class _HttpClient:
-    """Default HTTP client used by the WhatsAppChannel for making HTTP requests."""
+    """Default HTTP client used by the Infobip channels for making HTTP requests."""
 
     def __init__(self, auth: Authentication):
         self.auth = auth

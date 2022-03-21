@@ -2,8 +2,7 @@ from typing import List, Optional
 
 from pydantic import AnyHttpUrl
 
-from infobip_channels.core.models import CamelCaseModel
-from infobip_channels.whatsapp.models.response.core import WhatsAppResponse
+from infobip_channels.core.models import CamelCaseModel, ResponseBase
 
 
 class Button(CamelCaseModel):
@@ -36,5 +35,5 @@ class Template(CamelCaseModel):
     structure: Structure
 
 
-class GetTemplatesResponseOK(WhatsAppResponse):
+class GetTemplatesResponseOK(ResponseBase):
     templates: List[Template]
