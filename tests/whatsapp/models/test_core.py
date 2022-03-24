@@ -6,7 +6,7 @@ from pydantic_factories import ModelFactory
 from infobip_channels.core.models import Authentication
 from infobip_channels.whatsapp.channel import WhatsAppChannel
 from infobip_channels.whatsapp.models.body.core import MessageBody
-from tests.whatsapp.conftest import get_random_string
+from tests.conftest import get_random_string
 
 
 class MessageBodyFactory(ModelFactory):

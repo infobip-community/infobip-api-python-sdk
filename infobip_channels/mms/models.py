@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import AnyHttpUrl, Field, StrictBool, conint, constr, validator
 
@@ -42,14 +42,19 @@ class Head(CamelCaseModel):
     validity_period_minutes: Optional[int] = None
     callback_data: Optional[constr(max_length=200)] = None
     notify_url: Optional[AnyHttpUrl] = None
-    send_at: Optional[datetime] = None
-    intermediateReport: Optional[StrictBool] = False
+    send_at: Optional[Union[datetime, str]] = None
+    intermediate_report: Optional[StrictBool] = False
 
     @validator("send_at")
     def convert_send_at_to_correct_format(cls, value):
-        if value:
-            time_with_microseconds = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-            return time_with_microseconds.split("Z")[0][:-3] + "Z"
+        if not value:
+            return
+
+        if isinstance(value, str):
+            value = datetime.fromisoformat(value)
+
+        time_with_microseconds = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        return time_with_microseconds.split("Z")[0][:-3] + "Z"
 
 
 class MMSMessageBody(MessageBodyBase):

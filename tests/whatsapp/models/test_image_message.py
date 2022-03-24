@@ -3,7 +3,8 @@ from pydantic.error_wrappers import ValidationError
 
 from infobip_channels.whatsapp.models.body.core import MessageBody
 from infobip_channels.whatsapp.models.body.image_message import ImageMessageBody
-from tests.whatsapp.conftest import ImageMessageBodyFactory, get_random_string
+from tests.whatsapp.conftest import ImageMessageBodyFactory
+from tests.conftest import get_random_string
 
 
 def test_image_message_body__is_an_instance_of_message_body():
