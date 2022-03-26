@@ -2,10 +2,10 @@ import pytest
 from pydantic.error_wrappers import ValidationError
 
 from infobip_channels.whatsapp.models.body.create_template import CreateTemplate
+from tests.conftest import get_random_string
 from tests.whatsapp.conftest import (
     CreateTemplateBodyFactory,
     CreateTemplatesPathParametersFactory,
-    get_random_string,
 )
 
 

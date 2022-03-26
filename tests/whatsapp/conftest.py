@@ -1,6 +1,4 @@
 import json
-from random import choice
-from string import ascii_letters
 
 import pytest
 import requests
@@ -29,10 +27,6 @@ from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
 from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
     ManageTemplatesPathParameters,
 )
-
-
-def get_random_string(length: int) -> str:
-    return "".join(choice(ascii_letters) for _ in range(length))
 
 
 class AuthenticationFactory(ModelFactory):
