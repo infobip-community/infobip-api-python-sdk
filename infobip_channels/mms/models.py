@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from pydantic import AnyHttpUrl, Field, StrictBool, conint, conlist, constr, validator
 

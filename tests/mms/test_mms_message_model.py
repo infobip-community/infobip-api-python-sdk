@@ -136,7 +136,7 @@ def test_when_externally_hosted_media_is_invalid__validation_error_is_raised(
                     "from": "38599854312",
                     "to": "38598764321",
                 },
-                "externallyHostedMedia": externally_hosted_media
+                "externallyHostedMedia": externally_hosted_media,
             }
         )
 
