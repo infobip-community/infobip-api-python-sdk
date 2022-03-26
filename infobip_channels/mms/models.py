@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 from pydantic import AnyHttpUrl, Field, StrictBool, conint, conlist, constr, validator
 
@@ -62,5 +62,5 @@ class MMSMessageBody(MessageBodyBase):
     head: Head
     text: Optional[str] = None
     media: Optional[str] = None
-    externally_hosted_media: Optional[ExternallyHostedMedia] = None
+    externally_hosted_media: Optional[List[ExternallyHostedMedia]] = None
     smil: Optional[str] = None

@@ -3,6 +3,7 @@ from datetime import date
 import pytest
 from pydantic.error_wrappers import ValidationError
 
+from infobip_channels.mms.models import MMSMessageBody
 from tests.conftest import get_random_string
 from tests.mms.conftest import MMSMessageBodyFactory
 
@@ -121,9 +122,10 @@ def test_when_delivery_time_window_is_invalid__validation_error_is_raised(
     "externally_hosted_media",
     [
         {},
-        {"contentType": "test", "contentId": "2"},
-        {"contentType": "test", "contentUrl": "http://url.com"},
-        {"contentId": "3", "contentUrl": "http://url.com"},
+        [{}],
+        [{"contentType": "test", "contentId": "2"}],
+        [{"contentType": "test", "contentUrl": "http://url.com"}],
+        [{"contentId": "3", "contentUrl": "http://url.com"}],
     ],
 )
 def test_when_externally_hosted_media_is_invalid__validation_error_is_raised(
@@ -137,6 +139,26 @@ def test_when_externally_hosted_media_is_invalid__validation_error_is_raised(
                     "to": "38598764321",
                 },
                 "externallyHostedMedia": externally_hosted_media,
+            }
+        )
+
+
+@pytest.mark.parametrize("content_url", [{}, "string", "ftp://url.com"])
+def test_when_content_url_is_invalid__validation_error_is_raised(content_url):
+    with pytest.raises(ValidationError):
+        MMSMessageBodyFactory.build(
+            **{
+                "head": {
+                    "from": "38599854312",
+                    "to": "38598764321",
+                },
+                "externallyHostedMedia": [
+                    {
+                        "contentType": "test",
+                        "contentId": "3",
+                        "contentUrl": content_url,
+                    }
+                ],
             }
         )
 
@@ -187,3 +209,30 @@ def test_when_days_is_invalid__validation_error_is_raised(days):
                 }
             }
         )
+
+
+def test_when_input_data_is_valid__validation_error_is_not_raised():
+    try:
+        MMSMessageBody(
+            **{
+                "head": {
+                    "from": "38598743321",
+                    "to": "38599876543",
+                    "validityPeriodMinutes": 300,
+                    "callbackData": "test",
+                    "delivery_time_window": {
+                        "days": ["MONDAY", "THURSDAY"],
+                        "from_time": {"hour": 10, "minute": 30},
+                    },
+                },
+                "externallyHostedMedia": [
+                    {
+                        "contentType": "some type",
+                        "contentId": "331",
+                        "contentUrl": "https://someurl.com",
+                    }
+                ],
+            }
+        )
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
