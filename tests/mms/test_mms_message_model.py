@@ -99,8 +99,14 @@ def test_when_intermediate_report_is_invalid__validation_error_is_raised(
     "delivery_time_window",
     [
         {},
-        {"from": {"hour": 12, "minute": 0}},
-        {"to": {"hour": 12, "minute": 0}},
+        {"from": {"hour": 12, "minute": 0}, "to": {"hour": 14, "minute": 0}},
+        {"from": {"hour": 12, "minute": 0}, "days": ["FRIDAY"]},
+        {"to": {"hour": 12, "minute": 0}, "days": ["FRIDAY"]},
+        {
+            "from": {"hour": 12, "minute": 0},
+            "to": {"hour": 12, "minute": 40},
+            "days": ["FRIDAY"],
+        },
     ],
 )
 def test_when_delivery_time_window_is_invalid__validation_error_is_raised(
