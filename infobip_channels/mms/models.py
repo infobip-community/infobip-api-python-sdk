@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
-from pydantic import AnyHttpUrl, Field, StrictBool, conint, constr, validator
+from pydantic import AnyHttpUrl, Field, StrictBool, conint, conlist, constr, validator
 
 from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
 
@@ -29,8 +29,8 @@ class ExternallyHostedMedia(CamelCaseModel):
 
 
 class DeliveryTimeWindow(CamelCaseModel):
-    days: List[DaysEnum]
-    from_time: Optional[Time] = None
+    days: conlist(DaysEnum, min_items=1)
+    from_time: Optional[Time] = Field(alias="from", default=None)
     to: Optional[Time] = None
 
 
@@ -44,6 +44,7 @@ class Head(CamelCaseModel):
     notify_url: Optional[AnyHttpUrl] = None
     send_at: Optional[Union[datetime, str]] = None
     intermediate_report: Optional[StrictBool] = False
+    delivery_time_window: Optional[DeliveryTimeWindow] = None
 
     @validator("send_at")
     def convert_send_at_to_correct_format(cls, value):
