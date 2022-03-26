@@ -57,6 +57,8 @@ class DeliveryTimeWindow(CamelCaseModel):
 
         cls._validate_time_differences(values["from_time"], values["to"])
 
+        return values
+
     @classmethod
     def _validate_time_differences(cls, from_time: Time, to_time: Time):
         from_time_in_minutes = from_time.hour * 60 + from_time.minute

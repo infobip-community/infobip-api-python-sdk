@@ -179,6 +179,7 @@ def test_when_hour_is_invalid__validation_error_is_raised(hour):
                     "to": "38598764321",
                     "deliveryTimeWindow": {
                         "from": {"hour": hour, "minute": 30},
+                        "to": {"hour": 12, "minute": 30},
                         "days": ["MONDAY"],
                     },
                 }
@@ -196,6 +197,7 @@ def test_when_minute_is_invalid__validation_error_is_raised(minute):
                     "to": "38598764321",
                     "deliveryTimeWindow": {
                         "to": {"hour": 12, "minute": minute},
+                        "from": {"hour": 10, "minute": 35},
                         "days": ["MONDAY"],
                     },
                 }
@@ -229,6 +231,7 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                     "delivery_time_window": {
                         "days": ["MONDAY", "THURSDAY"],
                         "from_time": {"hour": 10, "minute": 30},
+                        "to": {"hour": 12, "minute": 30},
                     },
                 },
                 "externallyHostedMedia": [
