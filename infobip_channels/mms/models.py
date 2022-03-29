@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from io import IOBase
 from typing import List, Optional, Union
 
 from pydantic import (
@@ -47,7 +48,7 @@ class DeliveryTimeWindow(CamelCaseModel):
     @root_validator
     def validate_from_and_to(cls, values):
         if not values.get("from_time") and not values.get("to"):
-            return
+            return values
 
         if values.get("from_time") and not values.get("to"):
             raise ValueError("If 'from_time' is set, 'to' has to be set also")
@@ -98,6 +99,9 @@ class Head(CamelCaseModel):
 class MMSMessageBody(MessageBodyBase):
     head: Head
     text: Optional[str] = None
-    media: Optional[str] = None
+    media: Optional[IOBase] = None
     externally_hosted_media: Optional[List[ExternallyHostedMedia]] = None
     smil: Optional[str] = None
+
+    class Config(CamelCaseModel.Config):
+        arbitrary_types_allowed = True
