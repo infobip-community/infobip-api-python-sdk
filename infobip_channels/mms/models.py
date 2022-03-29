@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from io import BytesIO
+from io import IOBase
 from typing import List, Optional, Union
 
 from pydantic import (
@@ -99,7 +99,7 @@ class Head(CamelCaseModel):
 class MMSMessageBody(MessageBodyBase):
     head: Head
     text: Optional[str] = None
-    media: Optional[Union[bytes, BytesIO]] = None
+    media: Optional[IOBase] = None
     externally_hosted_media: Optional[List[ExternallyHostedMedia]] = None
     smil: Optional[str] = None
 

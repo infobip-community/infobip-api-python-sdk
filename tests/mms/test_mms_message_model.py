@@ -1,4 +1,6 @@
 from datetime import date
+from io import open
+from tempfile import NamedTemporaryFile
 
 import pytest
 from pydantic.error_wrappers import ValidationError
@@ -217,6 +219,11 @@ def test_when_days_is_invalid__validation_error_is_raised(days):
 
 
 def test_when_input_data_is_valid__validation_error_is_not_raised():
+    f = NamedTemporaryFile("wb")
+    f.write(b"random bytes")
+    f.flush()
+    media_file = open(f.name, "rb")
+
     try:
         MMSMessageBody(
             **{
@@ -232,7 +239,7 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                     },
                 },
                 "text": "some text",
-                "media": b"binary_data",
+                "media": media_file,
                 "externallyHostedMedia": [
                     {
                         "contentType": "some type",
@@ -242,5 +249,6 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                 ],
             }
         )
+        f.close()
     except ValidationError:
         pytest.fail("Unexpected ValidationError raised")
