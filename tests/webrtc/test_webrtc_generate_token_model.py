@@ -1,7 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.web_rtc.models.body.generate_token import GenerateToken
+from infobip_channels.web_rtc.models.body.generate_token import GenerateTokenBody
 from tests.conftest import get_random_string
 from tests.webrtc.conftest import GenerateTokenFactory
 
@@ -50,7 +50,7 @@ def test_when_recording_is_invalid__validation_error_is_raised(time_to_live):
 
 def test_when_input_data_is_valid__validation_error_is_not_raised():
     try:
-        GenerateToken(
+        GenerateTokenBody(
             **{
                 "identity": "Alice_",
                 "applicationId": "2277594c-76ea-4b8e-a299-e2b6db41b9dc",

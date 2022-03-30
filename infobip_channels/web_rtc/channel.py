@@ -5,10 +5,14 @@ import requests
 
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import ResponseBase
+from infobip_channels.web_rtc.models.body.generate_token import GenerateTokenBody
 from infobip_channels.web_rtc.models.path_parameters.core import PathParameter
 from infobip_channels.web_rtc.models.response.core import (
     WebRtcResponseError,
     WebRtcResponseOK,
+)
+from infobip_channels.web_rtc.models.response.generate_token import (
+    GenerateTokenResponseOK,
 )
 
 
@@ -55,3 +59,19 @@ class WebRtcChannel(Channel):
             return WebRtcResponseError
 
         raise ValueError
+
+    def generate_token(
+        self, message: Union[GenerateTokenBody, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This endpoint allows you to generate token for WebRTC channel.
+
+        :param message: Body od request to send
+        :return: Received response
+        """
+        # todo validation of body
+        message = self.validate_message_body(message, GenerateTokenBody)
+        response = self._client.post(
+            self.WEB_RTC_URL_TEMPLATE + "token", message.dict(by_alias=True)
+        )
+        return self._construct_response(response, GenerateTokenResponseOK)

@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import conint, constr
 
-from infobip_channels.core.models import CamelCaseModel
+from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
 
 
 class RecordingEnum(str, Enum):
@@ -16,7 +16,7 @@ class Capabilities(CamelCaseModel):
     recording: Optional[RecordingEnum] = None
 
 
-class GenerateToken(CamelCaseModel):
+class GenerateTokenBody(MessageBodyBase):
     identity: constr(regex=r"[\u0020-\ud7ff]{3,64}$")  # noqa: F722
     application_id: Optional[str] = None
     display_name: Optional[constr(min_length=5, max_length=50)] = None

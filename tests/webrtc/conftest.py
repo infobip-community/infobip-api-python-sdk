@@ -1,7 +1,7 @@
 from pydantic_factories import ModelFactory
 
-from infobip_channels.web_rtc.models.body.generate_token import GenerateToken
+from infobip_channels.web_rtc.models.body.generate_token import GenerateTokenBody
 
 
 class GenerateTokenFactory(ModelFactory):
-    __model__ = GenerateToken
+    __model__ = GenerateTokenBody
