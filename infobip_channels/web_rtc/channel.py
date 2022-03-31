@@ -62,6 +62,7 @@ class WebRtcChannel(Channel):
             HTTPStatus.UNAUTHORIZED,
             HTTPStatus.FORBIDDEN,
             HTTPStatus.TOO_MANY_REQUESTS,
+            HTTPStatus.INTERNAL_SERVER_ERROR,
         ):
             return WebRtcResponseError
 
@@ -117,6 +118,21 @@ class WebRtcChannel(Channel):
         """
         path_parameter = self.validate_path_parameter(parameter, WebRtcPathParameters)
         response = self._client.get(
+            self.WEB_RTC_URL_TEMPLATE + "applications/" + path_parameter.id
+        )
+        return self._construct_response(response)
+
+    def delete_application(
+        self, parameter: Union[WebRtcPathParameters, Dict]
+    ) -> Union[ResponseBase, Any]:
+        """
+        Delete WebRTC application for a given id.
+
+        :param parameter: Application Id
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(parameter, WebRtcPathParameters)
+        response = self._client.delete(
             self.WEB_RTC_URL_TEMPLATE + "applications/" + path_parameter.id
         )
         return self._construct_response(response)
