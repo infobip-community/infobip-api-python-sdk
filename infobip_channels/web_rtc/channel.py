@@ -15,6 +15,9 @@ from infobip_channels.web_rtc.models.response.core import (
 from infobip_channels.web_rtc.models.response.generate_token import (
     GenerateTokenResponseOK,
 )
+from infobip_channels.web_rtc.models.response.get_applications import (
+    GetApplicationsResponseOK,
+)
 
 
 class WebRtcChannel(Channel):
@@ -90,3 +93,12 @@ class WebRtcChannel(Channel):
             self.WEB_RTC_URL_TEMPLATE + "applications", message.dict(by_alias=True)
         )
         return self._construct_response(response)
+
+    def get_applications(self) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        List all applications for WebRTC channel.
+
+        :return: Received response
+        """
+        response = self._client.get(self.WEB_RTC_URL_TEMPLATE + "applications")
+        return self._construct_response(response, GetApplicationsResponseOK)

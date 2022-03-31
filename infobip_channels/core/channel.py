@@ -135,11 +135,17 @@ class Channel(ABC):
             response_class = self._get_custom_response_class(
                 raw_response, *args, **kwargs
             )
+
+            if type(raw_response.json()) is list:
+                raw_response_data = {"list": raw_response.json()}
+            else:
+                raw_response_data = raw_response.json()
+
             return response_class(
                 **{
                     "status_code": raw_response.status_code,
                     "raw_response": raw_response,
-                    **raw_response.json(),
+                    **raw_response_data,
                 }
             )
 
