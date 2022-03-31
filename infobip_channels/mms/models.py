@@ -1,3 +1,5 @@
+import json
+import os
 from datetime import datetime
 from enum import Enum
 from io import IOBase
@@ -13,6 +15,7 @@ from pydantic import (
     root_validator,
     validator,
 )
+from urllib3 import encode_multipart_formdata
 
 from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
 
@@ -105,3 +108,40 @@ class MMSMessageBody(MessageBodyBase):
 
     class Config(CamelCaseModel.Config):
         arbitrary_types_allowed = True
+
+    def to_multipart(self) -> tuple[bytes, str]:
+        multipart_fields = {"head": self._json_for_multipart(self.head)}
+        self._populate_optional_fields(multipart_fields)
+        return encode_multipart_formdata(multipart_fields)
+
+    def _populate_optional_fields(self, multipart_fields):
+        optional_fields = {}
+
+        if self.text:
+            optional_fields["text"] = self.text
+
+        if self.media:
+            optional_fields["media"] = (
+                os.path.basename(self.media.name),
+                self.media.read(),
+            )
+
+        if self.externally_hosted_media:
+            optional_fields["externallyHostedMedia"] = self._json_for_multipart(
+                self.externally_hosted_media
+            )
+
+        if self.smil:
+            optional_fields["smil"] = (None, self.smil, "application/xml")
+
+        multipart_fields.update(optional_fields)
+
+    def _json_for_multipart(
+        self, data: Union[CamelCaseModel, List[CamelCaseModel]]
+    ) -> tuple:
+        data = [data] if isinstance(data, CamelCaseModel) else data
+        return (
+            None,
+            json.dumps([item.dict(by_alias=True) for item in data]),
+            "application/json",
+        )
