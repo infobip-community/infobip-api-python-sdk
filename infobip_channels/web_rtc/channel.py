@@ -8,6 +8,9 @@ from infobip_channels.core.models import ResponseBase
 from infobip_channels.web_rtc.models.body.generate_token import GenerateTokenBody
 from infobip_channels.web_rtc.models.body.save_application import SaveApplicationBody
 from infobip_channels.web_rtc.models.path_parameters.core import PathParameter
+from infobip_channels.web_rtc.models.path_parameters.web_rtc_application import (
+    WebRtcPathParameters,
+)
 from infobip_channels.web_rtc.models.response.core import (
     WebRtcResponseError,
     WebRtcResponseOK,
@@ -102,3 +105,18 @@ class WebRtcChannel(Channel):
         """
         response = self._client.get(self.WEB_RTC_URL_TEMPLATE + "applications")
         return self._construct_response(response, GetApplicationsResponseOK)
+
+    def get_application(
+        self, parameter: Union[WebRtcPathParameters, Dict]
+    ) -> Union[ResponseBase, Any]:
+        """
+        Get a single WebRTC application to see its configuration details.
+
+        :param parameter: Application Id
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(parameter, WebRtcPathParameters)
+        response = self._client.get(
+            self.WEB_RTC_URL_TEMPLATE + "applications/" + path_parameter.id
+        )
+        return self._construct_response(response)
