@@ -1,8 +1,13 @@
-from typing import Dict
+from typing import Dict, Union
 
 import requests
 
-from infobip_channels.core.models import Authentication, GetHeaders, PostHeaders
+from infobip_channels.core.models import (
+    Authentication,
+    GetHeaders,
+    PostHeaders,
+    RequestHeaders,
+)
 
 
 class _HttpClient:
@@ -10,26 +15,30 @@ class _HttpClient:
 
     def __init__(self, auth: Authentication):
         self.auth = auth
-        self.post_headers = PostHeaders(authorization=self.auth.api_key)
-        self.get_headers = GetHeaders(authorization=self.auth.api_key)
 
-    def post(self, endpoint: str, body: Dict) -> requests.Response:
+    def post(
+        self, endpoint: str, body: Union[Dict, bytes], headers: RequestHeaders = None
+    ) -> requests.Response:
         """Send an HTTP post request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
         :param body: Body to send with the request
+        :param headers: Request headers
         :return: Received response
         """
+        headers = headers or PostHeaders(authorization=self.auth.api_key)
         url = self.auth.base_url + endpoint
-        return requests.post(
-            url=url, json=body, headers=self.post_headers.dict(by_alias=True)
-        )
 
-    def get(self, endpoint: str) -> requests.Response:
+        return requests.post(url=url, data=body, headers=headers.dict(by_alias=True))
+
+    def get(self, endpoint: str, headers: RequestHeaders = None) -> requests.Response:
         """Send an HTTP get request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
+        :param headers: Request headers
         :return: Received response
         """
+        headers = headers or GetHeaders(authorization=self.auth.api_key)
         url = self.auth.base_url + endpoint
-        return requests.get(url=url, headers=self.get_headers.dict(by_alias=True))
+
+        return requests.get(url=url, headers=headers.dict(by_alias=True))
