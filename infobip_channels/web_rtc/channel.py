@@ -7,6 +7,9 @@ from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import ResponseBase
 from infobip_channels.web_rtc.models.body.generate_token import GenerateTokenBody
 from infobip_channels.web_rtc.models.body.save_application import SaveApplicationBody
+from infobip_channels.web_rtc.models.body.update_application import (
+    UpdateApplicationBody,
+)
 from infobip_channels.web_rtc.models.path_parameters.core import PathParameter
 from infobip_channels.web_rtc.models.path_parameters.web_rtc_application import (
     WebRtcPathParameters,
@@ -109,7 +112,7 @@ class WebRtcChannel(Channel):
 
     def get_application(
         self, parameter: Union[WebRtcPathParameters, Dict]
-    ) -> Union[ResponseBase, Any]:
+    ) -> Union[ResponseBase, requests.Response, Any]:
         """
         Get a single WebRTC application to see its configuration details.
 
@@ -124,7 +127,7 @@ class WebRtcChannel(Channel):
 
     def delete_application(
         self, parameter: Union[WebRtcPathParameters, Dict]
-    ) -> Union[ResponseBase, Any]:
+    ) -> Union[ResponseBase, requests.Response, Any]:
         """
         Delete WebRTC application for a given id.
 
@@ -134,5 +137,25 @@ class WebRtcChannel(Channel):
         path_parameter = self.validate_path_parameter(parameter, WebRtcPathParameters)
         response = self._client.delete(
             self.WEB_RTC_URL_TEMPLATE + "applications/" + path_parameter.id
+        )
+        return self._construct_response(response)
+
+    def update_application(
+        self,
+        parameter: Union[WebRtcPathParameters, Dict],
+        message: Union[UpdateApplicationBody, Dict],
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        Change configuration details of your existing WebRTC application.
+
+        :param parameter: Application Id
+        :param message: Body of request to send
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(parameter, WebRtcPathParameters)
+        message = self.validate_message_body(message, UpdateApplicationBody)
+        response = self._client.put(
+            self.WEB_RTC_URL_TEMPLATE + "applications/" + path_parameter.id,
+            message.dict(by_alias=True),
         )
         return self._construct_response(response)

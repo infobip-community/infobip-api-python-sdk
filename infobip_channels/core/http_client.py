@@ -34,6 +34,18 @@ class _HttpClient:
         url = self.auth.base_url + endpoint
         return requests.get(url=url, headers=self.get_headers.dict(by_alias=True))
 
+    def put(self, endpoint: str, body: Dict) -> requests.Response:
+        """Send an HTTP put request to base_url + endpoint.
+
+        :param endpoint: Which endpoint to hit
+        :param body: Body to send with the request
+        :return: Received response
+        """
+        url = self.auth.base_url + endpoint
+        return requests.put(
+            url=url, json=body, headers=self.get_headers.dict(by_alias=True)
+        )
+
     def delete(self, endpoint: str) -> requests.Response:
         """Send an HTTP delete request to base_url + endpoint.
 

@@ -1,5 +1,5 @@
 from infobip_channels.web_rtc.models.body.core import ApplicationBody
 
 
-class SaveApplicationBody(ApplicationBody):
+class UpdateApplicationBody(ApplicationBody):
     pass
