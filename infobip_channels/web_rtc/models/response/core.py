@@ -30,12 +30,12 @@ class WebRtcResponseOKPayload(CamelCaseModel):
     id: str
     name: str
     description: str
-    ios: IosCertificate
-    android: AndroidServerKey
+    ios: Optional[IosCertificate] = None
+    android: Optional[AndroidServerKey] = None
     app_to_app: bool
     app_to_conversations: bool
     app_to_phone: bool
 
 
-class WebRtcResponseOK(WebRtcResponseError, ResponseBase):
+class WebRtcResponseOK(WebRtcResponseOKPayload, ResponseBase):
     pass
