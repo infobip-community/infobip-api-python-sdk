@@ -66,16 +66,16 @@ class WhatsAppChannel(Channel):
 
     def _get_custom_response_class(
         self,
-        response: Union[requests.Response, Any],
+        raw_response: Union[requests.Response, Any],
         response_ok_model: Type[ResponseBase] = WhatsAppResponseOK,
         *args,
         **kwargs
     ) -> Type[ResponseBase]:
 
-        if response.status_code in (HTTPStatus.OK, HTTPStatus.CREATED):
+        if raw_response.status_code in (HTTPStatus.OK, HTTPStatus.CREATED):
             return response_ok_model
 
-        elif response.status_code in (
+        elif raw_response.status_code in (
             HTTPStatus.BAD_REQUEST,
             HTTPStatus.UNAUTHORIZED,
             HTTPStatus.FORBIDDEN,

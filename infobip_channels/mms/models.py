@@ -115,7 +115,7 @@ class MMSMessageBody(MessageBodyBase):
         arbitrary_types_allowed = True
 
     def to_multipart(self) -> tuple[bytes, str]:
-        multipart_fields = {"head": self._json_for_multipart(self.head)}
+        multipart_fields = {"head": self._get_model_for_multipart(self.head)}
         self._populate_optional_fields(multipart_fields)
         return encode_multipart_formdata(multipart_fields)
 
@@ -123,7 +123,7 @@ class MMSMessageBody(MessageBodyBase):
         optional_fields = {}
 
         if self.text:
-            optional_fields["text"] = self.text
+            optional_fields["text"] = (None, self.text, "text/plain")
 
         if self.media:
             optional_fields["media"] = (
@@ -132,7 +132,7 @@ class MMSMessageBody(MessageBodyBase):
             )
 
         if self.externally_hosted_media:
-            optional_fields["externallyHostedMedia"] = self._json_for_multipart(
+            optional_fields["externallyHostedMedia"] = self._get_model_for_multipart(
                 self.externally_hosted_media
             )
 
@@ -141,15 +141,15 @@ class MMSMessageBody(MessageBodyBase):
 
         multipart_fields.update(optional_fields)
 
-    def _json_for_multipart(
-        self, data: Union[CamelCaseModel, List[CamelCaseModel]]
-    ) -> tuple:
-        data = [data] if isinstance(data, CamelCaseModel) else data
-        return (
-            None,
-            json.dumps([item.dict(by_alias=True) for item in data]),
-            "application/json",
-        )
+    def _get_model_for_multipart(
+        self, model: Union[CamelCaseModel, List[CamelCaseModel]]
+    ):
+        if isinstance(model, list):
+            model_aliased = [item.dict(by_alias=True) for item in model]
+        else:
+            model_aliased = model.dict(by_alias=True)
+
+        return None, json.dumps(model_aliased), "application/json"
 
 
 class MMSResponseMessage(CamelCaseModel):
