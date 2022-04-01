@@ -1,6 +1,10 @@
 # infobip-api-python-sdk
 Python client for Infobip's  API channels.
 
+# Supported channels
+- Whatsapp -> [Docs](https://www.infobip.com/docs/api#channels/whatsapp)
+- WebRTC -> [Docs](https://www.infobip.com/docs/api#channels/webrtc/)
+
 #### Table of contents:
 
 - [General Info](#general-info)
