@@ -29,7 +29,12 @@ class _HttpClient:
         headers = headers or PostHeaders(authorization=self.auth.api_key)
         url = self.auth.base_url + endpoint
 
-        return requests.post(url=url, data=body, headers=headers.dict(by_alias=True))
+        if isinstance(body, dict):
+            kwargs = {"json": body}
+        else:
+            kwargs = {"data": body}
+
+        return requests.post(url=url, headers=headers.dict(by_alias=True), **kwargs)
 
     def get(self, endpoint: str, headers: RequestHeaders = None) -> requests.Response:
         """Send an HTTP get request to base_url + endpoint.
