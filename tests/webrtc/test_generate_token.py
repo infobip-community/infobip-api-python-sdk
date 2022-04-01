@@ -6,7 +6,9 @@ from tests.conftest import get_random_string
 from tests.webrtc.conftest import GenerateTokenFactory
 
 
-@pytest.mark.parametrize("identity", [None, "", {}, get_random_string(65)])
+@pytest.mark.parametrize(
+    "identity", [None, "", {}, "Alice W", get_random_string(2), get_random_string(65)]
+)
 def test_when_identity_is_invalid__validation_error_is_raised(identity):
     with pytest.raises(ValidationError):
         GenerateTokenFactory.build(
@@ -15,6 +17,20 @@ def test_when_identity_is_invalid__validation_error_is_raised(identity):
                 "applicationId": "2277594c-76ea-4b8e-a299-e2b6db41b9dc",
                 "displayName": "Alice in Wonderland",
                 "capabilities": {"recording": "ALWAYS"},
+                "timeToLive": 43200,
+            }
+        )
+
+
+@pytest.mark.parametrize("recording", [None, "", {}, "INVALID"])
+def test_when_recording_is_invalid__validation_error_is_raised(recording):
+    with pytest.raises(ValidationError):
+        GenerateTokenFactory.build(
+            **{
+                "identity": "Alice",
+                "applicationId": "2277594c-76ea-4b8e-a299-e2b6db41b9dc",
+                "displayName": "Alice in Wonderland",
+                "capabilities": {"recording": recording},
                 "timeToLive": 43200,
             }
         )
@@ -35,7 +51,7 @@ def test_when_display_name_is_invalid__validation_error_is_raised(display_name):
 
 
 @pytest.mark.parametrize("time_to_live", [-1, 86401])
-def test_when_recording_is_invalid__validation_error_is_raised(time_to_live):
+def test_when_time_to_live_is_invalid__validation_error_is_raised(time_to_live):
     with pytest.raises(ValidationError):
         GenerateTokenFactory.build(
             **{

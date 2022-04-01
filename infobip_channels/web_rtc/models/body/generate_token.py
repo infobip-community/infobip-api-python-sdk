@@ -14,7 +14,7 @@ class RecordingEnum(str, Enum):
 
 
 class Capabilities(CamelCaseModel):
-    recording: Optional[RecordingEnum] = None
+    recording: RecordingEnum
 
 
 class GenerateTokenBody(MessageBodyBase):
