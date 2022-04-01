@@ -61,6 +61,15 @@ class ResponseBase(CamelCaseModel):
         arbitrary_types_allowed = True
 
 
+class ResponseStatus(CamelCaseModel):
+    group_id: int
+    group_name: str
+    id: int
+    name: str
+    description: str
+    action: Optional[str] = None
+
+
 class RequestHeaders(BaseModel):
     authorization: str
     accept: Optional[str] = "application/json"

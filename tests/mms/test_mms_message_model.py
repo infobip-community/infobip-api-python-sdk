@@ -1,11 +1,12 @@
 from datetime import date
+from io import open
+from tempfile import NamedTemporaryFile
 
 import pytest
 from pydantic.error_wrappers import ValidationError
 
 from infobip_channels.mms.models import MMSMessageBody
 from tests.conftest import get_random_string
-from tests.mms.conftest import MMSMessageBodyFactory
 
 
 @pytest.mark.parametrize(
@@ -20,27 +21,25 @@ from tests.mms.conftest import MMSMessageBodyFactory
 )
 def test_when_head_is_invalid__validation_error_is_raised(head):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(**{"head": head})
+        MMSMessageBody(**{"head": head})
 
 
 @pytest.mark.parametrize("from_number", [None, {}])
 def test_when_from_number_is_invalid__validation_error_is_raised(from_number):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
-            **{"head": {"from": from_number, "to": "38598764321"}}
-        )
+        MMSMessageBody(**{"head": {"from": from_number, "to": "38598764321"}})
 
 
 @pytest.mark.parametrize("to", [None, {}])
 def test_when_to_number_is_invalid__validation_error_is_raised(to):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(**{"head": {"from": "38599854312", "to": to}})
+        MMSMessageBody(**{"head": {"from": "38599854312", "to": to}})
 
 
 @pytest.mark.parametrize("callback_data", [{}, get_random_string(201)])
 def test_when_callback_data_is_invalid__validation_error_is_raised(callback_data):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -54,7 +53,7 @@ def test_when_callback_data_is_invalid__validation_error_is_raised(callback_data
 @pytest.mark.parametrize("notify_url", [{}, "string", "ftp://url.com"])
 def test_when_notify_url_is_invalid__validation_error_is_raised(notify_url):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -68,7 +67,7 @@ def test_when_notify_url_is_invalid__validation_error_is_raised(notify_url):
 @pytest.mark.parametrize("send_at", [{}, "22-03-2022", date.today()])
 def test_when_send_at_is_invalid__validation_error_is_raised(send_at):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -84,7 +83,7 @@ def test_when_intermediate_report_is_invalid__validation_error_is_raised(
     intermediate_report,
 ):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -113,7 +112,7 @@ def test_when_delivery_time_window_is_invalid__validation_error_is_raised(
     delivery_time_window,
 ):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -138,7 +137,7 @@ def test_when_externally_hosted_media_is_invalid__validation_error_is_raised(
     externally_hosted_media,
 ):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -152,7 +151,7 @@ def test_when_externally_hosted_media_is_invalid__validation_error_is_raised(
 @pytest.mark.parametrize("content_url", [{}, "string", "ftp://url.com"])
 def test_when_content_url_is_invalid__validation_error_is_raised(content_url):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -172,7 +171,7 @@ def test_when_content_url_is_invalid__validation_error_is_raised(content_url):
 @pytest.mark.parametrize("hour", [None, -2, 24])
 def test_when_hour_is_invalid__validation_error_is_raised(hour):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -190,7 +189,7 @@ def test_when_hour_is_invalid__validation_error_is_raised(hour):
 @pytest.mark.parametrize("minute", [None, -2, 60])
 def test_when_minute_is_invalid__validation_error_is_raised(minute):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -208,7 +207,7 @@ def test_when_minute_is_invalid__validation_error_is_raised(minute):
 @pytest.mark.parametrize("days", [[], "MONDAY", ["TEST"]])
 def test_when_days_is_invalid__validation_error_is_raised(days):
     with pytest.raises(ValidationError):
-        MMSMessageBodyFactory.build(
+        MMSMessageBody(
             **{
                 "head": {
                     "from": "38599854312",
@@ -220,6 +219,11 @@ def test_when_days_is_invalid__validation_error_is_raised(days):
 
 
 def test_when_input_data_is_valid__validation_error_is_not_raised():
+    f = NamedTemporaryFile("wb")
+    f.write(b"random bytes")
+    f.flush()
+    media_file = open(f.name, "rb")
+
     try:
         MMSMessageBody(
             **{
@@ -234,6 +238,8 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                         "to": {"hour": 12, "minute": 30},
                     },
                 },
+                "text": "some text",
+                "media": media_file,
                 "externallyHostedMedia": [
                     {
                         "contentType": "some type",
@@ -243,5 +249,6 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                 ],
             }
         )
+        f.close()
     except ValidationError:
         pytest.fail("Unexpected ValidationError raised")
