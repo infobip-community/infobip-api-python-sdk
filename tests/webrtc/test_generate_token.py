@@ -52,7 +52,7 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
     try:
         GenerateTokenBody(
             **{
-                "identity": "Alice_",
+                "identity": "Alice12-_.é=+",
                 "applicationId": "2277594c-76ea-4b8e-a299-e2b6db41b9dc",
                 "displayName": "Alice in Wonderland",
                 "capabilities": {"recording": "ALWAYS"},
