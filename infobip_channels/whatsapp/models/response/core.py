@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional
 
-from infobip_channels.core.models import CamelCaseModel, ResponseBase
+from infobip_channels.core.models import CamelCaseModel, ResponseBase, ResponseStatus
 
 
 class ServiceException(CamelCaseModel):
@@ -17,20 +17,11 @@ class WhatsAppResponseError(ResponseBase):
     request_error: RequestError
 
 
-class ResponseOKStatus(CamelCaseModel):
-    group_id: int
-    group_name: str
-    id: int
-    name: str
-    description: str
-    action: Optional[str] = None
-
-
 class WhatsAppResponseOKPayload(CamelCaseModel):
     to: str
     message_count: int
     message_id: str
-    status: ResponseOKStatus
+    status: ResponseStatus
 
 
 class WhatsAppResponseOK(WhatsAppResponseOKPayload, ResponseBase):
