@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 from enum import Enum
 from io import IOBase
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from pydantic import (
     AnyHttpUrl,
@@ -114,7 +114,7 @@ class MMSMessageBody(MessageBodyBase):
     class Config(CamelCaseModel.Config):
         arbitrary_types_allowed = True
 
-    def to_multipart(self) -> tuple[bytes, str]:
+    def to_multipart(self) -> Tuple[bytes, str]:
         multipart_fields = {"head": self._get_model_for_multipart(self.head)}
         self._populate_optional_fields(multipart_fields)
         return encode_multipart_formdata(multipart_fields)
@@ -143,7 +143,7 @@ class MMSMessageBody(MessageBodyBase):
 
     def _get_model_for_multipart(
         self, model: Union[CamelCaseModel, List[CamelCaseModel]]
-    ) -> tuple[None, str, str]:
+    ) -> Tuple[None, str, str]:
 
         if isinstance(model, list):
             model_aliased = [item.dict(by_alias=True) for item in model]
