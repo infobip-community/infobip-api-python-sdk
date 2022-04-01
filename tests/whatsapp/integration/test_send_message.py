@@ -4,8 +4,8 @@ from pytest_cases import parametrize_with_cases
 
 from infobip_channels.core.models import ResponseBase
 from infobip_channels.whatsapp.channel import WhatsAppChannel
+from tests.conftest import get_response_object
 from tests.whatsapp.conftest import (
-    get_response_object,
     get_response_object_unofficial,
     get_whatsapp_channel_instance,
 )
@@ -60,7 +60,7 @@ def test_send_message_from_all_instantiation_types_case__valid_content(
         factory=message_body_factory,
         http_server=httpserver,
         endpoint=endpoint,
-        headers=get_expected_post_headers("secret"),
+        headers=get_expected_post_headers(),
         response=get_response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         message_body_type=message_body_type,
@@ -114,7 +114,7 @@ def test_send_message_from_all_instantiation_types_case__invalid_content(
         factory=message_body_factory,
         http_server=httpserver,
         endpoint=endpoint,
-        headers=get_expected_post_headers("secret"),
+        headers=get_expected_post_headers(),
         response=response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         message_body_type=message_body_type,
