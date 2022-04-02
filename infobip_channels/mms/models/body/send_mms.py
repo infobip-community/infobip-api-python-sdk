@@ -17,12 +17,7 @@ from pydantic import (
 )
 from urllib3 import encode_multipart_formdata
 
-from infobip_channels.core.models import (
-    CamelCaseModel,
-    MessageBodyBase,
-    ResponseBase,
-    ResponseStatus,
-)
+from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
 
 MINIMUM_DELIVERY_WINDOW_MINUTES = 60
 
@@ -151,15 +146,3 @@ class MMSMessageBody(MessageBodyBase):
             model_aliased = model.dict(by_alias=True)
 
         return None, json.dumps(model_aliased), "application/json"
-
-
-class MMSResponseMessage(CamelCaseModel):
-    to: Optional[str] = None
-    status: ResponseStatus
-    message_id: Optional[str] = None
-
-
-class MMSResponse(ResponseBase):
-    bulk_id: Optional[str] = None
-    messages: List[MMSResponseMessage]
-    error_message: Optional[str] = None

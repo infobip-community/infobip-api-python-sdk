@@ -5,7 +5,8 @@ import requests
 
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, ResponseBase
-from infobip_channels.mms.models import MMSMessageBody, MMSResponse
+from infobip_channels.mms.models.body.send_mms import MMSMessageBody
+from infobip_channels.mms.models.response.send_mms import SendMMSResponse
 
 
 class MMSChannel(Channel):
@@ -21,7 +22,7 @@ class MMSChannel(Channel):
             HTTPStatus.BAD_REQUEST,
             HTTPStatus.INTERNAL_SERVER_ERROR,
         ):
-            return MMSResponse
+            return SendMMSResponse
 
         raise ValueError
 
