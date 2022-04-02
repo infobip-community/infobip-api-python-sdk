@@ -1,5 +1,6 @@
 from pytest_cases import parametrize
 
+from tests.conftest import get_response_error_invalid_content
 from tests.whatsapp.conftest import (
     AudioMessageBodyFactory,
     ButtonsMessageBodyFactory,
@@ -15,7 +16,6 @@ from tests.whatsapp.conftest import (
     TextMessageBodyFactory,
     VideoMessageBodyFactory,
     get_response_error_content,
-    get_response_error_invalid_content,
     get_response_ok_content,
     get_response_ok_invalid_content,
     get_template_message_response_ok_content,

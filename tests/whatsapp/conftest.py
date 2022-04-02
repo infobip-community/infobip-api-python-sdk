@@ -1,10 +1,8 @@
 import json
 
 import pytest
-import requests
 import urllib3
 from pydantic_factories import ModelFactory
-from werkzeug.wrappers.response import Response
 
 from infobip_channels import WhatsAppChannel
 from infobip_channels.core.models import Authentication
@@ -194,20 +192,6 @@ def authentication():
     return AuthenticationFactory.build()
 
 
-class HttpTestClient:
-    def __init__(self, url, headers):
-        self.url = url
-        self.headers = headers
-
-    def post(self, endpoint, body):
-        return requests.post(
-            url=f"{self.url}" + endpoint, json=body, headers=self.headers
-        )
-
-    def get(self, endpoint):
-        return requests.get(url=f"{self.url}" + endpoint, headers=self.headers)
-
-
 class HttpTestClientUnofficial:
     def __init__(self, url, headers):
         self.pool = urllib3.PoolManager()
@@ -226,14 +210,6 @@ class HttpTestClientUnofficial:
         return self.pool.request(
             "GET", url=f"{self.url}" + endpoint, headers=self.headers
         )
-
-
-@pytest.fixture
-def http_test_client():
-    def _get_http_test_client(url, headers):
-        return HttpTestClient(url, headers)
-
-    return _get_http_test_client
 
 
 @pytest.fixture
@@ -299,10 +275,6 @@ def get_response_ok_invalid_content():
     }
 
 
-def get_response_object(status_code, content):
-    return Response(json.dumps(content), status_code)
-
-
 class ResponseUnofficial:
     def __init__(self, status, content):
         self.status = status
@@ -328,24 +300,6 @@ def get_response_error_content():
             }
         }
     }
-
-
-def get_response_error_invalid_content():
-    return {
-        "error": {"field_one": "error_one", "field_two": "error_two"},
-    }
-
-
-@pytest.fixture
-def get_expected_post_headers():
-    def _get_expected_post_headers(api_key):
-        return {
-            "Authorization": f"App {api_key}",
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        }
-
-    return _get_expected_post_headers
 
 
 def get_whatsapp_channel_instance(instantiation_type, **kwargs):

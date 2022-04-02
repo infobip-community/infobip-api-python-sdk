@@ -8,8 +8,8 @@ from infobip_channels.whatsapp.channel import WhatsAppChannel
 from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
     ManageTemplatesPathParameters,
 )
+from tests.conftest import get_response_object
 from tests.whatsapp.conftest import (
-    get_response_object,
     get_response_object_unofficial,
     get_whatsapp_channel_instance,
 )
