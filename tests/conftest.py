@@ -43,13 +43,9 @@ def get_response_error_invalid_content():
     }
 
 
-@pytest.fixture
-def get_expected_post_headers():
-    def _get_expected_post_headers(content_type="application/json"):
-        return {
-            "Authorization": "App secret",
-            "Content-Type": content_type,
-            "Accept": "application/json",
-        }
-
-    return _get_expected_post_headers
+def get_expected_post_headers(content_type="application/json"):
+    return {
+        "Authorization": "App secret",
+        "Content-Type": content_type,
+        "Accept": "application/json",
+    }

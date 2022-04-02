@@ -5,20 +5,11 @@ from pytest_cases import parametrize_with_cases
 
 from infobip_channels.core.models import ResponseBase
 from infobip_channels.mms.channel import MMSChannel
-from tests.conftest import get_response_object
+from tests.conftest import get_expected_post_headers, get_response_object
 
 
-@patch("urllib3.filepost.choose_boundary", return_value="mockBoundary")
-@parametrize_with_cases("status_code, response_content", prefix="case__valid_content")
-def test_send_mms_message(
-    mock_boundary,
-    httpserver,
-    http_test_client,
-    status_code,
-    response_content,
-    mms_body_request,
-    mms_body_multipart,
-    get_expected_post_headers,
+def set_up_mock_server_and_send_request(
+    httpserver, mms_body_multipart, status_code, response_content, mms_body_request
 ):
     httpserver.expect_request(
         "/mms/1/single",
@@ -30,8 +21,27 @@ def test_send_mms_message(
     mms_channel = MMSChannel.from_auth_params(
         {"base_url": httpserver.url_for("/"), "api_key": "secret"}
     )
-    response = mms_channel.send_mms_message(mms_body_request)
-    response_dict = mms_channel.convert_model_to_dict(response)
+
+    return mms_channel.send_mms_message(mms_body_request)
+
+
+@patch("urllib3.filepost.choose_boundary", return_value="mockBoundary")
+@parametrize_with_cases(
+    "status_code, response_content", prefix="case__supported_status"
+)
+def test_send_mms_message__supported_status(
+    mock_boundary,
+    httpserver,
+    status_code,
+    response_content,
+    mms_body_request,
+    mms_body_multipart,
+):
+
+    response = set_up_mock_server_and_send_request(
+        httpserver, mms_body_multipart, status_code, response_content, mms_body_request
+    )
+    response_dict = MMSChannel.convert_model_to_dict(response)
     raw_response = response_dict.pop("rawResponse")
     expected_response_dict = {
         **response_content,
@@ -42,3 +52,25 @@ def test_send_mms_message(
     assert response.status_code == status_code
     assert response_dict == expected_response_dict
     assert raw_response is not None
+
+
+@patch("urllib3.filepost.choose_boundary", return_value="mockBoundary")
+@parametrize_with_cases(
+    "status_code, response_content", prefix="case__unsupported_status"
+)
+def test_send_mms_message__unsupported_status(
+    mock_boundary,
+    httpserver,
+    status_code,
+    response_content,
+    mms_body_request,
+    mms_body_multipart,
+):
+    response = set_up_mock_server_and_send_request(
+        httpserver, mms_body_multipart, status_code, response_content, mms_body_request
+    )
+
+    assert isinstance(response, ResponseBase) is False
+    assert response is not None
+    assert response.status_code == status_code
+    assert response.json() == response_content
