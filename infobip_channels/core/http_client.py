@@ -13,8 +13,21 @@ from infobip_channels.core.models import (
 class _HttpClient:
     """Default HTTP client used by the Infobip channels for making HTTP requests."""
 
-    def __init__(self, auth: Authentication):
+    def __init__(
+        self,
+        auth: Authentication,
+        post_headers: RequestHeaders = None,
+        get_headers: RequestHeaders = None,
+    ):
+        """Create an instance of the _HttpClient class with the provided authentication
+        model instance. Get and post headers can optionally be provided, otherwise
+        default instances will be created for both. These headers will be used as
+        defaults in the get and post methods, unless new values are sent through method
+        arguments.
+        """
         self.auth = auth
+        self.post_headers = post_headers or PostHeaders(authorization=self.auth.api_key)
+        self.get_headers = get_headers or GetHeaders(authorization=self.auth.api_key)
 
     def post(
         self, endpoint: str, body: Union[Dict, bytes], headers: RequestHeaders = None
@@ -26,7 +39,7 @@ class _HttpClient:
         :param headers: Request headers
         :return: Received response
         """
-        headers = headers or PostHeaders(authorization=self.auth.api_key)
+        headers = headers or self.post_headers
         url = self.auth.base_url + endpoint
 
         if isinstance(body, dict):
@@ -43,7 +56,7 @@ class _HttpClient:
         :param headers: Request headers
         :return: Received response
         """
-        headers = headers or GetHeaders(authorization=self.auth.api_key)
+        headers = headers or self.get_headers
         url = self.auth.base_url + endpoint
 
         return requests.get(url=url, headers=headers.dict(by_alias=True))
