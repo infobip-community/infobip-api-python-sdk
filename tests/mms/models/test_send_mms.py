@@ -5,7 +5,7 @@ from tempfile import NamedTemporaryFile
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.mms.models import MMSMessageBody
+from infobip_channels.mms.models.body.send_mms import MMSMessageBody
 from tests.conftest import get_random_string
 
 
