@@ -35,7 +35,7 @@ def mms_body_multipart():
     )
 
 
-def get_mms_response():
+def get_send_mms_response():
     return {
         "bulkId": "1",
         "messages": [
@@ -52,4 +52,42 @@ def get_mms_response():
             }
         ],
         "errorMessage": "string",
+    }
+
+
+@pytest.fixture
+def mms_delivery_reports_query_parameters():
+    return {"bulk_id": None, "message_id": "abc-123", "limit": 1}
+
+
+def get_mms_delivery_reports_response():
+    return {
+        "results": [
+            {
+                "bulkId": None,
+                "messageId": "abc-123",
+                "to": "38598331223",
+                "from": "38599873331",
+                "sentAt": "2022-04-02'T'15:44:12.351Z",
+                "doneAt": "2022-04-02'T'15:46:32.931Z",
+                "mmsCount": 1,
+                "mccMnc": "28988",
+                "callbackData": "",
+                "price": {"pricePerMessage": 4, "currency": "HRK"},
+                "status": {
+                    "groupId": 1,
+                    "groupName": "PENDING",
+                    "id": 26,
+                    "name": "PENDING_ACCEPTED",
+                    "description": "Message accepted, pending for delivery.",
+                },
+                "error": {
+                    "groupId": 1,
+                    "groupName": "Group 1",
+                    "id": 1,
+                    "name": "The Name",
+                    "description": "Some error",
+                },
+            }
+        ]
     }

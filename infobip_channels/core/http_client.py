@@ -49,14 +49,17 @@ class _HttpClient:
 
         return requests.post(url=url, headers=headers.dict(by_alias=True), **kwargs)
 
-    def get(self, endpoint: str, headers: RequestHeaders = None) -> requests.Response:
+    def get(
+        self, endpoint: str, headers: RequestHeaders = None, params: Dict = None
+    ) -> requests.Response:
         """Send an HTTP get request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
         :param headers: Request headers
+        :param params: Dictionary of query parameters
         :return: Received response
         """
         headers = headers or self.get_headers
         url = self.auth.base_url + endpoint
 
-        return requests.get(url=url, headers=headers.dict(by_alias=True))
+        return requests.get(url=url, headers=headers.dict(by_alias=True), params=params)

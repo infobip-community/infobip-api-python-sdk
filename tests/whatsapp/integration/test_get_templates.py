@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-import pytest
 from pytest_cases import parametrize_with_cases
 
 from infobip_channels.core.models import ResponseBase
@@ -8,27 +7,15 @@ from infobip_channels.whatsapp.channel import WhatsAppChannel
 from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
     ManageTemplatesPathParameters,
 )
-from tests.conftest import get_response_object
+from tests.conftest import get_expected_get_headers, get_response_object
 from tests.whatsapp.conftest import (
     get_response_object_unofficial,
     get_whatsapp_channel_instance,
 )
 
 
-@pytest.fixture
-def get_expected_get_headers():
-    def _get_expected_get_headers(api_key):
-        return {
-            "Authorization": f"App {api_key}",
-            "Accept": "application/json",
-        }
-
-    return _get_expected_get_headers
-
-
 def get_templates_request(
     http_server,
-    headers,
     response,
     instantiation_type,
     path_parameters_type,
@@ -40,7 +27,7 @@ def get_templates_request(
     http_server.expect_request(
         "/whatsapp/1/senders/38598765321/templates",
         method="GET",
-        headers=headers,
+        headers=get_expected_get_headers(),
     ).respond_with_response(response)
 
     whatsapp_channel = get_whatsapp_channel_instance(instantiation_type, **kwargs)
@@ -63,11 +50,9 @@ def test_get_templates_from_all_instantiation_types_case__valid_content(
     response_content,
     path_parameters_type,
     whatsapp_channel_instantiation_type,
-    get_expected_get_headers,
 ):
     response = get_templates_request(
         http_server=httpserver,
-        headers=get_expected_get_headers("secret"),
         response=get_response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         path_parameters_type=path_parameters_type,
@@ -104,7 +89,6 @@ def test_get_templates_from_all_instantiation_types_case__invalid_content(
     response_content,
     path_parameters_type,
     whatsapp_channel_instantiation_type,
-    get_expected_get_headers,
 ):
     if whatsapp_channel_instantiation_type == "client_unofficial":
         client = http_test_client_unofficial
@@ -115,7 +99,6 @@ def test_get_templates_from_all_instantiation_types_case__invalid_content(
 
     response = get_templates_request(
         http_server=httpserver,
-        headers=get_expected_get_headers("secret"),
         response=response_object(status_code, response_content),
         instantiation_type=whatsapp_channel_instantiation_type,
         path_parameters_type=path_parameters_type,

@@ -89,3 +89,11 @@ class GetHeaders(RequestHeaders):
 
 class PostHeaders(RequestHeaders):
     content_type: Optional[str] = "application/json"
+
+
+class PathParameter(CamelCaseModel):
+    sender: str
+
+
+class QueryParameter(CamelCaseModel):
+    pass

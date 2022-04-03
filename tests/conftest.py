@@ -49,3 +49,10 @@ def get_expected_post_headers(content_type="application/json"):
         "Content-Type": content_type,
         "Accept": "application/json",
     }
+
+
+def get_expected_get_headers():
+    return {
+        "Authorization": "App secret",
+        "Accept": "application/json",
+    }

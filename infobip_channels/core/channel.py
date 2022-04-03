@@ -120,7 +120,7 @@ class Channel(ABC):
         message_type: Type[MessageBodyBase],
     ) -> Union[MessageBodyBase]:
         """Validate the message by trying to instantiate the provided type class.
-        If the message passed is already of that type, just return it as is.
+        If the passed message is already of that type, just return it as is.
 
         :param message: Message body to validate
         :param message_type: Type of the message body
