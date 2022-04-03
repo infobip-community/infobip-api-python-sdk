@@ -41,7 +41,7 @@ def set_up_mock_server_and_send_request(
     "expected_query_parameters, expected_data, request_data, method_name",
     prefix="case__supported_status",
 )
-def test_get_mms_delivery_reports__supported_status(
+def test_mms_endpoints__supported_status(
     mock_boundary,
     httpserver,
     status_code,
@@ -86,7 +86,7 @@ def test_get_mms_delivery_reports__supported_status(
     "expected_query_parameters, expected_data, request_data, method_name",
     prefix="case__unsupported_status",
 )
-def test_get_mms_delivery_reports__unsupported_status(
+def test_mms_endpoints__unsupported_status(
     mock_boundary,
     httpserver,
     status_code,

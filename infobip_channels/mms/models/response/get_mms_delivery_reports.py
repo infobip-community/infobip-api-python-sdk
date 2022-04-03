@@ -3,6 +3,7 @@ from typing import List, Optional
 from pydantic import Field
 
 from infobip_channels.core.models import CamelCaseModel, ResponseBase, ResponseStatus
+from infobip_channels.mms.models.response.core import Price
 
 
 class Error(CamelCaseModel):
@@ -11,11 +12,6 @@ class Error(CamelCaseModel):
     id: Optional[int] = None
     name: Optional[str] = None
     description: Optional[str] = None
-
-
-class Price(CamelCaseModel):
-    price_per_message: Optional[int] = None
-    currency: Optional[str] = None
 
 
 class Result(CamelCaseModel):

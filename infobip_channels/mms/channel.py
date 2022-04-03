@@ -6,8 +6,14 @@ import requests
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, QueryParameter, ResponseBase
 from infobip_channels.mms.models.body.send_mms import MMSMessageBody
+from infobip_channels.mms.models.query_parameters.get_inbound_mms_messages import (
+    GetInboundMMSMessagesQueryParameters,
+)
 from infobip_channels.mms.models.query_parameters.get_mms_delivery_reports import (
     GetMMSDeliveryReportsQueryParameters,
+)
+from infobip_channels.mms.models.response.get_inbound_mms_messages import (
+    GetInboundMMSMessagesResponse,
 )
 from infobip_channels.mms.models.response.get_mms_delivery_reports import (
     GetMMSDeliveryReportsResponse,
@@ -93,3 +99,22 @@ class MMSChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, GetMMSDeliveryReportsResponse)
+
+    def get_inbound_mms_messages(
+        self, query_parameters: Union[GetInboundMMSMessagesQueryParameters, Dict]
+    ) -> Union[ResponseBase, Any]:
+        """Use this API method to fetch messages. Each request will return a batch of
+        received messages - only once. The following API request will return only new
+        messages that arrived since the last API request.
+
+        :param query_parameters: Query parameters to send with the request
+        :return: Received response
+        """
+        query_parameters = self.validate_query_parameter(
+            query_parameters, GetInboundMMSMessagesQueryParameters
+        )
+        response = self._client.get(
+            self.MMS_URL_TEMPLATE + "inbox/reports",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, GetInboundMMSMessagesResponse)
