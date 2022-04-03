@@ -1,8 +1,4 @@
-import pytest
-
-
-@pytest.fixture
-def mms_body_request():
+def get_mms_body_request():
     return {
         "head": {
             "from": "38598743321",
@@ -19,8 +15,7 @@ def mms_body_request():
     }
 
 
-@pytest.fixture
-def mms_body_multipart():
+def get_mms_body_multipart():
     return (
         b'--mockBoundary\r\nContent-Disposition: form-data; name="head"\r\n'
         b"Content-Type: application/json\r\n\r\n"
@@ -55,8 +50,7 @@ def get_send_mms_response():
     }
 
 
-@pytest.fixture
-def mms_delivery_reports_query_parameters():
+def get_mms_delivery_reports_query_parameters():
     return {"bulk_id": None, "message_id": "abc-123", "limit": 1}
 
 
