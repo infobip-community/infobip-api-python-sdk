@@ -1,8 +1,4 @@
-import pytest
-
-
-@pytest.fixture
-def mms_body_request():
+def get_mms_body_request():
     return {
         "head": {
             "from": "38598743321",
@@ -19,8 +15,7 @@ def mms_body_request():
     }
 
 
-@pytest.fixture
-def mms_body_multipart():
+def get_mms_body_multipart():
     return (
         b'--mockBoundary\r\nContent-Disposition: form-data; name="head"\r\n'
         b"Content-Type: application/json\r\n\r\n"
@@ -55,8 +50,7 @@ def get_send_mms_response():
     }
 
 
-@pytest.fixture
-def mms_delivery_reports_query_parameters():
+def get_mms_delivery_reports_query_parameters():
     return {"bulk_id": None, "message_id": "abc-123", "limit": 1}
 
 
@@ -68,8 +62,8 @@ def get_mms_delivery_reports_response():
                 "messageId": "abc-123",
                 "to": "38598331223",
                 "from": "38599873331",
-                "sentAt": "2022-04-02'T'15:44:12.351Z",
-                "doneAt": "2022-04-02'T'15:46:32.931Z",
+                "sentAt": "2022-04-02T15:44:12.351Z",
+                "doneAt": "2022-04-02T15:46:32.931Z",
                 "mmsCount": 1,
                 "mccMnc": "28988",
                 "callbackData": "",
@@ -88,6 +82,27 @@ def get_mms_delivery_reports_response():
                     "name": "The Name",
                     "description": "Some error",
                 },
+            }
+        ]
+    }
+
+
+def get_inbound_mms_messages_query_parameters():
+    return {"limit": 1}
+
+
+def get_inbound_mms_messages_response():
+    return {
+        "results": [
+            {
+                "messageId": "uyx-333",
+                "to": "38598331223",
+                "from": "38599873331",
+                "message": "Hi from MMS!",
+                "receivedAt": "2022-04-01T16:44:12.351Z",
+                "mmsCount": 1,
+                "callbackData": "",
+                "price": {"pricePerMessage": 4, "currency": "HRK"},
             }
         ]
     }
