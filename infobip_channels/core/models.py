@@ -1,9 +1,13 @@
+import json
+import os
 import xml.etree.ElementTree as ET
 from http import HTTPStatus
-from typing import Optional
+from io import IOBase
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
 from pydantic import AnyHttpUrl, BaseModel, constr, validator
+from urllib3 import encode_multipart_formdata
 
 
 def to_camel_case(string: str) -> str:
@@ -119,3 +123,58 @@ class XML(str):
             raise ValueError("Invalid XML string sent")
 
         return cls(value)
+
+
+class MultipartMixin:
+    _FIELD_TYPE_TO_MULTIPART_INFO_MAP: Dict = {
+        str: {"is_file": False, "content_type": "text/plain"},
+        IOBase: {"is_file": True, "content_type": ""},
+        XML: {"is_file": False, "content_type": "application/xml"},
+    }
+    _JSON_INFO: Dict = {"is_file": False, "content_type": "application/json"}
+
+    def to_multipart(self) -> Tuple[bytes, str]:
+        multipart_fields = {}
+
+        for field_name, field_object in self.__fields__.items():
+            self._add_multipart_tuple(
+                multipart_fields,
+                to_camel_case(field_name),
+                getattr(self, field_name),
+                field_object.type_,
+            )
+
+        return encode_multipart_formdata(multipart_fields)
+
+    def _add_multipart_tuple(
+        self, multipart_fields: Dict, field_name: str, field_value: Any, field_type: Any
+    ) -> None:
+        if not field_value:
+            return
+
+        field_info = self._FIELD_TYPE_TO_MULTIPART_INFO_MAP.get(
+            field_type, self._JSON_INFO
+        )
+        multipart_fields[field_name] = self._get_multipart_tuple(
+            field_value, field_info
+        )
+
+    def _get_multipart_tuple(self, field_value: Any, field_info: Dict) -> Tuple:
+        if field_info["is_file"]:
+            return os.path.basename(field_value.name), field_value.read()
+
+        if field_info["content_type"] == "application/json":
+            field_value = self._get_json_for_field(field_value)
+
+        return None, field_value, field_info["content_type"]
+
+    def _get_json_for_field(
+        self, model: Union[CamelCaseModel, List[CamelCaseModel]]
+    ) -> str:
+
+        if isinstance(model, list):
+            model_aliased = [item.dict(by_alias=True) for item in model]
+        else:
+            model_aliased = model.dict(by_alias=True)
+
+        return json.dumps(model_aliased)
