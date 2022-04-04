@@ -49,6 +49,9 @@ ENDPOINT_TEST_ARGUMENTS = {
 
 @parametrize(endpoint_type=ENDPOINT_TEST_ARGUMENTS.keys(), status_code=(200, 400, 500))
 def case__supported_status(endpoint_type, status_code):
+    if endpoint_type == "send_mms":
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["request_data"]["media"].seek(0)
+
     return (
         status_code,
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["response_content"],
@@ -64,6 +67,9 @@ def case__supported_status(endpoint_type, status_code):
 
 @parametrize(endpoint_type=ENDPOINT_TEST_ARGUMENTS.keys())
 def case__unsupported_status(endpoint_type):
+    if endpoint_type == "send_mms":
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["request_data"]["media"].seek(0)
+
     return (
         201,
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["response_content"],

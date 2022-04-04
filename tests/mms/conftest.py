@@ -1,10 +1,20 @@
+import os
+
+
 def get_mms_body_request():
+    with open("media_file", "wb") as f:
+        f.write(b"random bytes")
+        f.flush()
+        media_file = open(f.name, "rb")
+        os.remove("media_file")
+
     return {
         "head": {
             "from": "38598743321",
             "to": "38599876543",
         },
         "text": "some text",
+        "media": media_file,
         "externallyHostedMedia": [
             {
                 "contentType": "application/pdf",
@@ -25,9 +35,16 @@ def get_mms_body_multipart():
         b'"sendAt": null, "intermediateReport": false, "deliveryTimeWindow": null}\r\n'
         b'--mockBoundary\r\nContent-Disposition: form-data; name="text"\r\n'
         b"Content-Type: text/plain\r\n\r\nsome text\r\n--mockBoundary\r\n"
+        b'Content-Disposition: form-data; name="media"; filename="media_file"\r\n'
+        b"Content-Type: application/octet-stream\r\n\r\nrandom bytes\r\n"
+        b"--mockBoundary\r\n"
         b'Content-Disposition: form-data; name="externallyHostedMedia"\r\n'
-        b'Content-Type: application/json\r\n\r\n[{"contentType": "application/pdf", '
-        b'"contentId": "331", "contentUrl": "https://a.com"}]\r\n--mockBoundary--\r\n'
+        b"Content-Type: application/json\r\n\r\n"
+        b'[{"contentType": "application/pdf", "contentId": "331", '
+        b'"contentUrl": "https://a.com"}]\r\n--mockBoundary\r\n'
+        b'Content-Disposition: form-data; name="smil"\r\n'
+        b"Content-Type: application/xml\r\n\r\n"
+        b"<persons><person><name>John</name></person></persons>\r\n--mockBoundary--\r\n"
     )
 
 
