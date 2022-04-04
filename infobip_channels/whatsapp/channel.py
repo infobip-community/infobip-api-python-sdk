@@ -4,7 +4,7 @@ from typing import Any, Dict, Type, Union
 import requests
 
 from infobip_channels.core.channel import Channel
-from infobip_channels.core.models import ResponseBase
+from infobip_channels.core.models import PathParameter, ResponseBase
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
@@ -21,7 +21,6 @@ from infobip_channels.whatsapp.models.body.sticker_message import StickerMessage
 from infobip_channels.whatsapp.models.body.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
-from infobip_channels.whatsapp.models.path_parameters.core import PathParameter
 from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
     ManageTemplatesPathParameters,
 )

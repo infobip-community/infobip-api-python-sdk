@@ -1,9 +1,7 @@
 from pytest_cases import parametrize
 
-from tests.whatsapp.conftest import (
-    get_response_error_content,
-    get_response_error_invalid_content,
-)
+from tests.conftest import get_response_error_invalid_content
+from tests.whatsapp.conftest import get_response_error_content
 
 
 def get_response_ok_content():
