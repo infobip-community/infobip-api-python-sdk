@@ -1,7 +1,8 @@
 from pytest_cases import parametrize
 
 from tests.conftest import get_expected_post_headers
-from tests.webrtc.conftest import (  # get_webrtc_application_response,; get_webrtc_body_request,
+from tests.webrtc.conftest import (
+    GenerateTokenFactory,
     get_webrtc_body_generate_token,
     get_webrtc_generate_token_response,
 )
@@ -13,7 +14,7 @@ ENDPOINT_TEST_ARGUMENTS = {
         "http_method": "POST",
         "expected_headers": get_expected_post_headers(),
         "expected_query_parameters": None,
-        "expected_data": None,
+        "expected_json": GenerateTokenFactory,
         "request_data": get_webrtc_body_generate_token(),
         "method_name": "generate_token",
     }
@@ -29,7 +30,7 @@ def case__supported_status(endpoint_type, status_code):
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["http_method"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_headers"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_query_parameters"],
-        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_data"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_json"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["request_data"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["method_name"],
     )

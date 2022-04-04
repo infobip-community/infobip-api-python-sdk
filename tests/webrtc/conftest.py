@@ -54,3 +54,15 @@ def get_webrtc_application_response():
         "appToConversations": "true",
         "appToPhone": "true",
     }
+
+
+def get_webrtc_request_error_response():
+    return {
+        "requestError": {
+            "serviceException": {
+                "messageId": "BAD_REQUEST",
+                "text": "Bad request",
+                "validationErrors": "Some Validation error",
+            }
+        }
+    }

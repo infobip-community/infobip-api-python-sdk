@@ -15,23 +15,24 @@ def set_up_mock_server_and_send_request(
     http_method,
     expected_headers,
     expected_query_parameters,
-    expected_data,
+    expected_json,
     request_data,
     method_name,
 ):
+    message_body_instance = message_body = expected_json.build()
     httpserver.expect_request(
         endpoint,
         method=http_method,
         query_string=expected_query_parameters,
         headers=expected_headers,
-        data=expected_data,
+        json=message_body_instance.dict(by_alias=True),
     ).respond_with_response(get_response_object(status_code, response_content))
 
     webrtc_channel = WebRtcChannel.from_auth_params(
         {"base_url": httpserver.url_for("/"), "api_key": "secret"}
     )
 
-    return getattr(webrtc_channel, method_name)(request_data)
+    return getattr(webrtc_channel, method_name)(message_body)
 
 
 @parametrize_with_cases(
