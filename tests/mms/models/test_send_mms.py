@@ -218,6 +218,20 @@ def test_when_days_is_invalid__validation_error_is_raised(days):
         )
 
 
+@pytest.mark.parametrize("smil", [{}, "<value>1</value><value>2</value>"])
+def test_when_smil_is_invalid__validation_error_is_raised(smil):
+    with pytest.raises(ValidationError):
+        MMSMessageBody(
+            **{
+                "head": {
+                    "from": "38599854312",
+                    "to": "38598764321",
+                },
+                "smil": smil,
+            }
+        )
+
+
 def test_when_input_data_is_valid__validation_error_is_not_raised():
     f = NamedTemporaryFile("wb")
     f.write(b"random bytes")
@@ -247,6 +261,7 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                         "contentUrl": "https://someurl.com",
                     }
                 ],
+                "smil": "<persons><person><name>John</name></person></persons>",
             }
         )
         f.close()

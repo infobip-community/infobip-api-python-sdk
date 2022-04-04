@@ -17,7 +17,7 @@ from pydantic import (
 )
 from urllib3 import encode_multipart_formdata
 
-from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
+from infobip_channels.core.models import XML, CamelCaseModel, MessageBodyBase
 
 MINIMUM_DELIVERY_WINDOW_MINUTES = 60
 
@@ -104,7 +104,7 @@ class MMSMessageBody(MessageBodyBase):
     text: Optional[str] = None
     media: Optional[IOBase] = None
     externally_hosted_media: Optional[List[ExternallyHostedMedia]] = None
-    smil: Optional[str] = None
+    smil: Optional[XML] = None
 
     class Config(CamelCaseModel.Config):
         arbitrary_types_allowed = True

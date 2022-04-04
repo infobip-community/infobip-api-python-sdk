@@ -1,3 +1,4 @@
+import xml.etree.ElementTree as ET
 from http import HTTPStatus
 from typing import Optional
 
@@ -97,3 +98,24 @@ class PathParameter(CamelCaseModel):
 
 class QueryParameter(CamelCaseModel):
     pass
+
+
+class XML(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, value):
+        if not isinstance(value, str):
+            raise TypeError("String required")
+
+        if not value:
+            return
+
+        try:
+            ET.fromstring(value)
+        except ET.ParseError:
+            raise ValueError("Invalid XML string sent")
+
+        return cls(value)

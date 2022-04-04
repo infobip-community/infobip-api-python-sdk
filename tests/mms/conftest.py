@@ -12,6 +12,7 @@ def get_mms_body_request():
                 "contentUrl": "https://a.com",
             }
         ],
+        "smil": "<persons><person><name>John</name></person></persons>",
     }
 
 
