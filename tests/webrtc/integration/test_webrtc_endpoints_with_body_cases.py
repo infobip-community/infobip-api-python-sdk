@@ -52,7 +52,6 @@ ENDPOINT_TEST_ARGUMENTS = {
     responses=(
         [200, get_webrtc_application_response],
         [400, get_webrtc_request_error_response],
-        [500, get_webrtc_request_error_response],
     ),
 )
 def case__supported_status(endpoint_type, responses):
@@ -65,6 +64,22 @@ def case__supported_status(endpoint_type, responses):
     return (
         status_code,
         response_content(),
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["endpoint"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["http_method"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_headers"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_path_parameters"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_query_parameters"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_json"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["method_name"],
+    )
+
+
+@parametrize(endpoint_type=ENDPOINT_TEST_ARGUMENTS.keys())
+def case__unsupported_status(endpoint_type):
+
+    return (
+        201,
+        get_webrtc_application_response(),
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["endpoint"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["http_method"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_headers"],

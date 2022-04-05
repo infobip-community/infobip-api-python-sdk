@@ -57,15 +57,12 @@ class WebRtcChannel(Channel):
         **kwargs
     ) -> Type[ResponseBase]:
 
-        if response.status_code in (HTTPStatus.OK, HTTPStatus.CREATED):
+        if response.status_code == HTTPStatus.OK:
             return response_ok_model
 
         elif response.status_code in (
             HTTPStatus.BAD_REQUEST,
             HTTPStatus.UNAUTHORIZED,
-            HTTPStatus.FORBIDDEN,
-            HTTPStatus.TOO_MANY_REQUESTS,
-            HTTPStatus.INTERNAL_SERVER_ERROR,
         ):
             return WebRtcResponseError
 

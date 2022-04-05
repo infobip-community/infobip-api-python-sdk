@@ -84,3 +84,37 @@ def test_webrtc_endpoints__supported_status(
         assert response.status_code == status_code
         assert response_dict == expected_response_dict
         assert raw_response is not None
+
+
+@parametrize_with_cases(
+    "status_code, response_content, endpoint, http_method, expected_headers, "
+    "expected_path_parameters, expected_query_parameters, method_name",
+    prefix="case__unsupported_status",
+)
+def test_webrtc_endpoints__unsupported_status(
+    httpserver,
+    status_code,
+    response_content,
+    endpoint,
+    http_method,
+    expected_headers,
+    expected_path_parameters,
+    expected_query_parameters,
+    method_name,
+):
+
+    response = set_up_mock_server_and_send_request(
+        httpserver,
+        status_code,
+        response_content,
+        endpoint,
+        http_method,
+        expected_headers,
+        expected_path_parameters,
+        expected_query_parameters,
+        method_name,
+    )
+    assert isinstance(response, ResponseBase) is False
+    assert response is not None
+    assert response.status_code == status_code
+    assert response.json() == response_content
