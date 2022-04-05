@@ -14,29 +14,30 @@ def set_up_mock_server_and_send_request(
     endpoint,
     http_method,
     expected_headers,
+    expected_path_parameters,
     expected_query_parameters,
-    expected_json,
     method_name,
 ):
-    message_body_instance = message_body = expected_json.build()
+
     httpserver.expect_request(
         endpoint,
         method=http_method,
         query_string=expected_query_parameters,
         headers=expected_headers,
-        json=message_body_instance.dict(by_alias=True),
     ).respond_with_response(get_response_object(status_code, response_content))
 
     webrtc_channel = WebRtcChannel.from_auth_params(
         {"base_url": httpserver.url_for("/"), "api_key": "secret"}
     )
-
-    return getattr(webrtc_channel, method_name)(message_body)
+    if expected_path_parameters is not None:
+        return getattr(webrtc_channel, method_name)(expected_path_parameters)
+    else:
+        return getattr(webrtc_channel, method_name)()
 
 
 @parametrize_with_cases(
     "status_code, response_content, endpoint, http_method, expected_headers, "
-    "expected_query_parameters, expected_json, method_name",
+    "expected_path_parameters, expected_query_parameters, method_name",
     prefix="case__supported_status",
 )
 def test_webrtc_endpoints__supported_status(
@@ -46,8 +47,8 @@ def test_webrtc_endpoints__supported_status(
     endpoint,
     http_method,
     expected_headers,
+    expected_path_parameters,
     expected_query_parameters,
-    expected_json,
     method_name,
 ):
 
@@ -58,12 +59,18 @@ def test_webrtc_endpoints__supported_status(
         endpoint,
         http_method,
         expected_headers,
+        expected_path_parameters,
         expected_query_parameters,
-        expected_json,
         method_name,
     )
     response_dict = WebRtcChannel.convert_model_to_dict(response)
     raw_response = response_dict.pop("rawResponse")
+
+    if type(response_content) is list:
+        response_content = {"list": response_content}
+    else:
+        response_content = response_content
+
     expected_response_dict = {
         **response_content,
         "statusCode": HTTPStatus(status_code),

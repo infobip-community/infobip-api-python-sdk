@@ -12,6 +12,10 @@ class SaveApplicationFactory(ModelFactory):
     __model__ = SaveApplicationBody
 
 
+def get_expected_path_parameters():
+    return {"id": "894c822b-d7ba-439c-a761-141f591cace7"}
+
+
 def get_webrtc_body_request():
     return {
         "name": "Application Name",
@@ -50,6 +54,22 @@ def get_webrtc_application_response():
             "apnsCertificatePassword": "IOS_APNS_certificate_password",
         },
         "android": {"fcmServerKey": "test_key"},
+        "appToApp": True,
+        "appToConversations": True,
+        "appToPhone": True,
+    }
+
+
+def get_webrtc_application_request():
+    return {
+        "id": "894c822b-d7ba-439c-a761-141f591cace7",
+        "name": "Application Name",
+        "description": "Application Description",
+        "ios": {
+            "apnsCertificateFileName": "IOS_APNS_certificate.p",
+            "apnsCertificatePassword": "IOS_APNS_certificate_password",
+        },
+        "android": {"fcmServerKey": "test_key"},
         "appToApp": "true",
         "appToConversations": "true",
         "appToPhone": "true",
@@ -62,7 +82,45 @@ def get_webrtc_request_error_response():
             "serviceException": {
                 "messageId": "BAD_REQUEST",
                 "text": "Bad request",
-                "validationErrors": "Some Validation error",
+                "validationErrors": {
+                    "request.message.content.media.file.url": [
+                        "is not a valid url",
+                    ]
+                },
             }
         }
     }
+
+
+def get_webrtc_get_applications_response():
+    return [
+        {
+            "id": "894c822b-d7ba-439c-a761-141f591cace7",
+            "name": "Application Name 1",
+            "description": "Application Description",
+            "ios": {
+                "apnsCertificateFileName": "IOS_APNS_certificate.p",
+                "apnsCertificatePassword": "IOS_APNS_certificate_password",
+            },
+            "appToApp": True,
+            "appToConversations": False,
+            "appToPhone": True,
+        },
+        {
+            "id": "988c411a-a2db-227a-c563-245a159dcbe2",
+            "name": "Application Name 2",
+            "description": "Application Description",
+            "android": {"fcmServerKey": "AAAAtm7JlCY:APA91bEe02qZQbfcTtmnPOHlQ431tDPm"},
+            "appToApp": True,
+            "appToConversations": False,
+            "appToPhone": True,
+        },
+        {
+            "id": "454d142b-a1ad-239a-d231-227fa335aadc3",
+            "name": "Application Name 3",
+            "description": "Application Description",
+            "appToApp": True,
+            "appToConversations": False,
+            "appToPhone": True,
+        },
+    ]
