@@ -2,6 +2,9 @@ from pydantic_factories import ModelFactory
 
 from infobip_channels.web_rtc.models.body.generate_token import GenerateTokenBody
 from infobip_channels.web_rtc.models.body.save_application import SaveApplicationBody
+from infobip_channels.web_rtc.models.body.update_application import (
+    UpdateApplicationBody,
+)
 
 
 class GenerateTokenFactory(ModelFactory):
@@ -10,6 +13,10 @@ class GenerateTokenFactory(ModelFactory):
 
 class SaveApplicationFactory(ModelFactory):
     __model__ = SaveApplicationBody
+
+
+class UpdateApplicationFactory(ModelFactory):
+    __model__ = UpdateApplicationBody
 
 
 def get_expected_path_parameters():
