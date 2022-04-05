@@ -83,6 +83,10 @@ def get_webrtc_application_request():
     }
 
 
+def get_webrtc_delete_request():
+    return {}
+
+
 def get_webrtc_request_error_response():
     return {
         "requestError": {

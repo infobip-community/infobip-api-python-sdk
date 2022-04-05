@@ -63,20 +63,24 @@ def test_webrtc_endpoints__supported_status(
         expected_query_parameters,
         method_name,
     )
-    response_dict = WebRtcChannel.convert_model_to_dict(response)
-    raw_response = response_dict.pop("rawResponse")
-
-    if type(response_content) is list:
-        response_content = {"list": response_content}
+    if http_method == "DELETE" and status_code == 200:
+        assert response is not None
+        assert response.status_code == status_code
     else:
-        response_content = response_content
+        response_dict = WebRtcChannel.convert_model_to_dict(response)
+        raw_response = response_dict.pop("rawResponse")
 
-    expected_response_dict = {
-        **response_content,
-        "statusCode": HTTPStatus(status_code),
-    }
+        if type(response_content) is list:
+            response_content = {"list": response_content}
+        else:
+            response_content = response_content
 
-    assert isinstance(response, ResponseBase) is True
-    assert response.status_code == status_code
-    assert response_dict == expected_response_dict
-    assert raw_response is not None
+        expected_response_dict = {
+            **response_content,
+            "statusCode": HTTPStatus(status_code),
+        }
+
+        assert isinstance(response, ResponseBase) is True
+        assert response.status_code == status_code
+        assert response_dict == expected_response_dict
+        assert raw_response is not None
