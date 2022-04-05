@@ -1,8 +1,13 @@
+import json
+import os
+import xml.etree.ElementTree as ET
 from http import HTTPStatus
-from typing import Optional
+from io import IOBase
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
 from pydantic import AnyHttpUrl, BaseModel, constr, validator
+from urllib3 import encode_multipart_formdata
 
 
 def to_camel_case(string: str) -> str:
@@ -97,3 +102,104 @@ class PathParameter(CamelCaseModel):
 
 class QueryParameter(CamelCaseModel):
     pass
+
+
+class XML(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, value):
+        if not isinstance(value, str):
+            raise TypeError("String required")
+
+        if not value:
+            return
+
+        try:
+            ET.fromstring(value)
+        except ET.ParseError:
+            raise ValueError("Invalid XML string sent")
+
+        return cls(value)
+
+
+class MultipartMixin:
+    """Mixin used for allowing models to export their fields to a multipart/form-data
+    format. Field types currently supported are listed in the
+    _FIELD_TYPE_TO_MULTIPART_INFO_MAP attribute. All other BaseModel type fields are
+    covered with the _JSON_INFO attribute.
+    """
+
+    _FIELD_TYPE_TO_MULTIPART_INFO_MAP: Dict = {
+        str: {"is_file": False, "content_type": "text/plain"},
+        IOBase: {"is_file": True, "content_type": ""},
+        XML: {"is_file": False, "content_type": "application/xml"},
+    }
+
+    _JSON_INFO: Dict = {"is_file": False, "content_type": "application/json"}
+
+    def to_multipart(self) -> Tuple[bytes, str]:
+        """Export model's fields to a multipart/form-data format. The method returns
+        a tuple of binary type body to send via POST request, and the content_type
+        of the body including the multipart boundary.
+        The resulting multipart_fields dictionary will have the model's field names as
+        its keys and the tuples describing fields' multipart format as their values.
+
+        For a Pydantic model with a "name: str" field and an "address: Address" field,
+        the resulting multipart_fields dictionary would look like:
+
+         multipart_fields = {
+            "name": (None, "some name", "text/plain"),
+            "address:" (None, {"street": "...", "city": "..."}, "application/json")
+        }
+
+        The tuple format is enforced by the urllib3's encode_multipart_formdata
+        function: (filename, data, MIME type), where the MIME type is optional.
+        The filename is None for all non-file types.
+
+        :return: Tuple of binary encoded body and the multipart's content_type
+        """
+        multipart_fields = {}
+
+        for field_name, field_object in self.__fields__.items():
+            self._add_multipart_tuple(
+                multipart_fields,
+                to_camel_case(field_name),
+                getattr(self, field_name),
+                field_object.type_,
+            )
+
+        return encode_multipart_formdata(multipart_fields)
+
+    def _add_multipart_tuple(
+        self, multipart_fields: Dict, field_name: str, field_value: Any, field_type: Any
+    ) -> None:
+        if not field_value:
+            return
+
+        field_info = self._FIELD_TYPE_TO_MULTIPART_INFO_MAP.get(
+            field_type, self._JSON_INFO
+        )
+        multipart_fields[field_name] = self._get_multipart_tuple(
+            field_value, field_info
+        )
+
+    def _get_multipart_tuple(self, field_value: Any, field_info: Dict) -> Tuple:
+        if field_info["is_file"]:
+            return os.path.basename(field_value.name), field_value.read()
+
+        if field_info["content_type"] == "application/json":
+            field_value = self._get_json_for_field(field_value)
+
+        return None, field_value, field_info["content_type"]
+
+    @staticmethod
+    def _get_json_for_field(model: Union[CamelCaseModel, List[CamelCaseModel]]) -> str:
+        if isinstance(model, list):
+            model_aliased = [item.dict(by_alias=True) for item in model]
+        else:
+            model_aliased = model.dict(by_alias=True)
+
+        return json.dumps(model_aliased)
