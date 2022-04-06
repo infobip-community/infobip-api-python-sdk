@@ -14,10 +14,6 @@ Python client for Infobip's  API channels.
 - [Code example](#code-example)
 - [Testing](#testing)
 - [Enable pre-commit hooks](#enable-pre-commit-hooks)
-- [Generating distribution package](#generating-distribution-package)
-- [Uploading distribution package on TestPyPI](#uploading-distribution-package-on-testpypi-for-testing-purposes)
-- [Installing your newly uploaded package](#installing-your-newly-uploaded-package)
-
 
 ## General Info
 
