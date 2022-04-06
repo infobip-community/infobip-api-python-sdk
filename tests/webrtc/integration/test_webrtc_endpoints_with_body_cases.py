@@ -1,6 +1,6 @@
 from pytest_cases import parametrize
 
-from tests.conftest import get_expected_post_headers
+from tests.conftest import get_expected_post_headers, get_expected_put_headers
 from tests.webrtc.conftest import (
     GenerateTokenFactory,
     SaveApplicationFactory,
@@ -37,7 +37,7 @@ ENDPOINT_TEST_ARGUMENTS = {
     "update_application": {
         "endpoint": "/webrtc/1/applications/894c822b-d7ba-439c-a761-141f591cace7",
         "http_method": "PUT",
-        "expected_headers": get_expected_post_headers(),
+        "expected_headers": get_expected_put_headers(),
         "expected_path_parameters": get_expected_path_parameters(),
         "expected_query_parameters": None,
         "expected_json": UpdateApplicationFactory,

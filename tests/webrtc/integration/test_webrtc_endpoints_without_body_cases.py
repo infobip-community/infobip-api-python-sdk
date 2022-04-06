@@ -1,6 +1,6 @@
 from pytest_cases import parametrize
 
-from tests.conftest import get_expected_get_headers
+from tests.conftest import get_expected_delete_headers, get_expected_get_headers
 from tests.webrtc.conftest import (
     get_expected_path_parameters,
     get_webrtc_application_response,
@@ -29,7 +29,7 @@ ENDPOINT_TEST_ARGUMENTS = {
     "delete_webrtc_application": {
         "endpoint": "/webrtc/1/applications/894c822b-d7ba-439c-a761-141f591cace7",
         "http_method": "DELETE",
-        "expected_headers": get_expected_get_headers(),
+        "expected_headers": get_expected_delete_headers(),
         "expected_path_parameters": get_expected_path_parameters(),
         "expected_query_parameters": None,
         "method_name": "delete_application",
