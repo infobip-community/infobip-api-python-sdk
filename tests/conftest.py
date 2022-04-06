@@ -1,10 +1,14 @@
 import json
+from io import IOBase
 from random import choice
 from string import ascii_letters
+from typing import Optional
 
 import pytest
 import requests
 from werkzeug import Response
+
+from infobip_channels.core.models import CamelCaseModel, MultipartMixin
 
 
 def get_random_string(length: int) -> str:
@@ -23,6 +27,22 @@ class HttpTestClient:
     def get(self, endpoint, headers=None):
         headers = headers or self.headers
         return requests.get(url=f"{self.url}" + endpoint, headers=headers)
+
+
+class Address(CamelCaseModel):
+    street: str
+    city: str
+    zip_code: int
+
+
+class UserInfo(CamelCaseModel, MultipartMixin):
+    name: Optional[str] = None
+    last_name: str
+    address: Address
+    profile_image: IOBase
+
+    class Config(CamelCaseModel.Config):
+        arbitrary_types_allowed = True
 
 
 @pytest.fixture
