@@ -4,6 +4,7 @@ Python client for Infobip's  API channels.
 # Supported channels
 - Whatsapp -> [Docs](https://www.infobip.com/docs/api#channels/whatsapp)
 - WebRTC -> [Docs](https://www.infobip.com/docs/api#channels/webrtc/)
+- MMS -> [Docs](https://www.infobip.com/docs/api#channels/mms)
 
 #### Table of contents:
 
@@ -108,54 +109,3 @@ pre-commit run --all-files
 If setup was successful pre-commit will run on every commit.
 Every time you clone a project that uses pre-commit, running `pre-commit install`
 should be the first thing you do.
-
-
-## Generating distribution package
-Make sure you have the latest version of PyPA's
-[build](https://packaging.python.org/en/latest/key_projects/#build) installed:
-```bash
-python -m pip install --upgrade build
-```
-After installation check `setup.cfg` file for metadata.
-Name and version are used for file generation.
-Make sure that you appropriately change version before build.
-Update the `version` in the  `setup.cfg` file to the desired one.
-
-Now run this command from the same directory where pyproject.toml is located:
-```bash
-python -m build
-```
-
-This command should generate two files in the `dist` directory:
-```bash
-dist/
-  infobip_channels-x.y.z-py3-none-any.whl
-  infobip-channels-x.y.z.tar.gz
-```
-
-
-## Uploading distribution package on TestPyPI (for testing purposes)
-First thing to do is create an account on TestPyPI and acquire an API token.
-To upload the distribution package, you can use
-[twine](https://packaging.python.org/en/latest/key_projects/#twine):
-```bash
-python -m pip install --upgrade twine
-```
-
-Once installed, run Twine to upload all the archives under dist:
-```bash
-python -m twine upload --repository testpypi dist/*
-```
-
-You will be prompted for a username and password. For the username, use *\_\_token\_\_*.
-For the password, use the token value, including the pypi- prefix.
-
-
-## Installing your newly uploaded package
-To test the newly uploaded package, create a virtual environment and download the
-package:
-```
-pip install --extra-index-url https://test.pypi.org/simple/ infobip-channels==x.y.z
-```
-
-After that, create a test script or import the library in a shell and try it out.
