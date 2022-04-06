@@ -4,7 +4,7 @@ from typing import Any, Dict, Type, Union
 import requests
 
 from infobip_channels.core.channel import Channel
-from infobip_channels.core.models import PathParameter, ResponseBase
+from infobip_channels.core.models import ResponseBase
 from infobip_channels.whatsapp.models.body.audio_message import AudioMessageBody
 from infobip_channels.whatsapp.models.body.buttons_message import ButtonsMessageBody
 from infobip_channels.whatsapp.models.body.contact_message import ContactMessageBody
@@ -44,24 +44,6 @@ class WhatsAppChannel(Channel):
 
     SEND_MESSAGE_URL_TEMPLATE = "/whatsapp/1/message/"
     MANAGE_URL_TEMPLATE = "/whatsapp/1/senders/"
-
-    @staticmethod
-    def validate_path_parameter(
-        parameter: Union[PathParameter, Dict], parameter_type: Type[PathParameter]
-    ) -> PathParameter:
-        """
-        Validate path parameter by trying to instantiate the provided class and
-        extract valid path parameter.
-
-        :param parameter: Path parameter to validate
-        :param parameter_type: Type of path parameter
-        :return: Class instance corresponding to the provided parameter type
-        """
-        return (
-            parameter
-            if isinstance(parameter, parameter_type)
-            else parameter_type(**parameter)
-        )
 
     def _get_custom_response_class(
         self,

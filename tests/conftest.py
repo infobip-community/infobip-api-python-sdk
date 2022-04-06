@@ -71,7 +71,22 @@ def get_expected_post_headers(content_type="application/json"):
     }
 
 
+def get_expected_put_headers(content_type="application/json"):
+    return {
+        "Authorization": "App secret",
+        "Content-Type": content_type,
+        "Accept": "application/json",
+    }
+
+
 def get_expected_get_headers():
+    return {
+        "Authorization": "App secret",
+        "Accept": "application/json",
+    }
+
+
+def get_expected_delete_headers():
     return {
         "Authorization": "App secret",
         "Accept": "application/json",

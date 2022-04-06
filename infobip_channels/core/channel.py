@@ -12,6 +12,7 @@ from infobip_channels.core.models import (
     PostHeaders,
     ResponseBase,
 )
+from infobip_channels.web_rtc.models.path_parameters.core import PathParameter
 
 
 class Channel(ABC):
@@ -115,6 +116,24 @@ class Channel(ABC):
         return model.dict(by_alias=by_alias, exclude_unset=exclude_unset, **kwargs)
 
     @staticmethod
+    def validate_path_parameter(
+        parameter: Union[PathParameter, Dict], parameter_type: Type[PathParameter]
+    ) -> PathParameter:
+        """
+        Validate path parameter by trying to instantiate the provided class and
+        extract valid path parameter.
+
+        :param parameter: Path parameter to validate
+        :param parameter_type: Type of path parameter
+        :return: Class instance corresponding to the provided parameter type
+        """
+        return (
+            parameter
+            if isinstance(parameter, parameter_type)
+            else parameter_type(**parameter)
+        )
+
+    @staticmethod
     def validate_message_body(
         message: Union[MessageBodyBase, Dict],
         message_type: Type[MessageBodyBase],
@@ -135,11 +154,18 @@ class Channel(ABC):
             response_class = self._get_custom_response_class(
                 raw_response, *args, **kwargs
             )
+
+            response_json = raw_response.json()
+            if type(response_json) is list:
+                raw_response_data = {"list": response_json}
+            else:
+                raw_response_data = response_json
+
             return response_class(
                 **{
                     "status_code": raw_response.status_code,
                     "raw_response": raw_response,
-                    **raw_response.json(),
+                    **raw_response_data,
                 }
             )
 
