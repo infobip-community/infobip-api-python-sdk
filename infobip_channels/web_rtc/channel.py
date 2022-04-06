@@ -10,7 +10,6 @@ from infobip_channels.web_rtc.models.body.save_application import SaveApplicatio
 from infobip_channels.web_rtc.models.body.update_application import (
     UpdateApplicationBody,
 )
-from infobip_channels.web_rtc.models.path_parameters.core import PathParameter
 from infobip_channels.web_rtc.models.path_parameters.web_rtc_application import (
     WebRtcPathParameters,
 )
@@ -30,24 +29,6 @@ class WebRtcChannel(Channel):
     """Class used for interaction with the Infobip's WebRTC API."""
 
     WEB_RTC_URL_TEMPLATE = "/webrtc/1/"
-
-    @staticmethod
-    def validate_path_parameter(
-        parameter: Union[PathParameter, Dict], parameter_type: Type[PathParameter]
-    ) -> PathParameter:
-        """
-        Validate path parameter by trying to instantiate the provided class and
-        extract valid path parameter.
-
-        :param parameter: Path parameter to validate
-        :param parameter_type: Type of path parameter
-        :return: Class instance corresponding to the provided parameter type
-        """
-        return (
-            parameter
-            if isinstance(parameter, parameter_type)
-            else parameter_type(**parameter)
-        )
 
     def _get_custom_response_class(
         self,
