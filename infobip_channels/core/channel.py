@@ -136,10 +136,11 @@ class Channel(ABC):
                 raw_response, *args, **kwargs
             )
 
-            if type(raw_response.json()) is list:
-                raw_response_data = {"list": raw_response.json()}
+            response_json = raw_response.json()
+            if type(response_json) is list:
+                raw_response_data = {"list": response_json}
             else:
-                raw_response_data = raw_response.json()
+                raw_response_data = response_json
 
             return response_class(
                 **{

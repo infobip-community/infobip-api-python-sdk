@@ -17,9 +17,9 @@ class IosCertificates(CamelCaseModel):
 
 class ApplicationBody(MessageBodyBase):
     name: constr(min_length=1)
-    description: Optional[constr(max_length=160)]
-    ios: Optional[IosCertificates]
-    android: Optional[AndroidServerKey]
+    description: Optional[constr(max_length=160)] = None
+    ios: Optional[IosCertificates] = None
+    android: Optional[AndroidServerKey] = None
     app_to_app: Optional[bool] = None
     app_to_conversations: Optional[bool] = None
     app_to_phone: Optional[bool] = None

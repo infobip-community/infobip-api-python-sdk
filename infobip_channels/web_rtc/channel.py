@@ -27,7 +27,7 @@ from infobip_channels.web_rtc.models.response.get_applications import (
 
 
 class WebRtcChannel(Channel):
-    """Class used for interaction with the Infobip's WhatsApp API."""
+    """Class used for interaction with the Infobip's WebRTC API."""
 
     WEB_RTC_URL_TEMPLATE = "/webrtc/1/"
 
