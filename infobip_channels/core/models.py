@@ -91,6 +91,14 @@ class PostHeaders(RequestHeaders):
     content_type: Optional[str] = "application/json"
 
 
+class PutHeaders(RequestHeaders):
+    content_type: Optional[str] = "application/json"
+
+
+class DeleteHeaders(RequestHeaders):
+    pass
+
+
 class PathParameter(CamelCaseModel):
     sender: str
 
