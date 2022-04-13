@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
 
 try:
     from typing import Literal
@@ -52,7 +52,7 @@ class OrientationEnum(str, Enum):
 class FileProperties(CamelCaseModel, UrlLengthValidatorMixin):
     url: AnyHttpUrl
 
-    MAX_URL_LENGTH = 1000
+    # MAX_URL_LENGTH = 1000
 
     @validator("url", pre=True)
     def validate_url_length(cls, value: str) -> str:
@@ -62,7 +62,7 @@ class FileProperties(CamelCaseModel, UrlLengthValidatorMixin):
 class ThumbnailProperties(CamelCaseModel, UrlLengthValidatorMixin):
     url: AnyHttpUrl
 
-    MAX_URL_LENGTH = 1000
+    # MAX_URL_LENGTH = 1000
 
     @validator("url", pre=True)
     def validate_url_length(cls, value: str) -> str:
@@ -74,34 +74,29 @@ class Suggestion(CamelCaseModel):
     postback_data: constr(min_length=1, max_length=2048)
 
 
-class SuggestionReply(CamelCaseModel, Suggestion):
+class SuggestionReply(Suggestion):
     type: Literal["REPLY"]
 
 
-class SuggestionOpenUrl(CamelCaseModel, Suggestion):
+class SuggestionOpenUrl(Suggestion):
     type: Literal["OPEN_URL"]
     url: AnyHttpUrl
 
 
-class SuggestionDialPhone(CamelCaseModel, Suggestion):
+class SuggestionDialPhone(Suggestion):
     type: Literal["DIAL_PHONE"]
     phone_number: Optional[constr(regex=r"\+?\d{5,15}")] = None  # noqa: F722
 
 
-class SuggestionShowLocation(CamelCaseModel, Suggestion):
+class SuggestionShowLocation(Suggestion):
     type: Literal["SHOW_LOCATION"]
     latitude: confloat(ge=-90, le=90)
     longitude: confloat(ge=-180, le=180)
     label: Optional[constr(min_length=1, max_length=100)] = None
 
 
-class SuggestionRequestLocation(CamelCaseModel, Suggestion):
+class SuggestionRequestLocation(Suggestion):
     type: Literal["REQUEST_LOCATION"]
-
-
-class Media(CamelCaseModel):
-    file: FileProperties
-    thumbnail: Optional[ThumbnailProperties] = None
 
 
 class CardMedia(CamelCaseModel):
@@ -115,20 +110,18 @@ class CardContent(CamelCaseModel):
     description: Optional[constr(min_length=1, max_length=2000)] = None
     media: Optional[CardMedia] = None
     suggestions: Optional[List
-    [Union[Suggestion,
-           SuggestionReply,
-           SuggestionOpenUrl,
-           SuggestionDialPhone,
-           SuggestionShowLocation,
-           SuggestionRequestLocation]]
+    [Union[
+            SuggestionShowLocation,
+            SuggestionDialPhone,
+            SuggestionOpenUrl,
+            SuggestionReply,
+            SuggestionRequestLocation]]
     ] = None
 
     @validator("suggestions")
-    def validate_suggestions(cls, suggestions: List[Suggestion]) -> List[Suggestion]:
-
+    def validate_suggestions(cls, suggestions: Suggestion) -> List[Suggestion]:
         if len(suggestions) > 4:
             raise ValueError("There can be only four suggestions in a card")
-
         return suggestions
 
 
@@ -136,59 +129,61 @@ class Contents(CardContent):
     pass
 
 
-class Carousel(CamelCaseModel):
+class ContentCarousel(CamelCaseModel):
     type: Literal["CAROUSEL"]
     card_width: CardWidth
     contents: List[Contents]
     suggestions: Optional[List
-    [Union[Suggestion,
-           SuggestionReply,
-           SuggestionOpenUrl,
-           SuggestionDialPhone,
-           SuggestionShowLocation,
-           SuggestionRequestLocation]]
+    [Union[
+            SuggestionShowLocation,
+            SuggestionDialPhone,
+            SuggestionOpenUrl,
+            SuggestionReply,
+            SuggestionRequestLocation]]
     ] = None
 
     @validator("contents")
-    def validate_suggestions(cls, contents: List[Contents]) -> List[Contents]:
-        if 11 > len(contents) > 1:
-            raise ValueError("There can be only four suggestions in a card")
+    def validate_contents(cls, contents: List[Contents]) -> List[Contents]:
+        if len(contents) < 2 or len(contents) > 10:
+            raise ValueError("There can be only 2 - 10 content objects in a Carousel")
 
         return contents
 
 
-class Card(CamelCaseModel):
+class ContentCard(CamelCaseModel):
     type: Literal["CARD"]
     orientation: OrientationEnum
     alignment: AlignmentEnum
     content: CardContent
     suggestions: Optional[List
-        [Union[Suggestion,
-               SuggestionReply,
-               SuggestionOpenUrl,
-               SuggestionDialPhone,
-               SuggestionShowLocation,
-               SuggestionRequestLocation]]
+    [Union[
+            SuggestionShowLocation,
+            SuggestionDialPhone,
+            SuggestionOpenUrl,
+            SuggestionReply,
+            SuggestionRequestLocation
+        ]]
     ] = None
 
 
-class File(CamelCaseModel):
+class ContentFile(CamelCaseModel):
     type: Literal["FILE"]
     file: FileProperties
     thumbnail: Optional[ThumbnailProperties] = None
 
 
-class Text(CamelCaseModel):
+class ContentText(CamelCaseModel):
     type: Literal["TEXT"]
     text: constr(min_length=1, max_length=1000)
     suggestions: Optional[List
-        [Union[Suggestion,
-               SuggestionReply,
-               SuggestionOpenUrl,
-               SuggestionDialPhone,
-               SuggestionShowLocation,
-               SuggestionRequestLocation]]
-    ] = None
+    [Union[
+            SuggestionShowLocation,
+            SuggestionDialPhone,
+            SuggestionOpenUrl,
+            SuggestionReply,
+            SuggestionRequestLocation
+        ]]
+    ] = []
 
 
 class SmsFailover(CamelCaseModel):
@@ -203,7 +198,9 @@ class RCSMessageBody(MessageBodyBase):
     to: str
     validity_period: Optional[int] = None
     validity_period_time_unit: Optional[ValidityPeriodTimeUnitEnum] = None
-    content: Optional[Union[Text, File, Card, Carousel]] = None
+    content: Optional[Union
+    [ContentCarousel, ContentCard, ContentFile, ContentText]
+    ] = None
     sms_fail_over: Optional[SmsFailover] = None
     notify_url: Optional[str] = None
     callback_data: Optional[str] = None

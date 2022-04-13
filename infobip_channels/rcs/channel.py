@@ -6,7 +6,8 @@ import requests
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import ResponseBase
 
-from infobip_channels.rcs.Models.response.send_rcs import SendRCSResponse
+from infobip_channels.rcs.Models.response.core import RcsResponseError
+from infobip_channels.rcs.Models.response.core import RcsResponseOK
 from infobip_channels.rcs.Models.body.send_rcs import RCSMessageBody
 
 
@@ -17,16 +18,18 @@ class RCSChannel(Channel):
     def _get_custom_response_class(
             self,
             raw_response: Union[requests.Response, Any],
-            response_class: Type[ResponseBase] = SendRCSResponse,
+            response_ok_class: Type[ResponseBase] = RcsResponseOK,
             *args,
             **kwargs
     ) -> Type[ResponseBase]:
+        if raw_response.status_code == HTTPStatus.OK:
+            return response_ok_class
+
         if raw_response.status_code in (
                 HTTPStatus.OK,
                 HTTPStatus.BAD_REQUEST,
-                HTTPStatus.INTERNAL_SERVER_ERROR,
         ):
-            return response_class
+            return RcsResponseError
 
         raise ValueError
 
@@ -43,4 +46,5 @@ class RCSChannel(Channel):
         response = self._client.post(
             self.RCS_URL_TEMPLATE + "message", message.dict(by_alias=True)
         )
-        return self._construct_response(response, SendRCSResponse)
+        return self._construct_response(response, RcsResponseOK)
+
