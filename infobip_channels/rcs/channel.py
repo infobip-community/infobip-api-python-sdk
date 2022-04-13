@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Any, Dict, Type, Union
+from typing import Any, Dict, Type, Union, List
 
 import requests
 
@@ -8,7 +8,9 @@ from infobip_channels.core.models import ResponseBase
 
 from infobip_channels.rcs.Models.response.core import RcsResponseError
 from infobip_channels.rcs.Models.response.core import RcsResponseOK
-from infobip_channels.rcs.Models.body.send_rcs import RCSMessageBody
+from infobip_channels.rcs.Models.response.core import RcsResponseOKList
+from infobip_channels.rcs.Models.body.send_rcs import RcsMessageBody
+from infobip_channels.rcs.Models.body.send_bulk_rcs import RcsMessageBodyList
 
 
 class RCSChannel(Channel):
@@ -34,7 +36,7 @@ class RCSChannel(Channel):
         raise ValueError
 
     def send_rcs_message(
-            self, message: Union[RCSMessageBody, Dict]
+            self, message: Union[RcsMessageBody, Dict]
     ) -> Union[ResponseBase, requests.Response, Any]:
         """Used for sending single RCS messages
 
@@ -42,9 +44,24 @@ class RCSChannel(Channel):
         :return: Received response
         """
 
-        message = self.validate_message_body(message, RCSMessageBody)
+        message = self.validate_message_body(message, RcsMessageBody)
         response = self._client.post(
             self.RCS_URL_TEMPLATE + "message", message.dict(by_alias=True)
         )
         return self._construct_response(response, RcsResponseOK)
+
+    def send_bulk_rcs_message(
+            self, message: Union[RcsMessageBodyList, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """Used for sending bulk RCS messages
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+
+        message = self.validate_message_body(message, RcsMessageBodyList)
+        response = self._client.post(
+            self.RCS_URL_TEMPLATE + "message/bulk", message.dict(by_alias=True)
+        )
+        return self._construct_response(response, RcsResponseOKList)
 

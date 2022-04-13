@@ -193,7 +193,7 @@ class SmsFailover(CamelCaseModel):
     validity_period_time_unit: Optional[ValidityPeriodTimeUnitEnum] = None
 
 
-class RCSMessageBody(MessageBodyBase):
+class RcsMessageBody(MessageBodyBase):
     from_number: Optional[str] = Field(alias="from")
     to: str
     validity_period: Optional[int] = None

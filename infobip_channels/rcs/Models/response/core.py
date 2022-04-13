@@ -17,7 +17,7 @@ class RcsResponseError(ResponseBase):
     request_error: RequestError
 
 
-class SendRCSResponseMessage(CamelCaseModel):
+class SendRcsResponseMessage(CamelCaseModel):
     to: Optional[str] = None
     message_count: Optional[int] = None
     message_id: Optional[str] = None
@@ -25,4 +25,12 @@ class SendRCSResponseMessage(CamelCaseModel):
 
 
 class RcsResponseOK(ResponseBase):
-    messages: List[SendRCSResponseMessage]
+    messages: List[SendRcsResponseMessage]
+
+
+class Message(CamelCaseModel):
+    messages: List[SendRcsResponseMessage]
+
+
+class RcsResponseOKList(ResponseBase):
+    list: List[Message]
