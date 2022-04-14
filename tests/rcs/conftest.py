@@ -8,6 +8,10 @@ class RcsMessageBodyModelFactory(ModelFactory):
     __model__ = RcsMessageBody
 
 
+class RcsMessageBodyListModelFactory(ModelFactory):
+    __model__ = RcsMessageBodyList
+
+
 class RcsMessageBodyIntegrationFactory(ModelFactory):
     __model__ = RcsMessageBody
 
