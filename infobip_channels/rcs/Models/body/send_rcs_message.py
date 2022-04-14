@@ -198,9 +198,7 @@ class RcsMessageBody(MessageBodyBase):
     to: str
     validity_period: Optional[int] = None
     validity_period_time_unit: Optional[ValidityPeriodTimeUnitEnum] = None
-    content: Optional[Union
-    [ContentCarousel, ContentCard, ContentFile, ContentText]
-    ] = None
+    content: Union[ContentCarousel, ContentCard, ContentFile, ContentText]
     sms_fail_over: Optional[SmsFailover] = None
     notify_url: Optional[str] = None
     callback_data: Optional[str] = None

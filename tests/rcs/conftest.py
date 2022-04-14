@@ -1,10 +1,14 @@
 from pydantic_factories import ModelFactory
 
-from infobip_channels.rcs.Models.body.send_rcs import RcsMessageBody
-from infobip_channels.rcs.Models.body.send_bulk_rcs import RcsMessageBodyList
+from infobip_channels.rcs.Models.body.send_rcs_message import RcsMessageBody
+from infobip_channels.rcs.Models.body.send_bulk_rcs_message import RcsMessageBodyList
 
 
-class RcsMessageBodyFactory(ModelFactory):
+class RcsMessageBodyModelFactory(ModelFactory):
+    __model__ = RcsMessageBody
+
+
+class RcsMessageBodyIntegrationFactory(ModelFactory):
     __model__ = RcsMessageBody
 
     @classmethod
@@ -59,7 +63,7 @@ class RcsMessageBodyFactory(ModelFactory):
         )
 
 
-class RcsMessageBodyListFactory(ModelFactory):
+class RcsMessageBodyIntegrationListFactory(ModelFactory):
     __model__ = RcsMessageBodyList
 
     @classmethod

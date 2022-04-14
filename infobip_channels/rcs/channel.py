@@ -9,8 +9,8 @@ from infobip_channels.core.models import ResponseBase
 from infobip_channels.rcs.Models.response.core import RcsResponseError
 from infobip_channels.rcs.Models.response.core import RcsResponseOK
 from infobip_channels.rcs.Models.response.core import RcsResponseOKList
-from infobip_channels.rcs.Models.body.send_rcs import RcsMessageBody
-from infobip_channels.rcs.Models.body.send_bulk_rcs import RcsMessageBodyList
+from infobip_channels.rcs.Models.body.send_rcs_message import RcsMessageBody
+from infobip_channels.rcs.Models.body.send_bulk_rcs_message import RcsMessageBodyList
 
 
 class RCSChannel(Channel):

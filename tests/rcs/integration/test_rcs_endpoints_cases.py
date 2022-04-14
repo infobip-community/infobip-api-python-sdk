@@ -2,8 +2,8 @@ from pytest_cases import parametrize
 
 from tests.conftest import get_expected_post_headers
 from tests.rcs.conftest import (
-    RcsMessageBodyFactory,
-    RcsMessageBodyListFactory,
+    RcsMessageBodyIntegrationFactory,
+    RcsMessageBodyIntegrationListFactory,
     get_rcs_body_send_message,
     get_rcs_body_send_bulk_message,
     send_rcs_message_response,
@@ -18,7 +18,7 @@ ENDPOINT_TEST_ARGUMENTS = {
         "expected_headers": get_expected_post_headers(),
         "expected_path_parameters": None,
         "expected_query_parameters": None,
-        "expected_json": RcsMessageBodyFactory,
+        "expected_json": RcsMessageBodyIntegrationFactory,
         "request_data": get_rcs_body_send_message(),
         "method_name": "send_rcs_message",
     },
@@ -28,7 +28,7 @@ ENDPOINT_TEST_ARGUMENTS = {
         "expected_headers": get_expected_post_headers(),
         "expected_path_parameters": None,
         "expected_query_parameters": None,
-        "expected_json": RcsMessageBodyListFactory,
+        "expected_json": RcsMessageBodyIntegrationListFactory,
         "request_data": get_rcs_body_send_bulk_message(),
         "method_name": "send_bulk_rcs_message",
     }
