@@ -1,6 +1,13 @@
 # infobip-api-python-sdk
 Python client for Infobip's  API channels.
 
+![Version](https://img.shields.io/pypi/v/infobip-api-python-sdk)
+![Python](https://img.shields.io/pypi/pyversions/infobip-api-python-sdk)
+![Workflow](https://img.shields.io/github/workflow/status/infobip-community/infobip-api-python-sdk/Python%20package)
+![Release](https://img.shields.io/github/release-date/infobip-community/infobip-api-python-sdk)
+![Licence](https://img.shields.io/github/license/infobip-community/infobip-api-python-sdk)
+![Lines](https://img.shields.io/tokei/lines/github/infobip-community/infobip-api-php-sdk)
+
 # Supported channels
 - Whatsapp -> [Docs](https://www.infobip.com/docs/api#channels/whatsapp)
 - WebRTC -> [Docs](https://www.infobip.com/docs/api#channels/webrtc/)
