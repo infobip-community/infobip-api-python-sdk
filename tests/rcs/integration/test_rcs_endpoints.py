@@ -89,7 +89,7 @@ def test_rcs_endpoints__supported_status(
     "expected_path_parameters, expected_query_parameters, expected_json, method_name",
     prefix="case__unsupported_status",
 )
-def test_webrtc_endpoints__unsupported_status(
+def test_rcs_endpoints__unsupported_status(
     httpserver,
     status_code,
     response_content,
