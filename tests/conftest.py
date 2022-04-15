@@ -17,7 +17,7 @@ def get_random_string(length: int) -> str:
 
 
 def get_random_numbers(length: int) -> str:
-    return ''.join(choice(string.digits) for _ in range(length))
+    return "".join(choice(string.digits) for _ in range(length))
 
 
 class HttpTestClient:

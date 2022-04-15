@@ -1,7 +1,7 @@
 from pydantic_factories import ModelFactory
 
-from infobip_channels.rcs.Models.body.send_rcs_message import RCSMessageBody
 from infobip_channels.rcs.Models.body.send_bulk_rcs_message import RCSMessageBodyList
+from infobip_channels.rcs.Models.body.send_rcs_message import RCSMessageBody
 
 
 class RCSMessageBodyModelFactory(ModelFactory):
@@ -18,9 +18,7 @@ class RcsMessageBodyIntegrationFactory(ModelFactory):
     @classmethod
     def build(cls, *args, **kwargs):
         """Needed because factory classes don't play well with custom validation."""
-        return RCSMessageBody(
-            **get_rcs_body_send_message()
-        )
+        return RCSMessageBody(**get_rcs_body_send_message())
 
 
 class RcsMessageBodyIntegrationListFactory(ModelFactory):
@@ -29,9 +27,7 @@ class RcsMessageBodyIntegrationListFactory(ModelFactory):
     @classmethod
     def build(cls, *args, **kwargs):
         """Needed because factory classes don't play well with custom validation."""
-        return RCSMessageBodyList(
-            **get_rcs_body_send_bulk_message()
-        )
+        return RCSMessageBodyList(**get_rcs_body_send_bulk_message())
 
 
 def get_rcs_body_send_message():
@@ -46,19 +42,19 @@ def get_rcs_body_send_message():
                 {
                     "text": "exampleText",
                     "postbackData": "examplePostbackData",
-                    "type": "REPLY"
+                    "type": "REPLY",
                 },
                 {
                     "text": "exampleText",
                     "postbackData": "examplePostbackData",
                     "url": "http://www.example.test",
-                    "type": "OPEN_URL"
+                    "type": "OPEN_URL",
                 },
                 {
                     "text": "exampleText",
                     "postbackData": "examplePostbackData",
                     "phoneNumber": "385977666618",
-                    "type": "DIAL_PHONE"
+                    "type": "DIAL_PHONE",
                 },
                 {
                     "text": "exampleText",
@@ -66,19 +62,19 @@ def get_rcs_body_send_message():
                     "latitude": 45.793418,
                     "longitude": 15.946297,
                     "label": "label",
-                    "type": "SHOW_LOCATION"
+                    "type": "SHOW_LOCATION",
                 },
                 {
                     "text": "exampleText",
                     "postbackData": "examplePostbackData",
-                    "type": "REQUEST_LOCATION"
-                }
+                    "type": "REQUEST_LOCATION",
+                },
             ],
-            "type": "TEXT"
+            "type": "TEXT",
         },
         "notifyUrl": "https://www.example.com/rcs",
         "callbackData": "Callback data",
-        "messageId": "externalMessageId"
+        "messageId": "externalMessageId",
     }
 
 
@@ -96,19 +92,19 @@ def get_rcs_body_send_bulk_message():
                         {
                             "text": "exampleText1",
                             "postbackData": "examplePostbackData",
-                            "type": "REPLY"
+                            "type": "REPLY",
                         },
                         {
                             "text": "exampleText1",
                             "postbackData": "examplePostbackData",
                             "url": "http://www.example.test",
-                            "type": "OPEN_URL"
+                            "type": "OPEN_URL",
                         },
                         {
                             "text": "exampleText1",
                             "postbackData": "examplePostbackData",
                             "phoneNumber": "385977666618",
-                            "type": "DIAL_PHONE"
+                            "type": "DIAL_PHONE",
                         },
                         {
                             "text": "exampleText1",
@@ -116,19 +112,19 @@ def get_rcs_body_send_bulk_message():
                             "latitude": 45.793418,
                             "longitude": 15.946297,
                             "label": "label",
-                            "type": "SHOW_LOCATION"
+                            "type": "SHOW_LOCATION",
                         },
                         {
                             "text": "exampleText1",
                             "postbackData": "examplePostbackData",
-                            "type": "REQUEST_LOCATION"
-                        }
+                            "type": "REQUEST_LOCATION",
+                        },
                     ],
-                    "type": "TEXT"
+                    "type": "TEXT",
                 },
                 "notifyUrl": "https://www.example.com/rcs",
                 "callbackData": "Callback data",
-                "messageId": "externalMessageId"
+                "messageId": "externalMessageId",
             },
             {
                 "from": "myRcsSender2",
@@ -141,19 +137,19 @@ def get_rcs_body_send_bulk_message():
                         {
                             "text": "exampleText2",
                             "postbackData": "examplePostbackData",
-                            "type": "REPLY"
+                            "type": "REPLY",
                         },
                         {
                             "text": "exampleText2",
                             "postbackData": "examplePostbackData",
                             "url": "http://www.example.test",
-                            "type": "OPEN_URL"
+                            "type": "OPEN_URL",
                         },
                         {
                             "text": "exampleText2",
                             "postbackData": "examplePostbackData",
                             "phoneNumber": "385977666618",
-                            "type": "DIAL_PHONE"
+                            "type": "DIAL_PHONE",
                         },
                         {
                             "text": "exampleText2",
@@ -161,20 +157,20 @@ def get_rcs_body_send_bulk_message():
                             "latitude": 45.793418,
                             "longitude": 15.946297,
                             "label": "label",
-                            "type": "SHOW_LOCATION"
+                            "type": "SHOW_LOCATION",
                         },
                         {
                             "text": "exampleText2",
                             "postbackData": "examplePostbackData",
-                            "type": "REQUEST_LOCATION"
-                        }
+                            "type": "REQUEST_LOCATION",
+                        },
                     ],
-                    "type": "TEXT"
+                    "type": "TEXT",
                 },
                 "notifyUrl": "https://www.example.com/rcs",
                 "callbackData": "Callback data",
-                "messageId": "externalMessageId"
-            }
+                "messageId": "externalMessageId",
+            },
         ]
     }
 
@@ -192,8 +188,8 @@ def send_rcs_message_response():
                     "id": 7,
                     "name": "PENDING_ENROUTE",
                     "description": "Message sent to next instance",
-                    "action": "string"
-                }
+                    "action": "string",
+                },
             }
         ]
     }
@@ -201,41 +197,41 @@ def send_rcs_message_response():
 
 def send_rcs_bulk_message_response():
     return [
-            {
-                "messages": [
-                    {
-                        "to": "385977666618",
-                        "messageCount": 1,
-                        "messageId": "06df139a-7eb5-4a6e-902e-40e892210455",
-                        "status": {
-                            "groupId": 1,
-                            "groupName": "PENDING",
-                            "id": 7,
-                            "name": "PENDING_ENROUTE",
-                            "description": "Message sent to next instance",
-                            "action": "string"
-                        }
-                    }
-                ]
-            },
-            {
-                "messages": [
-                    {
-                        "to": "385977666618",
-                        "messageCount": 2,
-                        "messageId": "06df139a-7eb5-4a6e-902e-40e892210455",
-                        "status": {
-                            "groupId": 1,
-                            "groupName": "PENDING",
-                            "id": 8,
-                            "name": "PENDING_ENROUTE",
-                            "description": "Message sent to next instance",
-                            "action": "string"
-                        }
-                    }
-                ]
-            }
-        ]
+        {
+            "messages": [
+                {
+                    "to": "385977666618",
+                    "messageCount": 1,
+                    "messageId": "06df139a-7eb5-4a6e-902e-40e892210455",
+                    "status": {
+                        "groupId": 1,
+                        "groupName": "PENDING",
+                        "id": 7,
+                        "name": "PENDING_ENROUTE",
+                        "description": "Message sent to next instance",
+                        "action": "string",
+                    },
+                }
+            ]
+        },
+        {
+            "messages": [
+                {
+                    "to": "385977666618",
+                    "messageCount": 2,
+                    "messageId": "06df139a-7eb5-4a6e-902e-40e892210455",
+                    "status": {
+                        "groupId": 1,
+                        "groupName": "PENDING",
+                        "id": 8,
+                        "name": "PENDING_ENROUTE",
+                        "description": "Message sent to next instance",
+                        "action": "string",
+                    },
+                }
+            ]
+        },
+    ]
 
 
 def rcs_error_response():

@@ -4,11 +4,11 @@ from tests.conftest import get_expected_post_headers
 from tests.rcs.conftest import (
     RcsMessageBodyIntegrationFactory,
     RcsMessageBodyIntegrationListFactory,
-    get_rcs_body_send_message,
     get_rcs_body_send_bulk_message,
-    send_rcs_message_response,
-    send_rcs_bulk_message_response,
+    get_rcs_body_send_message,
     rcs_error_response,
+    send_rcs_bulk_message_response,
+    send_rcs_message_response,
 )
 
 ENDPOINT_TEST_ARGUMENTS = {
@@ -31,7 +31,7 @@ ENDPOINT_TEST_ARGUMENTS = {
         "expected_json": RcsMessageBodyIntegrationListFactory,
         "request_data": get_rcs_body_send_bulk_message(),
         "method_name": "send_bulk_rcs_message",
-    }
+    },
 }
 
 

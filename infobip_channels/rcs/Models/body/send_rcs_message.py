@@ -6,18 +6,12 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-from pydantic import (
-    AnyHttpUrl,
-    Field,
-    confloat,
-    constr,
-    validator,
-)
+from pydantic import AnyHttpUrl, Field, confloat, constr, validator
 
 from infobip_channels.core.models import (
     CamelCaseModel,
     MessageBodyBase,
-    UrlLengthValidatorMixin
+    UrlLengthValidatorMixin,
 )
 
 
@@ -115,13 +109,16 @@ class CardContent(CamelCaseModel):
     title: Optional[constr(min_length=1, max_length=200)] = None
     description: Optional[constr(min_length=1, max_length=2000)] = None
     media: Optional[CardMedia] = None
-    suggestions: Optional[List
-    [Union[
-            SuggestionShowLocation,
-            SuggestionDialPhone,
-            SuggestionOpenUrl,
-            SuggestionReply,
-            SuggestionRequestLocation]]
+    suggestions: Optional[
+        List[
+            Union[
+                SuggestionShowLocation,
+                SuggestionDialPhone,
+                SuggestionOpenUrl,
+                SuggestionReply,
+                SuggestionRequestLocation,
+            ]
+        ]
     ] = None
 
     @validator("suggestions")
@@ -139,13 +136,16 @@ class ContentCarousel(CamelCaseModel):
     type: Literal["CAROUSEL"]
     card_width: CardWidth
     contents: List[Contents]
-    suggestions: Optional[List
-    [Union[
-            SuggestionShowLocation,
-            SuggestionDialPhone,
-            SuggestionOpenUrl,
-            SuggestionReply,
-            SuggestionRequestLocation]]
+    suggestions: Optional[
+        List[
+            Union[
+                SuggestionShowLocation,
+                SuggestionDialPhone,
+                SuggestionOpenUrl,
+                SuggestionReply,
+                SuggestionRequestLocation,
+            ]
+        ]
     ] = None
 
     @validator("contents")
@@ -161,14 +161,16 @@ class ContentCard(CamelCaseModel):
     orientation: OrientationEnum
     alignment: AlignmentEnum
     content: CardContent
-    suggestions: Optional[List
-    [Union[
-            SuggestionShowLocation,
-            SuggestionDialPhone,
-            SuggestionOpenUrl,
-            SuggestionReply,
-            SuggestionRequestLocation
-        ]]
+    suggestions: Optional[
+        List[
+            Union[
+                SuggestionShowLocation,
+                SuggestionDialPhone,
+                SuggestionOpenUrl,
+                SuggestionReply,
+                SuggestionRequestLocation,
+            ]
+        ]
     ] = None
 
 
@@ -181,14 +183,16 @@ class ContentFile(CamelCaseModel):
 class ContentText(CamelCaseModel):
     type: Literal["TEXT"]
     text: constr(min_length=1, max_length=1000)
-    suggestions: Optional[List
-    [Union[
-            SuggestionShowLocation,
-            SuggestionDialPhone,
-            SuggestionOpenUrl,
-            SuggestionReply,
-            SuggestionRequestLocation
-        ]]
+    suggestions: Optional[
+        List[
+            Union[
+                SuggestionShowLocation,
+                SuggestionDialPhone,
+                SuggestionOpenUrl,
+                SuggestionReply,
+                SuggestionRequestLocation,
+            ]
+        ]
     ] = []
 
 
