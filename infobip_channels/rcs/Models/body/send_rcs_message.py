@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional, Union, Tuple
+from typing import List, Optional, Union
 
 try:
     from typing import Literal
@@ -193,7 +193,7 @@ class SmsFailover(CamelCaseModel):
     validity_period_time_unit: Optional[ValidityPeriodTimeUnitEnum] = None
 
 
-class RcsMessageBody(MessageBodyBase):
+class RCSMessageBody(MessageBodyBase):
     from_number: Optional[str] = Field(alias="from")
     to: str
     validity_period: Optional[int] = None

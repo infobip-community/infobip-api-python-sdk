@@ -1,15 +1,15 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.rcs.Models.body.send_rcs_message import RcsMessageBody
+from infobip_channels.rcs.Models.body.send_rcs_message import RCSMessageBody
 from tests.conftest import get_random_string, get_random_numbers
-from tests.rcs.conftest import RcsMessageBodyModelFactory
+from tests.rcs.conftest import RCSMessageBodyModelFactory
 
 
 @pytest.mark.parametrize("to", [None, {}])
 def test_when_to_is_invalid__validation_error_is_raised(to):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": to,
@@ -58,7 +58,7 @@ def test_when_to_is_invalid__validation_error_is_raised(to):
 @pytest.mark.parametrize("content", ["", None, {}])
 def test_when_content_is_invalid__validation_error_is_raised(content):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -72,7 +72,7 @@ def test_when_content_is_invalid__validation_error_is_raised(content):
 @pytest.mark.parametrize("content_text", ["", None, {}])
 def test_when_content_text_is_invalid__validation_error_is_raised(content_text):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -89,7 +89,7 @@ def test_when_content_text_is_invalid__validation_error_is_raised(content_text):
 @pytest.mark.parametrize("reply_text", ["", None, {}, get_random_string(26)])
 def test_when_reply_text_is_invalid__validation_error_is_raised(reply_text):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -139,7 +139,7 @@ def test_when_reply_text_is_invalid__validation_error_is_raised(reply_text):
 def test_when_reply_postback_data_is_invalid__validation_error_is_raised(
         reply_postback_data):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -164,7 +164,7 @@ def test_when_reply_postback_data_is_invalid__validation_error_is_raised(
 def test_when_open_url_text_is_invalid__validation_error_is_raised(
         open_url_text):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -191,7 +191,7 @@ def test_when_open_url_text_is_invalid__validation_error_is_raised(
 def test_when_open_url_postback_data_is_invalid__validation_error_is_raised(
         open_url_postback_data):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -222,7 +222,7 @@ def test_when_open_url_postback_data_is_invalid__validation_error_is_raised(
 def test_when_open_url_url_postback_data_is_invalid__validation_error_is_raised(
         open_url_url):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -248,7 +248,7 @@ def test_when_open_url_url_postback_data_is_invalid__validation_error_is_raised(
 def test_when_dial_phone_text_is_invalid__validation_error_is_raised(
         dial_phone_text):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -275,7 +275,7 @@ def test_when_dial_phone_text_is_invalid__validation_error_is_raised(
 def test_when_dial_phone_postback_data_is_invalid__validation_error_is_raised(
         dial_phone_postback_data):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -305,7 +305,7 @@ def test_when_dial_phone_postback_data_is_invalid__validation_error_is_raised(
 def test_when_dial_phone_phone_number_is_invalid__validation_error_is_raised(
         dial_phone_phone_number):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -332,7 +332,7 @@ def test_when_dial_phone_phone_number_is_invalid__validation_error_is_raised(
 def test_when_show_location_text_is_invalid__validation_error_is_raised(
         show_location_text):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -361,7 +361,7 @@ def test_when_show_location_text_is_invalid__validation_error_is_raised(
 def test_when_show_location_postback_data_is_invalid__validation_error_is_raised(
         show_location_postback_data):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -390,7 +390,7 @@ def test_when_show_location_postback_data_is_invalid__validation_error_is_raised
 def test_when_show_location_latitude_is_invalid__validation_error_is_raised(
         show_location_latitude):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -419,7 +419,7 @@ def test_when_show_location_latitude_is_invalid__validation_error_is_raised(
 def test_when_show_location_longitude_is_invalid__validation_error_is_raised(
         show_location_longitude):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -448,7 +448,7 @@ def test_when_show_location_longitude_is_invalid__validation_error_is_raised(
 def test_when_show_location_label_is_invalid__validation_error_is_raised(
         show_location_label):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -477,7 +477,7 @@ def test_when_show_location_label_is_invalid__validation_error_is_raised(
 def test_when_request_location_text_is_invalid__validation_error_is_raised(
         request_location_text):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -503,7 +503,7 @@ def test_when_request_location_text_is_invalid__validation_error_is_raised(
 def test_when_request_location_postback_data_is_invalid__validation_error_is_raised(
         request_location_postback_data):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -529,7 +529,7 @@ def test_when_request_location_postback_data_is_invalid__validation_error_is_rai
 def test_when_file_is_invalid__validation_error_is_raised(
         file):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -551,7 +551,7 @@ def test_when_file_is_invalid__validation_error_is_raised(
 def test_when_file_url_is_invalid__validation_error_is_raised(
         file_url):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -575,7 +575,7 @@ def test_when_file_url_is_invalid__validation_error_is_raised(
 def test_when_thumbnail_url_is_invalid__validation_error_is_raised(
         thumbnail_url):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -599,7 +599,7 @@ def test_when_thumbnail_url_is_invalid__validation_error_is_raised(
 def test_when_content_type_is_invalid__validation_error_is_raised(
         content_type):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -623,7 +623,7 @@ def test_when_content_type_is_invalid__validation_error_is_raised(
 def test_when_orientation_is_invalid__validation_error_is_raised(
         orientation):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -656,7 +656,7 @@ def test_when_orientation_is_invalid__validation_error_is_raised(
 def test_when_alignment_is_invalid__validation_error_is_raised(
         alignment):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -689,7 +689,7 @@ def test_when_alignment_is_invalid__validation_error_is_raised(
 def test_when_card_content_is_invalid__validation_error_is_raised(
         card_content):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -710,7 +710,7 @@ def test_when_card_content_is_invalid__validation_error_is_raised(
 def test_when_content_height_is_invalid__validation_error_is_raised(
         content_height):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -740,7 +740,7 @@ def test_when_content_height_is_invalid__validation_error_is_raised(
 def test_when_content_height_is_invalid__validation_error_is_raised(
         content_title):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -770,7 +770,7 @@ def test_when_content_height_is_invalid__validation_error_is_raised(
 def test_when_content_height_is_invalid__validation_error_is_raised(
         content_description):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -800,7 +800,7 @@ def test_when_content_height_is_invalid__validation_error_is_raised(
 def test_when_content_file_is_invalid__validation_error_is_raised(
         content_file):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -828,7 +828,7 @@ def test_when_content_file_is_invalid__validation_error_is_raised(
 def test_when_content_file_url_is_invalid__validation_error_is_raised(
         content_file_url):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -858,7 +858,7 @@ def test_when_content_file_url_is_invalid__validation_error_is_raised(
 def test_when_content_thumbnail_url_is_invalid__validation_error_is_raised(
         content_thumbnail_url):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -894,7 +894,7 @@ def test_when_content_thumbnail_url_is_invalid__validation_error_is_raised(
 def test_when_suggestions_items_is_invalid__validation_error_is_raised(
         suggestions_items):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -928,7 +928,7 @@ def test_when_suggestions_items_is_invalid__validation_error_is_raised(
 def test_when_carousel_card_with_is_invalid__validation_error_is_raised(
         carousel_card_with):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -969,7 +969,7 @@ def test_when_carousel_card_with_is_invalid__validation_error_is_raised(
 def test_when_carousel_contents_is_invalid__validation_error_is_raised(
         carousel_contents):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -991,7 +991,7 @@ def test_when_carousel_contents_is_invalid__validation_error_is_raised(
 def test_when_carousel_contents_size_is_invalid__validation_error_is_raised(
         carousel_contents_size):
     with pytest.raises(ValidationError):
-        RcsMessageBodyModelFactory.build(
+        RCSMessageBodyModelFactory.build(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -1008,7 +1008,7 @@ def test_when_carousel_contents_size_is_invalid__validation_error_is_raised(
 
 def test_when_input_data_carousel_is_valid_card__validation_error_is_not_raised():
     try:
-        RcsMessageBody(
+        RCSMessageBody(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -1112,7 +1112,7 @@ def test_when_input_data_carousel_is_valid_card__validation_error_is_not_raised(
 
 def test_when_input_data_is_valid_card__validation_error_is_not_raised():
     try:
-        RcsMessageBody(
+        RCSMessageBody(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -1175,7 +1175,7 @@ def test_when_input_data_is_valid_card__validation_error_is_not_raised():
 
 def test_when_input_data_is_valid_text__validation_error_is_not_raised():
     try:
-        RcsMessageBody(
+        RCSMessageBody(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",

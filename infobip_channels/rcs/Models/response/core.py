@@ -13,7 +13,7 @@ class RequestError(CamelCaseModel):
     service_exception: ServiceException
 
 
-class RcsResponseError(ResponseBase):
+class RCSResponseError(ResponseBase):
     request_error: RequestError
 
 
@@ -24,7 +24,7 @@ class SendRcsResponseMessage(CamelCaseModel):
     status: ResponseStatus
 
 
-class RcsResponseOK(ResponseBase):
+class RCSResponseOK(ResponseBase):
     messages: List[SendRcsResponseMessage]
 
 
@@ -32,5 +32,5 @@ class Message(CamelCaseModel):
     messages: List[SendRcsResponseMessage]
 
 
-class RcsResponseOKList(ResponseBase):
+class RCSResponseOKList(ResponseBase):
     list: List[Message]

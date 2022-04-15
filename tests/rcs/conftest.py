@@ -1,24 +1,24 @@
 from pydantic_factories import ModelFactory
 
-from infobip_channels.rcs.Models.body.send_rcs_message import RcsMessageBody
-from infobip_channels.rcs.Models.body.send_bulk_rcs_message import RcsMessageBodyList
+from infobip_channels.rcs.Models.body.send_rcs_message import RCSMessageBody
+from infobip_channels.rcs.Models.body.send_bulk_rcs_message import RCSMessageBodyList
 
 
-class RcsMessageBodyModelFactory(ModelFactory):
-    __model__ = RcsMessageBody
+class RCSMessageBodyModelFactory(ModelFactory):
+    __model__ = RCSMessageBody
 
 
-class RcsMessageBodyListModelFactory(ModelFactory):
-    __model__ = RcsMessageBodyList
+class RCSMessageBodyListModelFactory(ModelFactory):
+    __model__ = RCSMessageBodyList
 
 
 class RcsMessageBodyIntegrationFactory(ModelFactory):
-    __model__ = RcsMessageBody
+    __model__ = RCSMessageBody
 
     @classmethod
     def build(cls, *args, **kwargs):
         """Needed because factory classes don't play well with custom validation."""
-        return RcsMessageBody(
+        return RCSMessageBody(
             **{
                 "from": "myRcsSender",
                 "to": "385977666618",
@@ -68,12 +68,12 @@ class RcsMessageBodyIntegrationFactory(ModelFactory):
 
 
 class RcsMessageBodyIntegrationListFactory(ModelFactory):
-    __model__ = RcsMessageBodyList
+    __model__ = RCSMessageBodyList
 
     @classmethod
     def build(cls, *args, **kwargs):
         """Needed because factory classes don't play well with custom validation."""
-        return RcsMessageBodyList(
+        return RCSMessageBodyList(
             **{
                 "messages": [
                     {

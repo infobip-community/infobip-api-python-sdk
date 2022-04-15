@@ -1,20 +1,20 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.rcs.Models.body.send_bulk_rcs_message import RcsMessageBodyList
-from tests.rcs.conftest import RcsMessageBodyListModelFactory
+from infobip_channels.rcs.Models.body.send_bulk_rcs_message import RCSMessageBodyList
+from tests.rcs.conftest import RCSMessageBodyListModelFactory
 
 
 @pytest.mark.parametrize("messages_list", ["", None, {}])
 def test_when_messages_list_is_invalid__validation_error_is_raised(messages_list):
     with pytest.raises(ValidationError):
-        RcsMessageBodyListModelFactory.build(
+        RCSMessageBodyListModelFactory.build(
             **{"messages": messages_list})
 
 
 def test_when_input_data_is_valid_text__validation_error_is_not_raised():
     try:
-        RcsMessageBodyList(
+        RCSMessageBodyList(
             **{"messages":
                 [
                     {
