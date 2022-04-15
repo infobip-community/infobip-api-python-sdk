@@ -218,7 +218,9 @@ def test_when_open_url_postback_data_is_invalid__validation_error_is_raised(
                           None,
                           {},
                           get_random_string(1000),
-                          "www.example.test"])
+                          "www.example.test",
+                          f"http://myfile.com/{get_random_string(983)}"
+                          ])
 def test_when_open_url_url_postback_data_is_invalid__validation_error_is_raised(
         open_url_url):
     with pytest.raises(ValidationError):
@@ -547,7 +549,13 @@ def test_when_file_is_invalid__validation_error_is_raised(
 
 
 @pytest.mark.parametrize("file_url",
-                         [None, "", {}, "www.example.url"])
+                         [None,
+                          "",
+                          {},
+                          "www.example.url",
+                          get_random_string(1000),
+                          f"http://myfile.com/{get_random_string(983)}"
+                          ])
 def test_when_file_url_is_invalid__validation_error_is_raised(
         file_url):
     with pytest.raises(ValidationError):
@@ -571,7 +579,13 @@ def test_when_file_url_is_invalid__validation_error_is_raised(
 
 
 @pytest.mark.parametrize("thumbnail_url",
-                         [None, "", {}, "www.example.url"])
+                         [None,
+                          "",
+                          {},
+                          "www.example.url",
+                          get_random_string(1000),
+                          f"http://myfile.com/{get_random_string(983)}"
+                          ])
 def test_when_thumbnail_url_is_invalid__validation_error_is_raised(
         thumbnail_url):
     with pytest.raises(ValidationError):
@@ -1006,6 +1020,62 @@ def test_when_carousel_contents_size_is_invalid__validation_error_is_raised(
         )
 
 
+@pytest.mark.parametrize("sms_failover_from",
+                         [None, "", {}])
+def test_when_sms_failover_from_is_invalid__validation_error_is_raised(
+        sms_failover_from):
+    with pytest.raises(ValidationError):
+        RCSMessageBodyModelFactory.build(
+            **{
+                "from": "myRcsSender",
+                "to": "385977666618",
+                "validityPeriod": 15,
+                "validityPeriodTimeUnit": "MINUTES",
+                "content": {
+                    "text": "exampleText",
+                    "type": "TEXT"
+                },
+                "smsFailover": {
+                    "from": sms_failover_from,
+                    "text": "We could not reach you over RCS messaging.",
+                    "validityPeriod": 15,
+                    "validityPeriodTimeUnit": "MINUTES"
+                },
+                "notifyUrl": "https://www.example.com/rcs",
+                "callbackData": "Callback data",
+                "messageId": "externalMessageId"
+            }
+        )
+
+
+@pytest.mark.parametrize("sms_failover_text",
+                         [None, "", {}])
+def test_when_sms_failover_text_is_invalid__validation_error_is_raised(
+        sms_failover_text):
+    with pytest.raises(ValidationError):
+        RCSMessageBodyModelFactory.build(
+            **{
+                "from": "myRcsSender",
+                "to": "385977666618",
+                "validityPeriod": 15,
+                "validityPeriodTimeUnit": "MINUTES",
+                "content": {
+                    "text": "exampleText",
+                    "type": "TEXT"
+                },
+                "smsFailover": {
+                    "from": "myInfoSmsSender",
+                    "text": sms_failover_text,
+                    "validityPeriod": 15,
+                    "validityPeriodTimeUnit": "MINUTES"
+                },
+                "notifyUrl": "https://www.example.com/rcs",
+                "callbackData": "Callback data",
+                "messageId": "externalMessageId"
+            }
+        )
+
+
 def test_when_input_data_carousel_is_valid_card__validation_error_is_not_raised():
     try:
         RCSMessageBody(
@@ -1016,47 +1086,47 @@ def test_when_input_data_carousel_is_valid_card__validation_error_is_not_raised(
                 "validityPeriodTimeUnit": "MINUTES",
                 "content": {
                     "cardWidth": "SMALL",
-                        "contents": [{
-                            "title": "title 1",
-                            "description": "description 1",
-                            "media": {
-                                "file": {
-                                    "url": "http://www.example.url"
-                                },
-                                "thumbnail": {
-                                    "url": "http://www.example.url"
-                                },
-                                "height": "MEDIUM"
+                    "contents": [{
+                        "title": "title 1",
+                        "description": "description 1",
+                        "media": {
+                            "file": {
+                                "url": "http://www.example.url"
                             },
-                            "suggestions":
-                                [
-                                    {
-                                        "text": "exampleText",
-                                        "postbackData": "examplePostbackData",
-                                        "type": "REPLY"
-                                    },
-                                    {
-                                        "text": "exampleText",
-                                        "postbackData": "examplePostbackData",
-                                        "url": "https://www.example.test",
-                                        "type": "OPEN_URL"
-                                    },
-                                    {
-                                        "text": "exampleText",
-                                        "postbackData": "examplePostbackData",
-                                        "phoneNumber": "385977666618",
-                                        "type": "DIAL_PHONE"
-                                    },
-                                    {
-                                        "text": "exampleText",
-                                        "postbackData": "examplePostbackData",
-                                        "latitude": 45.793418,
-                                        "longitude": 15.946297,
-                                        "label": "label",
-                                        "type": "SHOW_LOCATION"
-                                    },
-                                ],
+                            "thumbnail": {
+                                "url": "http://www.example.url"
+                            },
+                            "height": "MEDIUM"
                         },
+                        "suggestions":
+                            [
+                                {
+                                    "text": "exampleText",
+                                    "postbackData": "examplePostbackData",
+                                    "type": "REPLY"
+                                },
+                                {
+                                    "text": "exampleText",
+                                    "postbackData": "examplePostbackData",
+                                    "url": "https://www.example.test",
+                                    "type": "OPEN_URL"
+                                },
+                                {
+                                    "text": "exampleText",
+                                    "postbackData": "examplePostbackData",
+                                    "phoneNumber": "385977666618",
+                                    "type": "DIAL_PHONE"
+                                },
+                                {
+                                    "text": "exampleText",
+                                    "postbackData": "examplePostbackData",
+                                    "latitude": 45.793418,
+                                    "longitude": 15.946297,
+                                    "label": "label",
+                                    "type": "SHOW_LOCATION"
+                                },
+                            ],
+                    },
                         {
                             "title": "title 2",
                             "description": "description 2",
@@ -1098,7 +1168,7 @@ def test_when_input_data_carousel_is_valid_card__validation_error_is_not_raised(
                                     },
                                 ],
                         },
-                        ],
+                    ],
                     "type": "CAROUSEL"
                 },
                 "notifyUrl": "https://www.example.com/rcs",

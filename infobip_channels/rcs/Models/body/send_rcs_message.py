@@ -52,7 +52,7 @@ class OrientationEnum(str, Enum):
 class FileProperties(CamelCaseModel, UrlLengthValidatorMixin):
     url: AnyHttpUrl
 
-    # MAX_URL_LENGTH = 1000
+    _MAX_URL_LENGTH = 1000
 
     @validator("url", pre=True)
     def validate_url_length(cls, value: str) -> str:
@@ -62,7 +62,7 @@ class FileProperties(CamelCaseModel, UrlLengthValidatorMixin):
 class ThumbnailProperties(CamelCaseModel, UrlLengthValidatorMixin):
     url: AnyHttpUrl
 
-    # MAX_URL_LENGTH = 1000
+    _MAX_URL_LENGTH = 1000
 
     @validator("url", pre=True)
     def validate_url_length(cls, value: str) -> str:
@@ -78,9 +78,15 @@ class SuggestionReply(Suggestion):
     type: Literal["REPLY"]
 
 
-class SuggestionOpenUrl(Suggestion):
+class SuggestionOpenUrl(Suggestion, UrlLengthValidatorMixin):
     type: Literal["OPEN_URL"]
     url: AnyHttpUrl
+
+    _MAX_URL_LENGTH = 1000
+
+    @validator("url", pre=True)
+    def validate_url_length(cls, value: str) -> str:
+        return super().validate_url_length(value)
 
 
 class SuggestionDialPhone(Suggestion):
@@ -119,7 +125,7 @@ class CardContent(CamelCaseModel):
     ] = None
 
     @validator("suggestions")
-    def validate_suggestions(cls, suggestions: Suggestion) -> List[Suggestion]:
+    def validate_suggestions(cls, suggestions: List[Suggestion]) -> List[Suggestion]:
         if len(suggestions) > 4:
             raise ValueError("There can be only four suggestions in a card")
         return suggestions
@@ -187,8 +193,8 @@ class ContentText(CamelCaseModel):
 
 
 class SmsFailover(CamelCaseModel):
-    from_number: str = Field(alias="from")
-    text: str
+    from_number: constr(min_length=1) = Field(alias="from")
+    text: constr(min_length=1)
     validity_period: Optional[int] = None
     validity_period_time_unit: Optional[ValidityPeriodTimeUnitEnum] = None
 
@@ -199,7 +205,7 @@ class RCSMessageBody(MessageBodyBase):
     validity_period: Optional[int] = None
     validity_period_time_unit: Optional[ValidityPeriodTimeUnitEnum] = None
     content: Union[ContentCarousel, ContentCard, ContentFile, ContentText]
-    sms_fail_over: Optional[SmsFailover] = None
+    sms_failover: Optional[SmsFailover] = None
     notify_url: Optional[str] = None
     callback_data: Optional[str] = None
     message_id: Optional[str] = None
