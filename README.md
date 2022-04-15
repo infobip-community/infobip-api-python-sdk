@@ -1,11 +1,11 @@
 # infobip-api-python-sdk
 Python client for Infobip's  API channels.
 
-![Version](https://img.shields.io/pypi/v/infobip-api-python-sdk)
+[![Version](https://img.shields.io/pypi/v/infobip-api-python-sdk)](https://pypi.org/project/infobip-api-python-sdk/)
 ![Python](https://img.shields.io/pypi/pyversions/infobip-api-python-sdk)
-![Workflow](https://img.shields.io/github/workflow/status/infobip-community/infobip-api-python-sdk/Python%20package)
+[![Workflow](https://img.shields.io/github/workflow/status/infobip-community/infobip-api-python-sdk/Python%20package)](https://github.com/infobip-community/infobip-api-python-sdk/actions/workflows/python-package.yml)
 ![Release](https://img.shields.io/github/release-date/infobip-community/infobip-api-python-sdk)
-![Licence](https://img.shields.io/github/license/infobip-community/infobip-api-python-sdk)
+[![Licence](https://img.shields.io/github/license/infobip-community/infobip-api-python-sdk)](LICENSE)
 ![Lines](https://img.shields.io/tokei/lines/github/infobip-community/infobip-api-php-sdk)
 
 # Supported channels
