@@ -35,15 +35,15 @@ class Authentication(BaseModel):
 
 
 class UrlLengthValidatorMixin:
-    MAX_URL_LENGTH = 2048
+    _MAX_URL_LENGTH = 2048
 
     @classmethod
     def validate_url_length(cls, value: str) -> str:
         if not isinstance(value, str):
             return value
 
-        if len(value) > cls.MAX_URL_LENGTH:
-            raise ValueError(f"Url length must be less than {cls.MAX_URL_LENGTH}")
+        if len(value) > cls._MAX_URL_LENGTH:
+            raise ValueError(f"Url length must be less than {cls._MAX_URL_LENGTH}")
 
         return value
 

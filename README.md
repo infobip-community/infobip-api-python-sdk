@@ -5,6 +5,7 @@ Python client for Infobip's  API channels.
 - Whatsapp -> [Docs](https://www.infobip.com/docs/api#channels/whatsapp)
 - WebRTC -> [Docs](https://www.infobip.com/docs/api#channels/webrtc/)
 - MMS -> [Docs](https://www.infobip.com/docs/api#channels/mms)
+- RCS -> [Docs](https://www.infobip.com/docs/api#channels/rcs)
 
 #### Table of contents:
 
