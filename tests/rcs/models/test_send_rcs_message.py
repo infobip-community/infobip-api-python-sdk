@@ -781,7 +781,7 @@ def test_when_content_title_is_invalid__validation_error_is_raised(
 
 @pytest.mark.parametrize("content_description",
                          ["", {}, get_random_string(2001)])
-def test_when_content_height_is_invalid__validation_error_is_raised(
+def test_when_content_description_is_invalid__validation_error_is_raised(
         content_description):
     with pytest.raises(ValidationError):
         RCSMessageBodyModelFactory.build(
