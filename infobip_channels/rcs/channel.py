@@ -63,4 +63,3 @@ class RCSChannel(Channel):
             self.RCS_URL_TEMPLATE + "message/bulk", message.dict(by_alias=True)
         )
         return self._construct_response(response, RCSResponseOKList)
-
