@@ -25,13 +25,9 @@ def get_send_sms_message_body():
     return {
         "messages": [
             {
-                "destinations": [
-                    {
-                        "to": "41793026727"
-                    }
-                ],
+                "destinations": [{"to": "41793026727"}],
                 "from": "InfoSMS",
-                "text": "This is a sample message"
+                "text": "This is a sample message",
             }
         ]
     }
@@ -48,11 +44,11 @@ def get_sms_request_response():
                     "groupId": 1,
                     "groupName": "PENDING",
                     "id": 26,
-                    "name": "MESSAGE_ACCEPTED"
+                    "name": "MESSAGE_ACCEPTED",
                 },
-                "to": "2250be2d4219-3af1-78856-aabe-1362af1edfd2"
+                "to": "2250be2d4219-3af1-78856-aabe-1362af1edfd2",
             }
-        ]
+        ],
     }
 
 
@@ -60,5 +56,5 @@ def get_sms_request_error_response():
     return {
         "bulkId": "",
         "messages": [],
-        "errorMessage": "Head part is mandatory. Check API documentation"
+        "errorMessage": "Head part is mandatory. Check API documentation",
     }

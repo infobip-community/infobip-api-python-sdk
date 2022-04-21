@@ -32,9 +32,7 @@ def set_up_mock_server_and_send_request(
         {"base_url": httpserver.url_for("/"), "api_key": "secret"}
     )
     if expected_path_parameters is not None:
-        return getattr(sms_channel, method_name)(
-            expected_path_parameters, message_body
-        )
+        return getattr(sms_channel, method_name)(expected_path_parameters, message_body)
     else:
         return getattr(sms_channel, method_name)(message_body)
 

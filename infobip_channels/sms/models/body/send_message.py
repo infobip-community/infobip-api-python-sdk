@@ -12,10 +12,7 @@ from pydantic import (
     validator,
 )
 
-from infobip_channels.core.models import (
-    CamelCaseModel,
-    MessageBodyBase,
-)
+from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
 
 MINIMUM_DELIVERY_WINDOW_MINUTES = 60
 

@@ -5,9 +5,8 @@ import requests
 
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, QueryParameter, ResponseBase
-
-from infobip_channels.sms.models.response.send_message import SendSMSResponse
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
+from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
 
 class SMSChannel(Channel):
@@ -17,7 +16,7 @@ class SMSChannel(Channel):
 
     @staticmethod
     def validate_query_parameter(
-            parameter: Union[QueryParameter, Dict], parameter_type: Type[QueryParameter]
+        parameter: Union[QueryParameter, Dict], parameter_type: Type[QueryParameter]
     ) -> QueryParameter:
         """
         Validate the query parameter by trying to instantiate the provided class.
@@ -34,23 +33,23 @@ class SMSChannel(Channel):
         )
 
     def _get_custom_response_class(
-            self,
-            raw_response: Union[requests.Response, Any],
-            response_class: Type[ResponseBase] = SendSMSResponse,
-            *args,
-            **kwargs
+        self,
+        raw_response: Union[requests.Response, Any],
+        response_class: Type[ResponseBase] = SendSMSResponse,
+        *args,
+        **kwargs
     ) -> Type[ResponseBase]:
         if raw_response.status_code in (
-                HTTPStatus.OK,
-                HTTPStatus.BAD_REQUEST,
-                HTTPStatus.INTERNAL_SERVER_ERROR,
+            HTTPStatus.OK,
+            HTTPStatus.BAD_REQUEST,
+            HTTPStatus.INTERNAL_SERVER_ERROR,
         ):
             return response_class
 
         raise ValueError
 
     def send_sms_message(
-            self, message: Union[SMSMessageBody, Dict]
+        self, message: Union[SMSMessageBody, Dict]
     ) -> Union[ResponseBase, requests.Response, Any]:
         """99% of all use cases can be achieved by using this API method. Everything
         from sending a simple single message to a single destination, up to batch
@@ -66,8 +65,6 @@ class SMSChannel(Channel):
         response = self._client.post(
             self.SMS_URL_TEMPLATE + "advanced",
             message.dict(by_alias=True),
-            PostHeaders(
-                authorization=self._client.auth.api_key
-            ),
+            PostHeaders(authorization=self._client.auth.api_key),
         )
         return self._construct_response(response, SendSMSResponse)

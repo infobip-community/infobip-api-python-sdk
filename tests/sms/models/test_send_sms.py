@@ -1,4 +1,5 @@
 from datetime import date
+
 import pytest
 from pydantic.error_wrappers import ValidationError
 
@@ -10,11 +11,7 @@ from tests.sms.conftest import GenerateSMSMessageBodyFactory
 @pytest.mark.parametrize("messages", ["", None, {}])
 def test_when_messages_is_invalid__validation_error_is_raised(messages):
     with pytest.raises(ValidationError):
-        GenerateSMSMessageBodyFactory.build(
-            **{
-                "messages": [messages]
-            }
-        )
+        GenerateSMSMessageBodyFactory.build(**{"messages": [messages]})
 
 
 @pytest.mark.parametrize("destinations", ["", None, {}])
@@ -24,9 +21,7 @@ def test_when_destinations_is_invalid__validation_error_is_raised(destinations):
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            destinations
-                        ],
+                        "destinations": [destinations],
                     }
                 ]
             }
@@ -40,11 +35,7 @@ def test_when_destinations_to_is_invalid__validation_error_is_raised(destination
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            {
-                                "to": destinations_to
-                            }
-                        ],
+                        "destinations": [{"to": destinations_to}],
                     }
                 ]
             }
@@ -59,11 +50,7 @@ def test_when_destinations_to_is_invalid__validation_error_is_raised(calback_dat
                 "messages": [
                     {
                         "callbackData": calback_data,
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
+                        "destinations": [{"to": "41793026727"}],
                     }
                 ]
             }
@@ -93,15 +80,12 @@ def test_when_delivery_time_window_is_invalid__validation_error_is_raised(
                 "messages": [
                     {
                         "deliveryTimeWindow": delivery_time_window,
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
+                        "destinations": [{"to": "41793026727"}],
                     }
                 ]
             }
         )
+
 
 @pytest.mark.parametrize("language_code", ["", {}, "Test"])
 def test_when_language_code_is_invalid__validation_error_is_raised(language_code):
@@ -109,14 +93,7 @@ def test_when_language_code_is_invalid__validation_error_is_raised(language_code
         GenerateSMSMessageBodyFactory.build(
             **{
                 "messages": [
-                    {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
-                        "language": language_code
-                    }
+                    {"destinations": [{"to": "41793026727"}], "language": language_code}
                 ]
             }
         )
@@ -126,36 +103,21 @@ def test_when_language_code_is_invalid__validation_error_is_raised(language_code
 def test_when_flash_is_invalid__validation_error_is_raised(flash):
     with pytest.raises(ValidationError):
         GenerateSMSMessageBodyFactory.build(
-            **{
-                "messages": [
-                    {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
-                        "flash": flash
-                    }
-                ]
-            }
+            **{"messages": [{"destinations": [{"to": "41793026727"}], "flash": flash}]}
         )
 
 
 @pytest.mark.parametrize("notify_content_type", ["", {}, "Test"])
 def test_when_notify_content_type_is_invalid__validation_error_is_raised(
-        notify_content_type
+    notify_content_type,
 ):
     with pytest.raises(ValidationError):
         GenerateSMSMessageBodyFactory.build(
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
-                        "notifyContentType": notify_content_type
+                        "destinations": [{"to": "41793026727"}],
+                        "notifyContentType": notify_content_type,
                     }
                 ]
             }
@@ -163,41 +125,26 @@ def test_when_notify_content_type_is_invalid__validation_error_is_raised(
 
 
 @pytest.mark.parametrize("send_at", [{}, "Test", "22-03-2022", date.today()])
-def test_when_send_at_is_invalid__validation_error_is_raised(
-        send_at
-):
+def test_when_send_at_is_invalid__validation_error_is_raised(send_at):
     with pytest.raises(ValidationError):
         GenerateSMSMessageBodyFactory.build(
             **{
                 "messages": [
-                    {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
-                        "sendAt": send_at
-                    }
+                    {"destinations": [{"to": "41793026727"}], "sendAt": send_at}
                 ]
             }
         )
 
 
 @pytest.mark.parametrize("transliteration", ["", {}, "Test"])
-def test_when_transliteration_is_invalid__validation_error_is_raised(
-        transliteration
-):
+def test_when_transliteration_is_invalid__validation_error_is_raised(transliteration):
     with pytest.raises(ValidationError):
         GenerateSMSMessageBodyFactory.build(
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
-                        "transliteration": transliteration
+                        "destinations": [{"to": "41793026727"}],
+                        "transliteration": transliteration,
                     }
                 ]
             }
@@ -205,20 +152,14 @@ def test_when_transliteration_is_invalid__validation_error_is_raised(
 
 
 @pytest.mark.parametrize("validity_period", ["", {}, "Test", 2881])
-def test_when_validity_period_is_invalid__validation_error_is_raised(
-        validity_period
-):
+def test_when_validity_period_is_invalid__validation_error_is_raised(validity_period):
     with pytest.raises(ValidationError):
         GenerateSMSMessageBodyFactory.build(
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
-                        "validityPeriod": validity_period
+                        "destinations": [{"to": "41793026727"}],
+                        "validityPeriod": validity_period,
                     }
                 ]
             }
@@ -227,23 +168,17 @@ def test_when_validity_period_is_invalid__validation_error_is_raised(
 
 @pytest.mark.parametrize("principal_entity_id", [None, {}])
 def test_when_principal_entity_id_is_invalid__validation_error_is_raised(
-        principal_entity_id
+    principal_entity_id,
 ):
     with pytest.raises(ValidationError):
         GenerateSMSMessageBodyFactory.build(
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
+                        "destinations": [{"to": "41793026727"}],
                         "regional": {
-                            "indiaDlt": {
-                                "principalEntityId": principal_entity_id
-                            }
-                        }
+                            "indiaDlt": {"principalEntityId": principal_entity_id}
+                        },
                     }
                 ]
             }
@@ -257,18 +192,10 @@ def test_when_amount_is_invalid__validation_error_is_raised(amount):
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
-
+                        "destinations": [{"to": "41793026727"}],
                     }
                 ],
-                "sendingSpeedLimit": {
-                    "amount": amount,
-                    "timeUnit": "MINUTE"
-                }
+                "sendingSpeedLimit": {"amount": amount, "timeUnit": "MINUTE"},
             }
         )
 
@@ -280,17 +207,12 @@ def test_when_track_is_invalid__validation_error_is_raised(track):
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
-
+                        "destinations": [{"to": "41793026727"}],
                     }
                 ],
                 "tracking": {
                     "track": track,
-                }
+                },
             }
         )
 
@@ -302,17 +224,12 @@ def test_when_tracking_type_is_invalid__validation_error_is_raised(tracking_type
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
-
+                        "destinations": [{"to": "41793026727"}],
                     }
                 ],
                 "tracking": {
                     "type": tracking_type,
-                }
+                },
             }
         )
 
@@ -323,13 +240,9 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
             **{
                 "messages": [
                     {
-                        "destinations": [
-                            {
-                                "to": "41793026727"
-                            }
-                        ],
+                        "destinations": [{"to": "41793026727"}],
                         "from": "InfoSMS",
-                        "text": "This is a sample message"
+                        "text": "This is a sample message",
                     }
                 ]
             }

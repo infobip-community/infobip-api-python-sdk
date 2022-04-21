@@ -1,12 +1,11 @@
 from pytest_cases import parametrize
 
-from tests.conftest import get_expected_post_headers, get_expected_put_headers
+from tests.conftest import get_expected_post_headers
 from tests.sms.conftest import (
     GenerateSMSMessageBodyFactoryIntegration,
-    GenerateSendSMSMessageResponse,
     get_send_sms_message_body,
-    get_sms_request_response,
     get_sms_request_error_response,
+    get_sms_request_response,
 )
 
 ENDPOINT_TEST_ARGUMENTS = {
