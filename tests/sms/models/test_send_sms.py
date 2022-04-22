@@ -43,7 +43,7 @@ def test_when_destinations_to_is_invalid__validation_error_is_raised(destination
 
 
 @pytest.mark.parametrize("calback_data", [{}, get_random_string(4001)])
-def test_when_destinations_to_is_invalid__validation_error_is_raised(calback_data):
+def test_when_calback_data_to_is_invalid__validation_error_is_raised(calback_data):
     with pytest.raises(ValidationError):
         GenerateSMSMessageBodyFactory.build(
             **{
@@ -124,6 +124,21 @@ def test_when_notify_content_type_is_invalid__validation_error_is_raised(
         )
 
 
+@pytest.mark.parametrize("notify_url", [{}, "myserver.com", "www.myserver.com"])
+def test_when_notify_url_is_invalid__validation_error_is_raised(notify_url):
+    with pytest.raises(ValidationError):
+        GenerateSMSMessageBodyFactory.build(
+            **{
+                "messages": [
+                    {
+                        "destinations": [{"to": "41793026727"}],
+                        "notifyUrl": notify_url,
+                    }
+                ]
+            }
+        )
+
+
 @pytest.mark.parametrize("send_at", [{}, "Test", "22-03-2022", date.today()])
 def test_when_send_at_is_invalid__validation_error_is_raised(send_at):
     with pytest.raises(ValidationError):
@@ -196,6 +211,21 @@ def test_when_amount_is_invalid__validation_error_is_raised(amount):
                     }
                 ],
                 "sendingSpeedLimit": {"amount": amount, "timeUnit": "MINUTE"},
+            }
+        )
+
+
+@pytest.mark.parametrize("time_unit", ["", {}, "test"])
+def test_when_time_unit_is_invalid__validation_error_is_raised(time_unit):
+    with pytest.raises(ValidationError):
+        GenerateSMSMessageBodyFactory.build(
+            **{
+                "messages": [
+                    {
+                        "destinations": [{"to": "41793026727"}],
+                    }
+                ],
+                "sendingSpeedLimit": {"amount": 22, "timeUnit": time_unit},
             }
         )
 

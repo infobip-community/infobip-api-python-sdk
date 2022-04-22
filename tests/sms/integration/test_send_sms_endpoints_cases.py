@@ -2,7 +2,9 @@ from pytest_cases import parametrize
 
 from tests.conftest import get_expected_post_headers
 from tests.sms.conftest import (
+    GenerateBinarySMSMessageBodyFactoryIntegration,
     GenerateSMSMessageBodyFactoryIntegration,
+    get_send_binary_sms_message_body,
     get_send_sms_message_body,
     get_sms_request_error_response,
     get_sms_request_response,
@@ -18,6 +20,16 @@ ENDPOINT_TEST_ARGUMENTS = {
         "expected_json": GenerateSMSMessageBodyFactoryIntegration,
         "request_data": get_send_sms_message_body(),
         "method_name": "send_sms_message",
+    },
+    "send_binary_SMS_message": {
+        "endpoint": "/sms/2/binary/advanced",
+        "http_method": "POST",
+        "expected_headers": get_expected_post_headers(),
+        "expected_path_parameters": None,
+        "expected_query_parameters": None,
+        "expected_json": GenerateBinarySMSMessageBodyFactoryIntegration,
+        "request_data": get_send_binary_sms_message_body(),
+        "method_name": "send_binary_sms_message",
     },
 }
 

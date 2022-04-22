@@ -5,6 +5,7 @@ import requests
 
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, QueryParameter, ResponseBase
+from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
@@ -12,7 +13,7 @@ from infobip_channels.sms.models.response.send_message import SendSMSResponse
 class SMSChannel(Channel):
     """Class used for interaction with the Infobip's SMS API."""
 
-    SMS_URL_TEMPLATE = "/sms/2/text/"
+    SMS_URL_TEMPLATE = "/sms/2/"
 
     @staticmethod
     def validate_query_parameter(
@@ -63,7 +64,24 @@ class SMSChannel(Channel):
         message = self.validate_message_body(message, SMSMessageBody)
 
         response = self._client.post(
-            self.SMS_URL_TEMPLATE + "advanced",
+            self.SMS_URL_TEMPLATE + "text/advanced",
+            message.dict(by_alias=True),
+            PostHeaders(authorization=self._client.auth.api_key),
+        )
+        return self._construct_response(response, SendSMSResponse)
+
+    def send_binary_sms_message(
+        self, message: Union[BinarySMSMessageBody, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """Send single or multiple binary messages to one or more destination address.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        message = self.validate_message_body(message, BinarySMSMessageBody)
+
+        response = self._client.post(
+            self.SMS_URL_TEMPLATE + "binary/advanced",
             message.dict(by_alias=True),
             PostHeaders(authorization=self._client.auth.api_key),
         )

@@ -1,5 +1,6 @@
 from pydantic_factories import ModelFactory
 
+from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
@@ -17,6 +18,19 @@ class GenerateSMSMessageBodyFactoryIntegration(ModelFactory):
         return SMSMessageBody(**get_send_sms_message_body())
 
 
+class GenerateBinarySMSMessageBodyFactory(ModelFactory):
+    __model__ = BinarySMSMessageBody
+
+
+class GenerateBinarySMSMessageBodyFactoryIntegration(ModelFactory):
+    __model__ = BinarySMSMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return BinarySMSMessageBody(**get_send_binary_sms_message_body())
+
+
 class GenerateSendSMSMessageResponse(ModelFactory):
     __model__ = SendSMSResponse
 
@@ -30,6 +44,31 @@ def get_send_sms_message_body():
                 "text": "This is a sample message",
             }
         ]
+    }
+
+
+def get_send_binary_sms_message_body():
+    return {
+        "bulkId": "BULK-ID-123-xyz",
+        "messages": [
+            {
+                "binary": {
+                    "dataCoding": 0,
+                    "esmClass": 0,
+                    "hex": "54 65 73 74 20 6d 65 73 73 61 67 65 2e",
+                },
+                "callbackData": "DLR callback data",
+                "destinations": [
+                    {"messageId": "MESSAGE-ID-123-xyz", "to": "41793026727"},
+                    {"to": "41793026834"},
+                ],
+                "from": "InfoSMS",
+                "intermediateReport": True,
+                "notifyContentType": "application/json",
+                "notifyUrl": "https://www.example.com/sms/advanced",
+                "validityPeriod": 720,
+            },
+        ],
     }
 
 

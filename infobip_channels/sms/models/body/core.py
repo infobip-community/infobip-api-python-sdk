@@ -3,6 +3,7 @@ from enum import Enum
 from typing import List, Optional, Union
 
 from pydantic import (
+    AnyHttpUrl,
     Field,
     StrictBool,
     conint,
@@ -107,7 +108,7 @@ class CoreMessage(CamelCaseModel):
     from_name: Optional[str] = Field(alias="from", default=None)
     intermediate_report: Optional[StrictBool] = False
     notify_content_type: Optional[ContentTypeEnum] = None
-    notify_url: Optional[str] = None
+    notify_url: Optional[AnyHttpUrl] = None
     regional: Optional[Regional] = None
     send_at: Optional[Union[datetime, str]] = None
     validity_period: Optional[conint(gt=0, le=2880)]
