@@ -7,13 +7,17 @@ from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, QueryParameter, ResponseBase
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
+from infobip_channels.sms.models.query_parameters.get_sms_send_message import (
+    GetSMSSendMessageQueryParameters,
+)
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
 
 class SMSChannel(Channel):
     """Class used for interaction with the Infobip's SMS API."""
 
-    SMS_URL_TEMPLATE = "/sms/2/"
+    SMS_URL_TEMPLATE_VERSION_1 = "/sms/1/"
+    SMS_URL_TEMPLATE_VERSION_2 = "/sms/2/"
 
     @staticmethod
     def validate_query_parameter(
@@ -64,7 +68,7 @@ class SMSChannel(Channel):
         message = self.validate_message_body(message, SMSMessageBody)
 
         response = self._client.post(
-            self.SMS_URL_TEMPLATE + "text/advanced",
+            self.SMS_URL_TEMPLATE_VERSION_2 + "text/advanced",
             message.dict(by_alias=True),
             PostHeaders(authorization=self._client.auth.api_key),
         )
@@ -81,8 +85,30 @@ class SMSChannel(Channel):
         message = self.validate_message_body(message, BinarySMSMessageBody)
 
         response = self._client.post(
-            self.SMS_URL_TEMPLATE + "binary/advanced",
+            self.SMS_URL_TEMPLATE_VERSION_2 + "binary/advanced",
             message.dict(by_alias=True),
             PostHeaders(authorization=self._client.auth.api_key),
+        )
+        return self._construct_response(response, SendSMSResponse)
+
+    def send_sms_message_over_query_parameters(
+        self, query_parameters: Union[GetSMSSendMessageQueryParameters, Dict]
+    ) -> Union[ResponseBase, Any]:
+        """
+        All message parameters of the message can be defined in the query string. Use
+        this method only if Send SMS message is not an option for your use case!
+        Note: Make sure that special characters and user credentials are properly
+        encoded
+
+        :param query_parameters: Query parameters to send with the request
+        :return: Received response
+        """
+        query_parameters = self.validate_query_parameter(
+            query_parameters, GetSMSSendMessageQueryParameters
+        )
+        query_parameters.url_encode()
+        response = self._client.get(
+            self.SMS_URL_TEMPLATE_VERSION_1 + "text/query",
+            params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, SendSMSResponse)

@@ -1,5 +1,6 @@
 import json
 import os
+import urllib.parse
 import xml.etree.ElementTree as ET
 from http import HTTPStatus
 from io import IOBase
@@ -17,6 +18,20 @@ def to_camel_case(string: str) -> str:
 
 def to_header_specific_case(string: str) -> str:
     return "-".join(word.capitalize() for word in string.split("_"))
+
+
+def url_encoding(string_to_encode: str, safe: str = "", encoding: str = "utf-8") -> str:
+    """
+    Special characters and user credentials are properly encoded.
+    Use a URL encoding reference as a guide:
+    https://www.w3schools.com/tags/ref_urlencode.asp
+
+    The optional safe parameter specifies additional ASCII characters
+    that should not be quoted — its default value is '/'.
+    """
+    return urllib.parse.quote(
+        string_to_encode, safe=safe, encoding=encoding, errors=None
+    )
 
 
 class Authentication(BaseModel):
