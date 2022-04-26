@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timedelta
 
 import pytest
 from pydantic.error_wrappers import ValidationError
@@ -321,7 +321,7 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                         },
                         "destinations": [{"to": "41793026700"}],
                         "from": "41793026700",
-                        "sendAt": "2021-08-25T16:00:00.000+0000",
+                        "sendAt": datetime.now() + timedelta(days=1),
                     },
                 ],
             }

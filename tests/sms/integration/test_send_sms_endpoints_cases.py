@@ -1,6 +1,6 @@
 from pytest_cases import parametrize
 
-from tests.conftest import get_expected_post_headers
+from tests.conftest import get_expected_get_headers, get_expected_post_headers
 from tests.sms.conftest import (
     GenerateBinarySMSMessageBodyFactoryIntegration,
     GenerateSMSMessageBodyFactoryIntegration,
@@ -8,6 +8,7 @@ from tests.sms.conftest import (
     get_send_sms_message_body,
     get_sms_request_error_response,
     get_sms_request_response,
+    get_sms_send_message_over_query_parameters,
 )
 
 ENDPOINT_TEST_ARGUMENTS = {
@@ -18,7 +19,7 @@ ENDPOINT_TEST_ARGUMENTS = {
         "expected_path_parameters": None,
         "expected_query_parameters": None,
         "expected_json": GenerateSMSMessageBodyFactoryIntegration,
-        "request_data": get_send_sms_message_body(),
+        "request_parameters": get_send_sms_message_body(),
         "method_name": "send_sms_message",
     },
     "send_binary_SMS_message": {
@@ -28,8 +29,18 @@ ENDPOINT_TEST_ARGUMENTS = {
         "expected_path_parameters": None,
         "expected_query_parameters": None,
         "expected_json": GenerateBinarySMSMessageBodyFactoryIntegration,
-        "request_data": get_send_binary_sms_message_body(),
+        "request_parameters": get_send_binary_sms_message_body(),
         "method_name": "send_binary_sms_message",
+    },
+    "send_SMS_message_over_query_parameters": {
+        "endpoint": "/sms/1/text/query",
+        "http_method": "GET",
+        "expected_headers": get_expected_get_headers(),
+        "expected_path_parameters": None,
+        "expected_query_parameters": "username=TestUser&password=Pass123&to=41793026727&flash=False",
+        "expected_json": None,
+        "request_parameters": get_sms_send_message_over_query_parameters(),
+        "method_name": "send_sms_message_over_query_parameters",
     },
 }
 
@@ -54,6 +65,7 @@ def case__supported_status(endpoint_type, responses):
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_path_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_query_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_json"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["request_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["method_name"],
     )
 
@@ -70,5 +82,6 @@ def case__unsupported_status(endpoint_type):
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_path_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_query_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_json"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["request_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["method_name"],
     )

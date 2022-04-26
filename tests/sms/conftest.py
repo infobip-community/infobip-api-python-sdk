@@ -97,3 +97,11 @@ def get_sms_request_error_response():
         "messages": [],
         "errorMessage": "Head part is mandatory. Check API documentation",
     }
+
+
+def get_sms_send_message_over_query_parameters():
+    return {
+        "username": "TestUser",
+        "password": "Pass123",
+        "to": ["41793026727"],
+    }
