@@ -2,6 +2,7 @@ import json
 import os
 import urllib.parse
 import xml.etree.ElementTree as ET
+from enum import Enum
 from http import HTTPStatus
 from io import IOBase
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -146,6 +147,23 @@ class XML(str):
             raise ValueError("Invalid XML string sent")
 
         return cls(value)
+
+
+class LanguageEnum(str, Enum):
+    TURKISH = "TR"
+    SPANISH = "ES"
+    PORTUGUESE = "PT"
+    AUTODETECT = "AUTODETECT"
+
+
+class TransliterationEnum(str, Enum):
+    TURKISH = "TURKISH"
+    GREEK = "GREEK"
+    CYRILLIC = "CYRILLIC"
+    SERBIAN_CYRILLIC = "SERBIAN_CYRILLIC"
+    CENTRAL_EUROPEAN = "CENTRAL_EUROPEAN"
+    BALTIC = "BALTIC"
+    NON_UNICODE = "NON_UNICODE"
 
 
 class MultipartMixin:

@@ -27,7 +27,7 @@ class TrackEnum(str, Enum):
     URL = "URL"
 
 
-class GetSMSSendMessageQueryParameters(QueryParameter):
+class SendSMSMessageQueryParameters(QueryParameter):
     username: str
     password: str
     bulk_id: Optional[str] = None

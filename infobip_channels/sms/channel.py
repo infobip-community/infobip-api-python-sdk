@@ -5,10 +5,15 @@ import requests
 
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, QueryParameter, ResponseBase
+from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
-from infobip_channels.sms.models.query_parameters.get_sms_send_message import (
-    GetSMSSendMessageQueryParameters,
+from infobip_channels.sms.models.query_parameters.sms_send_message import (
+    SendSMSMessageQueryParameters,
+)
+from infobip_channels.sms.models.response.core import SMSResponseError
+from infobip_channels.sms.models.response.preview_message import (
+    PreviewSMSMessageResponse,
 )
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
@@ -44,12 +49,18 @@ class SMSChannel(Channel):
         *args,
         **kwargs
     ) -> Type[ResponseBase]:
-        if raw_response.status_code in (
-            HTTPStatus.OK,
-            HTTPStatus.BAD_REQUEST,
-            HTTPStatus.INTERNAL_SERVER_ERROR,
-        ):
+
+        if raw_response.status_code in (HTTPStatus.OK,):
             return response_class
+        elif raw_response.status_code in (
+            HTTPStatus.BAD_REQUEST,
+            HTTPStatus.UNAUTHORIZED,
+            HTTPStatus.FORBIDDEN,
+            HTTPStatus.TOO_MANY_REQUESTS,
+            HTTPStatus.INTERNAL_SERVER_ERROR,
+            HTTPStatus.NOT_FOUND,
+        ):
+            return SMSResponseError
 
         raise ValueError
 
@@ -92,7 +103,7 @@ class SMSChannel(Channel):
         return self._construct_response(response, SendSMSResponse)
 
     def send_sms_message_over_query_parameters(
-        self, query_parameters: Union[GetSMSSendMessageQueryParameters, Dict]
+        self, query_parameters: Union[SendSMSMessageQueryParameters, Dict]
     ) -> Union[ResponseBase, Any]:
         """
         All message parameters of the message can be defined in the query string. Use
@@ -104,7 +115,7 @@ class SMSChannel(Channel):
         :return: Received response
         """
         query_parameters = self.validate_query_parameter(
-            query_parameters, GetSMSSendMessageQueryParameters
+            query_parameters, SendSMSMessageQueryParameters
         )
         query_parameters.url_encode()
         response = self._client.get(
@@ -112,3 +123,23 @@ class SMSChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, SendSMSResponse)
+
+    def preview_sms_message(
+        self, message: Union[PreviewSMSMessage, Dict]
+    ) -> Union[ResponseBase, Any]:
+        """
+        Avoid unpleasant surprises and check how different message configurations
+        will affect your message text, number of characters and message parts.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+
+        message = self.validate_message_body(message, PreviewSMSMessage)
+
+        response = self._client.post(
+            self.SMS_URL_TEMPLATE_VERSION_1 + "preview",
+            message.dict(by_alias=True),
+            PostHeaders(authorization=self._client.auth.api_key),
+        )
+        return self._construct_response(response, PreviewSMSMessageResponse)

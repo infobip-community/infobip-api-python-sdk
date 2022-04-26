@@ -93,9 +93,18 @@ def get_sms_request_response():
 
 def get_sms_request_error_response():
     return {
-        "bulkId": "",
-        "messages": [],
-        "errorMessage": "Head part is mandatory. Check API documentation",
+        "requestError": {
+            "serviceException": {
+                "messageId": "BAD_REQUEST",
+                "text": "Bad request",
+                "validationErrors": {
+                    "content.text": [
+                        "size must be between 1 and 4096",
+                        "must not be blank",
+                    ]
+                },
+            }
+        }
     }
 
 
