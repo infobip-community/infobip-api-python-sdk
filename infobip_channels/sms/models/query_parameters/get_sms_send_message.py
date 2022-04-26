@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 from typing import List, Optional, Union
 
-from pydantic import AnyHttpUrl, Field, StrictBool, validator
+from pydantic import AnyHttpUrl, Field, StrictBool, conint, validator
 
 from infobip_channels.core.models import QueryParameter, url_encoding
 
@@ -36,8 +36,12 @@ class GetSMSSendMessageQueryParameters(QueryParameter):
     text: Optional[str] = None
     flash: Optional[StrictBool] = False
     transliteration: Optional[TransliterationEnum]
+    language_code: Optional[str] = None
+    intermediate_report: Optional[StrictBool] = None
     notify_url: Optional[AnyHttpUrl] = None
     notify_content_type: Optional[ContentTypeEnum] = None
+    callback_data: Optional[str] = None
+    validity_period: Optional[conint(gt=0, le=2880)]
     send_at: Optional[Union[datetime, str]] = None  # todo validation
     track: Optional[TrackEnum] = None
     process_key: Optional[str] = None
