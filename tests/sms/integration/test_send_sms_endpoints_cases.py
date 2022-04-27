@@ -3,7 +3,10 @@ from pytest_cases import parametrize
 from tests.conftest import get_expected_get_headers, get_expected_post_headers
 from tests.sms.conftest import (
     GenerateBinarySMSMessageBodyFactoryIntegration,
+    GeneratePreviewSMSMessageBodyFactory,
     GenerateSMSMessageBodyFactoryIntegration,
+    get_preview_send_sms_message_body,
+    get_preview_send_sms_response,
     get_send_binary_sms_message_body,
     get_send_sms_message_body,
     get_sms_request_error_response,
@@ -37,10 +40,21 @@ ENDPOINT_TEST_ARGUMENTS = {
         "http_method": "GET",
         "expected_headers": get_expected_get_headers(),
         "expected_path_parameters": None,
-        "expected_query_parameters": "username=TestUser&password=Pass123&to=41793026727&flash=False",
+        "expected_query_parameters": "username=TestUser&password=Pass123&to"
+        "=41793026727&flash=False",
         "expected_json": None,
         "request_parameters": get_sms_send_message_over_query_parameters(),
         "method_name": "send_sms_message_over_query_parameters",
+    },
+    "preview_SMS_message": {
+        "endpoint": "/sms/1/preview",
+        "http_method": "POST",
+        "expected_headers": get_expected_post_headers(),
+        "expected_path_parameters": None,
+        "expected_query_parameters": None,
+        "expected_json": GeneratePreviewSMSMessageBodyFactory,
+        "request_parameters": get_preview_send_sms_message_body(),
+        "method_name": "preview_sms_message",
     },
 }
 
@@ -55,6 +69,9 @@ ENDPOINT_TEST_ARGUMENTS = {
 def case__supported_status(endpoint_type, responses):
     status_code = responses[0]
     response_content = responses[1]
+
+    if endpoint_type == "preview_SMS_message" and responses[0] == 200:
+        response_content = get_preview_send_sms_response
 
     return (
         status_code,

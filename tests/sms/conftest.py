@@ -1,5 +1,6 @@
 from pydantic_factories import ModelFactory
 
+from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
@@ -44,6 +45,19 @@ def get_send_sms_message_body():
                 "text": "This is a sample message",
             }
         ]
+    }
+
+
+class GeneratePreviewSMSMessageBodyFactory(ModelFactory):
+    __model__ = PreviewSMSMessage
+
+
+def get_preview_send_sms_message_body():
+    return {
+        "text": "Ως Μεγαρικό ψήφισμα είναι γνωστή η απόφαση της Εκκλησίας του δήμου "
+        "των Αθηναίων (πιθανόν γύρω στο 433/2 π.Χ.) να επιβάλει αυστηρό και "
+        "καθολικό εμπάργκο στα",
+        "transliteration": "GREEK",
     }
 
 
@@ -105,6 +119,24 @@ def get_sms_request_error_response():
                 },
             }
         }
+    }
+
+
+def get_preview_send_sms_response():
+    return {
+        "originalText": "Let's see how many characters will remain unused in this "
+        "message.",
+        "previews": [
+            {
+                "textPreview": "ΩΣ MEΓAPIKO ΨHΦIΣMA EINAI ΓNΩΣTH H AΠOΦAΣH THΣ "
+                "EKKΛHΣIAΣ TOY ΔHMOY TΩN AΘHNAIΩN (ΠIΘANON ΓYPΩ ΣTO "
+                "433/2 Π.X.) NA EΠIBAΛEI AYΣTHPO KAI KAΘOΛIKO EMΠAPΓKO "
+                "ΣTA",
+                "messageCount": 1,
+                "charactersRemaining": 5,
+                "configuration": {"transliteration": "GREEK"},
+            }
+        ],
     }
 
 
