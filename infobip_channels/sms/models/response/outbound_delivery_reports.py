@@ -1,5 +1,4 @@
-from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from pydantic import StrictBool
 
@@ -19,8 +18,8 @@ class Result(CamelCaseModel):
     bulk_id: Optional[str] = None
     message_id: Optional[str] = None
     to: Optional[str] = None
-    send_at: Optional[Union[datetime, str]] = None
-    done_at: Optional[Union[datetime, str]] = None
+    sent_at: Optional[str] = None
+    done_at: Optional[str] = None
     sms_count: Optional[int] = None
     price: Optional[Price] = None
     status: Optional[ResponseStatus] = None
