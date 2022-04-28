@@ -11,12 +11,18 @@ from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.query_parameters.get_outbound_delivery_reports import (
     GetOutboundSMSDeliveryReportsQueryParameters,
 )
+from infobip_channels.sms.models.query_parameters.get_outbound_logs import (
+    GetOutboundSMSLogsQueryParameters,
+)
 from infobip_channels.sms.models.query_parameters.sms_send_message import (
     SendSMSMessageQueryParameters,
 )
 from infobip_channels.sms.models.response.core import SMSResponseError
 from infobip_channels.sms.models.response.outbound_delivery_reports import (
     OutboundDeliveryReportsResponse,
+)
+from infobip_channels.sms.models.response.outbound_message_logs import (
+    OutboundMessageLogsResponse,
 )
 from infobip_channels.sms.models.response.preview_message import (
     PreviewSMSMessageResponse,
@@ -157,7 +163,7 @@ class SMSChannel(Channel):
             GetOutboundSMSDeliveryReportsQueryParameters, Dict
         ] = {},
     ) -> Union[ResponseBase, Any]:
-        """f you are for any reason unable to receive real-time delivery reports on
+        """If you are for any reason unable to receive real-time delivery reports on
         your endpoint, you can use this API method to learn if and when the message
         has been delivered to the recipient. Each request will return a batch of
         delivery reports - only once. The following API request will return only new
@@ -175,3 +181,25 @@ class SMSChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, OutboundDeliveryReportsResponse)
+
+    def get_outbound_sms_message_logs(
+        self,
+        query_parameters: Union[GetOutboundSMSLogsQueryParameters, Dict] = {},
+    ) -> Union[ResponseBase, Any]:
+        """Use this method for displaying logs for example in the user interface.
+        Available are the logs for the last 48 hours and you can only retrieve
+        maximum of 1000 logs per call. See message delivery reports if your use case
+        is to verify message delivery.
+
+        :param query_parameters: Query parameters to send with the request
+        :return: Received response
+        """
+        query_parameters = self.validate_query_parameter(
+            query_parameters, GetOutboundSMSLogsQueryParameters
+        )
+
+        response = self._client.get(
+            self.SMS_URL_TEMPLATE_VERSION_1 + "logs",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, OutboundMessageLogsResponse)

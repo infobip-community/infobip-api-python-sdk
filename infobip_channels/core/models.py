@@ -2,6 +2,7 @@ import json
 import os
 import urllib.parse
 import xml.etree.ElementTree as ET
+from datetime import datetime
 from enum import Enum
 from http import HTTPStatus
 from io import IOBase
@@ -62,6 +63,20 @@ class UrlLengthValidatorMixin:
             raise ValueError(f"Url length must be less than {cls._MAX_URL_LENGTH}")
 
         return value
+
+
+class ConvertTimeToCorrectFormat:
+    @classmethod
+    def convert_time_to_correct_format(cls, value):
+        if not value:
+            return
+
+        if isinstance(value, str):
+            value = datetime.fromisoformat(value)
+
+        time_with_microseconds = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+        return time_with_microseconds.split("Z")[0][:-3] + "Z"
 
 
 class CamelCaseModel(BaseModel):
@@ -164,6 +179,15 @@ class TransliterationEnum(str, Enum):
     CENTRAL_EUROPEAN = "CENTRAL_EUROPEAN"
     BALTIC = "BALTIC"
     NON_UNICODE = "NON_UNICODE"
+
+
+class GeneralStatus(str, Enum):
+    ACCEPTED = "ACCEPTED"
+    PENDING = "PENDING"
+    UNDELIVERABLE = "UNDELIVERABLE"
+    DELIVERED = "DELIVERED"
+    REJECTED = "REJECTED"
+    EXPIRED = "EXPIRED"
 
 
 class MultipartMixin:
