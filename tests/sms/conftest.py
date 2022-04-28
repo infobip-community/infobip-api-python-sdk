@@ -171,6 +171,63 @@ def get_outbound_sms_delivery_reports_response():
     }
 
 
+def get_outbound_sms_message_logs_response():
+    return {
+        "results": [
+            {
+                "bulkId": "BULK-ID-123-xyz",
+                "messageId": "MESSAGE-ID-123-xyz",
+                "to": "41793026727",
+                "sentAt": "2019-11-09T16:00:00.000+0000",
+                "doneAt": "2019-11-09T16:00:00.000+0000",
+                "smsCount": 1,
+                "mccMnc": "22801",
+                "price": {"pricePerMessage": 0.01, "currency": "EUR"},
+                "status": {
+                    "groupId": 3,
+                    "groupName": "DELIVERED",
+                    "id": 5,
+                    "name": "DELIVERED_TO_HANDSET",
+                    "description": "Message delivered to handset",
+                },
+                "error": {
+                    "groupId": 0,
+                    "groupName": "Ok",
+                    "id": 0,
+                    "name": "NO_ERROR",
+                    "description": "No Error",
+                    "permanent": False,
+                },
+            },
+            {
+                "bulkId": "BULK-ID-123-xyz",
+                "messageId": "MESSAGE-ID-ijkl-45",
+                "to": "41793026834",
+                "sentAt": "2019-11-09T17:00:00.000+0000",
+                "doneAt": "2019-11-09T17:00:00.000+0000",
+                "smsCount": 1,
+                "mccMnc": "22801",
+                "price": {"pricePerMessage": 0.01, "currency": "EUR"},
+                "status": {
+                    "groupId": 3,
+                    "groupName": "DELIVERED",
+                    "id": 5,
+                    "name": "DELIVERED_TO_HANDSET",
+                    "description": "Message delivered to handset",
+                },
+                "error": {
+                    "groupId": 0,
+                    "groupName": "Ok",
+                    "id": 0,
+                    "name": "NO_ERROR",
+                    "description": "No Error",
+                    "permanent": False,
+                },
+            },
+        ]
+    }
+
+
 def get_sms_send_message_over_query_parameters():
     return {
         "username": "TestUser",
@@ -184,4 +241,12 @@ def get_outbound_sms_delivery_reports_query_parameters():
         "bulkId": "BULK-ID-123-xyz",
         "messageId": "MESSAGE-ID-123-xyz",
         "limit": 1,
+    }
+
+
+def get_outbound_sms_message_logs_query_parameters():
+    return {
+        "from": "41793026999",
+        "to": "41793026727",
+        "bulkId": ["BULK-ID-123-xyz"],
     }

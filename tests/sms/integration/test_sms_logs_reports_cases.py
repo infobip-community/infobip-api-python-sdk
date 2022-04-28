@@ -4,6 +4,8 @@ from tests.conftest import get_expected_get_headers
 from tests.sms.conftest import (
     get_outbound_sms_delivery_reports_query_parameters,
     get_outbound_sms_delivery_reports_response,
+    get_outbound_sms_message_logs_query_parameters,
+    get_outbound_sms_message_logs_response,
     get_sms_request_error_response,
 )
 
@@ -19,6 +21,17 @@ ENDPOINT_TEST_ARGUMENTS = {
         "request_parameters": get_outbound_sms_delivery_reports_query_parameters(),
         "method_name": "get_outbound_sms_delivery_reports",
     },
+    "get_outbound_sms_message_logs": {
+        "endpoint": "/sms/1/logs",
+        "http_method": "GET",
+        "expected_headers": get_expected_get_headers(),
+        "expected_path_parameters": None,
+        "expected_query_parameters": "from=41793026999&to=41793026727&bulkId=BULK-ID"
+        "-123-xyz",
+        "expected_json": None,
+        "request_parameters": get_outbound_sms_message_logs_query_parameters(),
+        "method_name": "get_outbound_sms_message_logs",
+    },
 }
 
 
@@ -33,8 +46,8 @@ def case__supported_status(endpoint_type, responses):
     status_code = responses[0]
     response_content = responses[1]
 
-    # if endpoint_type == "preview_SMS_message" and responses[0] == 200:
-    #     response_content = get_preview_send_sms_response
+    if endpoint_type == "get_outbound_sms_message_logs" and responses[0] == 200:
+        response_content = get_outbound_sms_message_logs_response
 
     return (
         status_code,
