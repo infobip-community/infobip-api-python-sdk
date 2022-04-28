@@ -8,16 +8,22 @@ from infobip_channels.core.models import PostHeaders, QueryParameter, ResponseBa
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
+from infobip_channels.sms.models.query_parameters.get_inbound_sms_messages import (
+    GetInboundSMSMessagesQueryParameters,
+)
 from infobip_channels.sms.models.query_parameters.get_outbound_delivery_reports import (
     GetOutboundSMSDeliveryReportsQueryParameters,
 )
 from infobip_channels.sms.models.query_parameters.get_outbound_logs import (
     GetOutboundSMSLogsQueryParameters,
 )
-from infobip_channels.sms.models.query_parameters.sms_send_message import (
+from infobip_channels.sms.models.query_parameters.send_sms_send_message import (
     SendSMSMessageQueryParameters,
 )
 from infobip_channels.sms.models.response.core import SMSResponseError
+from infobip_channels.sms.models.response.inbound_messages import (
+    InboundSMSMessagesResponse,
+)
 from infobip_channels.sms.models.response.outbound_delivery_reports import (
     OutboundDeliveryReportsResponse,
 )
@@ -203,3 +209,25 @@ class SMSChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, OutboundMessageLogsResponse)
+
+    def get_inbound_sms_messages(
+        self,
+        query_parameters: Union[GetInboundSMSMessagesQueryParameters, Dict] = {},
+    ) -> Union[ResponseBase, Any]:
+        """If for some reason you are unable to receive incoming SMS to the endpoint
+        of your choice in real time, you can use this API call to fetch messages.
+        Each request will return a batch of received messages - only once. The API
+        request will only return new messages that arrived since the last API request.
+
+        :param query_parameters: Query parameters to send with the request
+        :return: Received response
+        """
+        query_parameters = self.validate_query_parameter(
+            query_parameters, GetInboundSMSMessagesQueryParameters
+        )
+
+        response = self._client.get(
+            self.SMS_URL_TEMPLATE_VERSION_1 + "inbox/reports",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, InboundSMSMessagesResponse)

@@ -2,6 +2,8 @@ from pytest_cases import parametrize
 
 from tests.conftest import get_expected_get_headers
 from tests.sms.conftest import (
+    get_inbound_sms_messages_query_parameters,
+    get_inbound_sms_messages_response,
     get_outbound_sms_delivery_reports_query_parameters,
     get_outbound_sms_delivery_reports_response,
     get_outbound_sms_message_logs_query_parameters,
@@ -32,6 +34,16 @@ ENDPOINT_TEST_ARGUMENTS = {
         "request_parameters": get_outbound_sms_message_logs_query_parameters(),
         "method_name": "get_outbound_sms_message_logs",
     },
+    "get_inbound_sms_messages": {
+        "endpoint": "/sms/1/inbox/reports",
+        "http_method": "GET",
+        "expected_headers": get_expected_get_headers(),
+        "expected_path_parameters": None,
+        "expected_query_parameters": "limit=2",
+        "expected_json": None,
+        "request_parameters": get_inbound_sms_messages_query_parameters(),
+        "method_name": "get_inbound_sms_messages",
+    },
 }
 
 
@@ -48,6 +60,8 @@ def case__supported_status(endpoint_type, responses):
 
     if endpoint_type == "get_outbound_sms_message_logs" and responses[0] == 200:
         response_content = get_outbound_sms_message_logs_response
+    if endpoint_type == "get_inbound_sms_messages" and responses[0] == 200:
+        response_content = get_inbound_sms_messages_response
 
     return (
         status_code,
@@ -65,7 +79,6 @@ def case__supported_status(endpoint_type, responses):
 
 @parametrize(endpoint_type=ENDPOINT_TEST_ARGUMENTS.keys())
 def case__unsupported_status(endpoint_type):
-
     return (
         201,
         get_sms_request_error_response(),
