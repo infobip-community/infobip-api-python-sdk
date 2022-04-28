@@ -42,7 +42,7 @@ class SendSMSMessageQueryParameters(QueryParameter):
     notify_content_type: Optional[ContentTypeEnum] = None
     callback_data: Optional[str] = None
     validity_period: Optional[conint(gt=0, le=2880)]
-    send_at: Optional[Union[datetime, str]] = None  # todo validation
+    send_at: Optional[Union[datetime, str]] = None
     track: Optional[TrackEnum] = None
     process_key: Optional[str] = None
     tracking_type: Optional[str] = None

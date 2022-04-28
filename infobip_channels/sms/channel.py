@@ -8,10 +8,16 @@ from infobip_channels.core.models import PostHeaders, QueryParameter, ResponseBa
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
+from infobip_channels.sms.models.query_parameters.get_outbound_delivery_reports import (
+    GetOutboundSMSDeliveryReportsQueryParameters,
+)
 from infobip_channels.sms.models.query_parameters.sms_send_message import (
     SendSMSMessageQueryParameters,
 )
 from infobip_channels.sms.models.response.core import SMSResponseError
+from infobip_channels.sms.models.response.outbound_delivery_reports import (
+    OutboundDeliveryReportsResponse,
+)
 from infobip_channels.sms.models.response.preview_message import (
     PreviewSMSMessageResponse,
 )
@@ -118,6 +124,7 @@ class SMSChannel(Channel):
             query_parameters, SendSMSMessageQueryParameters
         )
         query_parameters.url_encode()
+
         response = self._client.get(
             self.SMS_URL_TEMPLATE_VERSION_1 + "text/query",
             params=query_parameters.dict(by_alias=True),
@@ -143,3 +150,28 @@ class SMSChannel(Channel):
             PostHeaders(authorization=self._client.auth.api_key),
         )
         return self._construct_response(response, PreviewSMSMessageResponse)
+
+    def get_outbound_sms_delivery_reports(
+        self,
+        query_parameters: Union[
+            GetOutboundSMSDeliveryReportsQueryParameters, Dict
+        ] = {},
+    ) -> Union[ResponseBase, Any]:
+        """f you are for any reason unable to receive real-time delivery reports on
+        your endpoint, you can use this API method to learn if and when the message
+        has been delivered to the recipient. Each request will return a batch of
+        delivery reports - only once. The following API request will return only new
+        reports that arrived since the last API request in the last 48 hours.
+
+        :param query_parameters: Query parameters to send with the request
+        :return: Received response
+        """
+        query_parameters = self.validate_query_parameter(
+            query_parameters, GetOutboundSMSDeliveryReportsQueryParameters
+        )
+
+        response = self._client.get(
+            self.SMS_URL_TEMPLATE_VERSION_1 + "reports",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, OutboundDeliveryReportsResponse)
