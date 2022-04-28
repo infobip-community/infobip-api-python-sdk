@@ -18,7 +18,7 @@ class GetOutboundSMSLogsQueryParameters(QueryParameter, ConvertTimeToCorrectForm
     general_status: Optional[GeneralStatus] = None
     sent_since: Optional[Union[datetime, str]] = None
     sent_until: Optional[Union[datetime, str]] = None
-    limit: Optional[conint(le=1000)] = None
+    limit: Optional[conint(ge=1, le=1000)] = None
     mcc: Optional[str] = None
     mnc: Optional[str] = None
 
