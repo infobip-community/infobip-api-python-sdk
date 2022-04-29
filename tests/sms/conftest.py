@@ -1,6 +1,9 @@
 from pydantic_factories import ModelFactory
 
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
+from infobip_channels.sms.models.body.reschedule_sms_messages import (
+    RescheduleSMSMessagesMessageBody,
+)
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
@@ -36,6 +39,21 @@ class GenerateSendSMSMessageResponse(ModelFactory):
     __model__ = SendSMSResponse
 
 
+class GeneratePreviewSMSMessageBodyFactory(ModelFactory):
+    __model__ = PreviewSMSMessage
+
+
+class GenerateRescheduleSMSMessagesFactory(ModelFactory):
+    __model__ = RescheduleSMSMessagesMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return RescheduleSMSMessagesMessageBody(
+            **get_reschedule_sms_messages_message_body()
+        )
+
+
 def get_send_sms_message_body():
     return {
         "messages": [
@@ -46,10 +64,6 @@ def get_send_sms_message_body():
             }
         ]
     }
-
-
-class GeneratePreviewSMSMessageBodyFactory(ModelFactory):
-    __model__ = PreviewSMSMessage
 
 
 def get_preview_send_sms_message_body():
@@ -86,6 +100,14 @@ def get_send_binary_sms_message_body():
     }
 
 
+def get_reschedule_sms_messages_query_parameters():
+    return {"bulkId": "35122736310703571952"}
+
+
+def get_reschedule_sms_messages_message_body():
+    return {"sendAt": "2021-08-25T16:00:00.000"}
+
+
 def get_sms_request_response():
     return {
         "bulkId": "2034072219640523072",
@@ -103,6 +125,10 @@ def get_sms_request_response():
             }
         ],
     }
+
+
+def get_scheduled_sms_messages_response():
+    return {"bulkId": "BulkId-xyz-123", "sendAt": "2021-08-25T16:00:00.000"}
 
 
 def get_sms_request_error_response():
@@ -276,4 +302,10 @@ def get_outbound_sms_message_logs_query_parameters():
 def get_inbound_sms_messages_query_parameters():
     return {
         "limit": 2,
+    }
+
+
+def get_scheduled_sms_messages():
+    return {
+        "bulk_id": "BulkId-xyz-123",
     }
