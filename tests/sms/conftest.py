@@ -6,6 +6,9 @@ from infobip_channels.sms.models.body.reschedule_sms_messages import (
 )
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
+from infobip_channels.sms.models.body.update_scheduled_messages_status import (
+    UpdateScheduledSMSMessagesMessageBody,
+)
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
 
@@ -52,6 +55,10 @@ class GenerateRescheduleSMSMessagesFactory(ModelFactory):
         return RescheduleSMSMessagesMessageBody(
             **get_reschedule_sms_messages_message_body()
         )
+
+
+class GenerateUpdateScheduledSMSMessagesStatusFactory(ModelFactory):
+    __model__ = UpdateScheduledSMSMessagesMessageBody
 
 
 def get_send_sms_message_body():
@@ -129,6 +136,10 @@ def get_sms_request_response():
 
 def get_scheduled_sms_messages_response():
     return {"bulkId": "BulkId-xyz-123", "sendAt": "2021-08-25T16:00:00.000"}
+
+
+def get_update_scheduled_sms_messages_status_response():
+    return {"bulkId": "BulkId-xyz-123", "status": "PAUSED"}
 
 
 def get_scheduled_sms_messages_status_response():
