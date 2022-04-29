@@ -71,19 +71,26 @@ class _HttpClient:
         return requests.get(url=url, headers=headers.dict(by_alias=True), params=params)
 
     def put(
-        self, endpoint: str, body: Dict, headers: RequestHeaders = None
+        self,
+        endpoint: str,
+        body: Dict,
+        headers: RequestHeaders = None,
+        params: Dict = None,
     ) -> requests.Response:
         """Send an HTTP put request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
         :param headers: Request headers
         :param body: Body to send with the request
+        :param params: Dictionary of query parameters
         :return: Received response
         """
         headers = headers or self.put_headers
         url = self.auth.base_url + endpoint
 
-        return requests.put(url=url, json=body, headers=headers.dict(by_alias=True))
+        return requests.put(
+            url=url, json=body, headers=headers.dict(by_alias=True), params=params
+        )
 
     def delete(
         self, endpoint: str, headers: RequestHeaders = None
@@ -91,6 +98,7 @@ class _HttpClient:
         """Send an HTTP delete request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
+        :param headers: Request headers
         :return: Received response
         """
         headers = headers or self.delete_headers

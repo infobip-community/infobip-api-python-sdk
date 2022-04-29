@@ -38,3 +38,8 @@ class CoreResult(CamelCaseModel):
     price: Optional[Price] = None
     status: Optional[ResponseStatus] = None
     error: Optional[Error] = None
+
+
+class ScheduledSMSMessages(ResponseBase):
+    bulk_id: Optional[str] = None
+    send_at: Optional[str] = None

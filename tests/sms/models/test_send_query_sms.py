@@ -3,7 +3,7 @@ from datetime import date, datetime, timedelta
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.sms.models.query_parameters.send_sms_send_message import (
+from infobip_channels.sms.models.query_parameters.send_message import (
     SendSMSMessageQueryParameters,
 )
 

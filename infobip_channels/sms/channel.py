@@ -4,11 +4,19 @@ from typing import Any, Dict, Type, Union
 import requests
 
 from infobip_channels.core.channel import Channel
-from infobip_channels.core.models import PostHeaders, QueryParameter, ResponseBase
+from infobip_channels.core.models import (
+    PostHeaders,
+    PutHeaders,
+    QueryParameter,
+    ResponseBase,
+)
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
+from infobip_channels.sms.models.body.reschedule_sms_messages import (
+    RescheduleSMSMessagesMessageBody,
+)
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
-from infobip_channels.sms.models.query_parameters.get_inbound_sms_messages import (
+from infobip_channels.sms.models.query_parameters.get_inbound_messages import (
     GetInboundSMSMessagesQueryParameters,
 )
 from infobip_channels.sms.models.query_parameters.get_outbound_delivery_reports import (
@@ -17,10 +25,19 @@ from infobip_channels.sms.models.query_parameters.get_outbound_delivery_reports 
 from infobip_channels.sms.models.query_parameters.get_outbound_logs import (
     GetOutboundSMSLogsQueryParameters,
 )
-from infobip_channels.sms.models.query_parameters.send_sms_send_message import (
+from infobip_channels.sms.models.query_parameters.get_scheduled_messages import (
+    GetScheduledSMSMessagesQueryParameters,
+)
+from infobip_channels.sms.models.query_parameters.reschedule_sms_messages import (
+    RescheduleSMSMessagesQueryParameters,
+)
+from infobip_channels.sms.models.query_parameters.send_message import (
     SendSMSMessageQueryParameters,
 )
 from infobip_channels.sms.models.response.core import SMSResponseError
+from infobip_channels.sms.models.response.get_scheduled_messages import (
+    GetScheduledSMSMessagesResponse,
+)
 from infobip_channels.sms.models.response.inbound_messages import (
     InboundSMSMessagesResponse,
 )
@@ -32,6 +49,9 @@ from infobip_channels.sms.models.response.outbound_message_logs import (
 )
 from infobip_channels.sms.models.response.preview_message import (
     PreviewSMSMessageResponse,
+)
+from infobip_channels.sms.models.response.reschedule_sms_messages import (
+    RescheduleSMSMessagesResponse,
 )
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
@@ -231,3 +251,48 @@ class SMSChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, InboundSMSMessagesResponse)
+
+    def get_scheduled_sms_messages(
+        self,
+        query_parameters: Union[GetScheduledSMSMessagesQueryParameters, Dict],
+    ) -> Union[ResponseBase, Any]:
+        """See the status and the scheduled time of your SMS messages.
+
+        :param query_parameters: Query parameters to send with the request
+        :return: Received response
+        """
+        query_parameters = self.validate_query_parameter(
+            query_parameters, GetScheduledSMSMessagesQueryParameters
+        )
+
+        response = self._client.get(
+            self.SMS_URL_TEMPLATE_VERSION_1 + "bulks",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, GetScheduledSMSMessagesResponse)
+
+    def reschedule_sms_messages(
+        self,
+        query_parameters: Union[RescheduleSMSMessagesQueryParameters, Dict],
+        message: Union[RescheduleSMSMessagesMessageBody, Dict],
+    ) -> Union[ResponseBase, Any]:
+        """Change the date and time for sending scheduled messages.
+
+        :param query_parameters: Query parameters to send with the request
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        query_parameters = self.validate_query_parameter(
+            query_parameters, RescheduleSMSMessagesQueryParameters
+        )
+
+        message = self.validate_message_body(message, RescheduleSMSMessagesMessageBody)
+
+        response = self._client.put(
+            self.SMS_URL_TEMPLATE_VERSION_1 + "bulks",
+            message.dict(by_alias=True),
+            PutHeaders(authorization=self._client.auth.api_key),
+            query_parameters.dict(by_alias=True),
+        )
+
+        return self._construct_response(response, RescheduleSMSMessagesResponse)

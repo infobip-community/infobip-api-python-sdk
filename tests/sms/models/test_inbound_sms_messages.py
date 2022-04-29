@@ -1,7 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.sms.models.query_parameters.get_inbound_sms_messages import (
+from infobip_channels.sms.models.query_parameters.get_inbound_messages import (
     GetInboundSMSMessagesQueryParameters,
 )
 
