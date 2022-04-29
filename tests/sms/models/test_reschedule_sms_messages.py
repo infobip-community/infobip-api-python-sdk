@@ -6,7 +6,7 @@ from pydantic.error_wrappers import ValidationError
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
 )
-from infobip_channels.sms.models.query_parameters.reschedule_sms_messages import (
+from infobip_channels.sms.models.query_parameters.reschedule_messages import (
     RescheduleSMSMessagesQueryParameters,
 )
 

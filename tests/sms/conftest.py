@@ -131,6 +131,10 @@ def get_scheduled_sms_messages_response():
     return {"bulkId": "BulkId-xyz-123", "sendAt": "2021-08-25T16:00:00.000"}
 
 
+def get_scheduled_sms_messages_status_response():
+    return {"bulkId": "BulkId-xyz-123", "status": "PENDING"}
+
+
 def get_sms_request_error_response():
     return {
         "requestError": {

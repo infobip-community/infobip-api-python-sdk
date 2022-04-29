@@ -41,5 +41,4 @@ class CoreResult(CamelCaseModel):
 
 
 class ScheduledSMSMessages(ResponseBase):
-    bulk_id: Optional[str] = None
-    send_at: Optional[str] = None
+    bulk_id: str

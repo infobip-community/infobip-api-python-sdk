@@ -28,7 +28,10 @@ from infobip_channels.sms.models.query_parameters.get_outbound_logs import (
 from infobip_channels.sms.models.query_parameters.get_scheduled_messages import (
     GetScheduledSMSMessagesQueryParameters,
 )
-from infobip_channels.sms.models.query_parameters.reschedule_sms_messages import (
+from infobip_channels.sms.models.query_parameters.get_scheduled_messages_status import (
+    GetScheduledSMSMessagesStatusQueryParameters,
+)
+from infobip_channels.sms.models.query_parameters.reschedule_messages import (
     RescheduleSMSMessagesQueryParameters,
 )
 from infobip_channels.sms.models.query_parameters.send_message import (
@@ -37,6 +40,9 @@ from infobip_channels.sms.models.query_parameters.send_message import (
 from infobip_channels.sms.models.response.core import SMSResponseError
 from infobip_channels.sms.models.response.get_scheduled_messages import (
     GetScheduledSMSMessagesResponse,
+)
+from infobip_channels.sms.models.response.get_scheduled_messages_status import (
+    GetScheduledSMSMessagesStatusResponse,
 )
 from infobip_channels.sms.models.response.inbound_messages import (
     InboundSMSMessagesResponse,
@@ -296,3 +302,22 @@ class SMSChannel(Channel):
         )
 
         return self._construct_response(response, RescheduleSMSMessagesResponse)
+
+    def get_scheduled_sms_messages_status(
+        self,
+        query_parameters: Union[GetScheduledSMSMessagesStatusQueryParameters, Dict],
+    ) -> Union[ResponseBase, Any]:
+        """See the status of scheduled messages.
+
+        :param query_parameters: Query parameters to send with the request
+        :return: Received response
+        """
+        query_parameters = self.validate_query_parameter(
+            query_parameters, GetScheduledSMSMessagesStatusQueryParameters
+        )
+
+        response = self._client.get(
+            self.SMS_URL_TEMPLATE_VERSION_1 + "bulks/status",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, GetScheduledSMSMessagesStatusResponse)
