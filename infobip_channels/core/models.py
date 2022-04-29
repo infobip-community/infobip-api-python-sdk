@@ -190,6 +190,15 @@ class GeneralStatus(str, Enum):
     EXPIRED = "EXPIRED"
 
 
+class MessageStatus(str, Enum):
+    PENDING = "PENDING"
+    PAUSED = "PAUSED"
+    PROCESSING = "PROCESSING"
+    CANCELED = "CANCELED"
+    FINISHED = "FINISHED"
+    FAILED = "FAILED"
+
+
 class MultipartMixin:
     """Mixin used for allowing models to export their fields to a multipart/form-data
     format. Field types currently supported are listed in the

@@ -16,6 +16,9 @@ from infobip_channels.sms.models.body.reschedule_sms_messages import (
 )
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
+from infobip_channels.sms.models.body.update_scheduled_messages_status import (
+    UpdateScheduledSMSMessagesMessageBody,
+)
 from infobip_channels.sms.models.query_parameters.get_inbound_messages import (
     GetInboundSMSMessagesQueryParameters,
 )
@@ -36,6 +39,9 @@ from infobip_channels.sms.models.query_parameters.reschedule_messages import (
 )
 from infobip_channels.sms.models.query_parameters.send_message import (
     SendSMSMessageQueryParameters,
+)
+from infobip_channels.sms.models.query_parameters.update_scheduled_messages_status import (
+    UpdateScheduledSMSMessagesQueryParameters,
 )
 from infobip_channels.sms.models.response.core import SMSResponseError
 from infobip_channels.sms.models.response.get_scheduled_messages import (
@@ -60,6 +66,9 @@ from infobip_channels.sms.models.response.reschedule_sms_messages import (
     RescheduleSMSMessagesResponse,
 )
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
+from infobip_channels.sms.models.response.update_scheduled_messages_status import (
+    UpdateScheduledSMSMessagesStatusResponse,
+)
 
 
 class SMSChannel(Channel):
@@ -321,3 +330,33 @@ class SMSChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, GetScheduledSMSMessagesStatusResponse)
+
+    def update_scheduled_sms_messages_status(
+        self,
+        query_parameters: Union[UpdateScheduledSMSMessagesQueryParameters, Dict],
+        message: Union[UpdateScheduledSMSMessagesMessageBody, Dict],
+    ) -> Union[ResponseBase, Any]:
+        """Change status or completely cancel sending of scheduled messages.
+
+        :param query_parameters: Query parameters to send with the request
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        query_parameters = self.validate_query_parameter(
+            query_parameters, UpdateScheduledSMSMessagesQueryParameters
+        )
+
+        message = self.validate_message_body(
+            message, UpdateScheduledSMSMessagesMessageBody
+        )
+
+        response = self._client.put(
+            self.SMS_URL_TEMPLATE_VERSION_1 + "bulks/status",
+            message.dict(by_alias=True),
+            PutHeaders(authorization=self._client.auth.api_key),
+            query_parameters.dict(by_alias=True),
+        )
+
+        return self._construct_response(
+            response, UpdateScheduledSMSMessagesStatusResponse
+        )
