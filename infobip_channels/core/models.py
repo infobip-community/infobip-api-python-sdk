@@ -65,8 +65,42 @@ class UrlLengthValidatorMixin:
         return value
 
 
+class FromAndToTimeValidator:
+    _MINIMUM_DELIVERY_WINDOW_MINUTES = 60
+
+    @classmethod
+    def _validate_time_differences(cls, from_time, to_time):
+        from_time_in_minutes = from_time.hour * 60 + from_time.minute
+        to_time_in_minutes = to_time.hour * 60 + to_time.minute
+
+        if (
+            to_time_in_minutes - from_time_in_minutes
+            < cls._MINIMUM_DELIVERY_WINDOW_MINUTES
+        ):
+            raise ValueError(
+                f"Minimum of {cls._MINIMUM_DELIVERY_WINDOW_MINUTES} minutes has to pass "
+                f"between from and to delivery window times."
+            )
+
+    @classmethod
+    def validate_from_and_to(cls, values):
+        if not values.get("from_time") and not values.get("to"):
+            return values
+
+        if values.get("from_time") and not values.get("to"):
+            raise ValueError("If 'from_time' is set, 'to' has to be set also")
+
+        if values.get("to") and not values.get("from_time"):
+            raise ValueError("If 'to' is set, 'from_time' has to be set also")
+
+        cls._validate_time_differences(values["from_time"], values["to"])
+
+        return values
+
+
 class DateTimeValidator:
     _MAX_TIME_LIMIT = 180
+    _EXPECTED_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
     @classmethod
     def convert_to_date_time_format(cls, value):
@@ -81,7 +115,7 @@ class DateTimeValidator:
     def convert_time_to_correct_format(cls, value) -> str:
         date_time_format = cls.convert_to_date_time_format(value)
 
-        return date_time_format.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        return date_time_format.strftime(cls._EXPECTED_TIME_FORMAT)
 
     @classmethod
     def convert_time_to_correct_format_validate_limit(cls, value):
@@ -90,10 +124,10 @@ class DateTimeValidator:
 
         if date_time_format > datetime.now() + timedelta(days=cls._MAX_TIME_LIMIT):
             raise ValueError(
-                "Scheduled message must me sooner than 180 days from today"
+                "Scheduled message must be sooner than 180 days from today"
             )
-        else:
-            return value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+        return value.strftime(cls._EXPECTED_TIME_FORMAT)
 
 
 class CamelCaseModel(BaseModel):
@@ -294,3 +328,13 @@ class MultipartMixin:
             model_aliased = model.dict(by_alias=True)
 
         return json.dumps(model_aliased)
+
+
+class DaysEnum(str, Enum):
+    MONDAY = "MONDAY"
+    TUESDAY = "TUESDAY"
+    WEDNESDAY = "WEDNESDAY"
+    THURSDAY = "THURSDAY"
+    FRIDAY = "FRIDAY"
+    SATURDAY = "SATURDAY"
+    SUNDAY = "SUNDAY"

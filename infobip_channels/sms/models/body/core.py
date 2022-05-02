@@ -13,9 +13,12 @@ from pydantic import (
     validator,
 )
 
-from infobip_channels.core.models import CamelCaseModel, DateTimeValidator
-
-MINIMUM_DELIVERY_WINDOW_MINUTES = 60
+from infobip_channels.core.models import (
+    CamelCaseModel,
+    DateTimeValidator,
+    DaysEnum,
+    FromAndToTimeValidator,
+)
 
 
 class ContentTypeEnum(str, Enum):
@@ -39,16 +42,6 @@ class TimeUnitEnum(str, Enum):
     DAY = "DAY"
 
 
-class DaysEnum(str, Enum):
-    MONDAY = "MONDAY"
-    TUESDAY = "TUESDAY"
-    WEDNESDAY = "WEDNESDAY"
-    THURSDAY = "THURSDAY"
-    FRIDAY = "FRIDAY"
-    SATURDAY = "SATURDAY"
-    SUNDAY = "SUNDAY"
-
-
 class IndiaDlt(CamelCaseModel):
     content_template_id: Optional[str] = None
     principal_entity_id: str
@@ -68,36 +61,14 @@ class Destination(CamelCaseModel):
     to: constr(min_length=0, max_length=50)
 
 
-class DeliveryTimeWindow(CamelCaseModel):
+class DeliveryTimeWindow(CamelCaseModel, FromAndToTimeValidator):
     days: conlist(DaysEnum, min_items=1)
     from_time: Optional[Time] = Field(alias="from", default=None)
     to: Optional[Time] = None
 
     @root_validator
     def validate_from_and_to(cls, values):
-        if not values.get("from_time") and not values.get("to"):
-            return values
-
-        if values.get("from_time") and not values.get("to"):
-            raise ValueError("If 'from_time' is set, 'to' has to be set also")
-
-        if values.get("to") and not values.get("from_time"):
-            raise ValueError("If 'to' is set, 'from_time' has to be set also")
-
-        cls._validate_time_differences(values["from_time"], values["to"])
-
-        return values
-
-    @classmethod
-    def _validate_time_differences(cls, from_time: Time, to_time: Time):
-        from_time_in_minutes = from_time.hour * 60 + from_time.minute
-        to_time_in_minutes = to_time.hour * 60 + to_time.minute
-
-        if to_time_in_minutes - from_time_in_minutes < MINIMUM_DELIVERY_WINDOW_MINUTES:
-            raise ValueError(
-                f"Minimum of {MINIMUM_DELIVERY_WINDOW_MINUTES} minutes has to pass "
-                f"between from and to delivery window times."
-            )
+        return super().validate_from_and_to(values)
 
 
 class CoreMessage(CamelCaseModel, DateTimeValidator):

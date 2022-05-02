@@ -4,7 +4,7 @@ from typing import Any, Dict, Type, Union
 import requests
 
 from infobip_channels.core.channel import Channel
-from infobip_channels.core.models import PostHeaders, QueryParameter, ResponseBase
+from infobip_channels.core.models import PostHeaders, ResponseBase
 from infobip_channels.mms.models.body.send_mms import MMSMessageBody
 from infobip_channels.mms.models.query_parameters.get_inbound_mms_messages import (
     GetInboundMMSMessagesQueryParameters,
@@ -25,24 +25,6 @@ class MMSChannel(Channel):
     """Class used for interaction with the Infobip's MMS API."""
 
     MMS_URL_TEMPLATE = "/mms/1/"
-
-    @staticmethod
-    def validate_query_parameter(
-        parameter: Union[QueryParameter, Dict], parameter_type: Type[QueryParameter]
-    ) -> QueryParameter:
-        """
-        Validate the query parameter by trying to instantiate the provided class.
-        If the passed parameter is already of that type, just return it as is.
-
-        :param parameter: Query parameter to validate
-        :param parameter_type: Type of the query parameter
-        :return: Class instance corresponding to the provided parameter type
-        """
-        return (
-            parameter
-            if isinstance(parameter, parameter_type)
-            else parameter_type(**parameter)
-        )
 
     def _get_custom_response_class(
         self,

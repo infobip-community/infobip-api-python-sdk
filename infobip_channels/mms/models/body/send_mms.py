@@ -1,5 +1,4 @@
 from datetime import datetime
-from enum import Enum
 from io import IOBase
 from typing import List, Optional, Union
 
@@ -17,21 +16,14 @@ from pydantic import (
 from infobip_channels.core.models import (
     XML,
     CamelCaseModel,
+    DateTimeValidator,
+    DaysEnum,
+    FromAndToTimeValidator,
     MessageBodyBase,
     MultipartMixin,
 )
 
 MINIMUM_DELIVERY_WINDOW_MINUTES = 60
-
-
-class DaysEnum(str, Enum):
-    MONDAY = "MONDAY"
-    TUESDAY = "TUESDAY"
-    WEDNESDAY = "WEDNESDAY"
-    THURSDAY = "THURSDAY"
-    FRIDAY = "FRIDAY"
-    SATURDAY = "SATURDAY"
-    SUNDAY = "SUNDAY"
 
 
 class Time(CamelCaseModel):
@@ -45,39 +37,17 @@ class ExternallyHostedMedia(CamelCaseModel):
     content_url: AnyHttpUrl
 
 
-class DeliveryTimeWindow(CamelCaseModel):
+class DeliveryTimeWindow(CamelCaseModel, FromAndToTimeValidator):
     days: conlist(DaysEnum, min_items=1)
     from_time: Optional[Time] = Field(alias="from", default=None)
     to: Optional[Time] = None
 
     @root_validator
     def validate_from_and_to(cls, values):
-        if not values.get("from_time") and not values.get("to"):
-            return values
-
-        if values.get("from_time") and not values.get("to"):
-            raise ValueError("If 'from_time' is set, 'to' has to be set also")
-
-        if values.get("to") and not values.get("from_time"):
-            raise ValueError("If 'to' is set, 'from_time' has to be set also")
-
-        cls._validate_time_differences(values["from_time"], values["to"])
-
-        return values
-
-    @classmethod
-    def _validate_time_differences(cls, from_time: Time, to_time: Time):
-        from_time_in_minutes = from_time.hour * 60 + from_time.minute
-        to_time_in_minutes = to_time.hour * 60 + to_time.minute
-
-        if to_time_in_minutes - from_time_in_minutes < MINIMUM_DELIVERY_WINDOW_MINUTES:
-            raise ValueError(
-                f"Minimum of {MINIMUM_DELIVERY_WINDOW_MINUTES} minutes has to pass "
-                f"between from and to delivery window times."
-            )
+        return super().validate_from_and_to(values)
 
 
-class Head(CamelCaseModel):
+class Head(CamelCaseModel, DateTimeValidator):
     from_number: str = Field(alias="from")
     to: str
     id: Optional[str] = None
@@ -91,14 +61,7 @@ class Head(CamelCaseModel):
 
     @validator("send_at")
     def convert_send_at_to_correct_format(cls, value):
-        if not value:
-            return
-
-        if isinstance(value, str):
-            value = datetime.fromisoformat(value)
-
-        time_with_microseconds = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        return time_with_microseconds.split("Z")[0][:-3] + "Z"
+        return super().convert_time_to_correct_format(value)
 
 
 class MMSMessageBody(MultipartMixin, MessageBodyBase):

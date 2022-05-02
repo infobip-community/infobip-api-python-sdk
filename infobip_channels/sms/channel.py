@@ -4,12 +4,7 @@ from typing import Any, Dict, Type, Union
 import requests
 
 from infobip_channels.core.channel import Channel
-from infobip_channels.core.models import (
-    PostHeaders,
-    PutHeaders,
-    QueryParameter,
-    ResponseBase,
-)
+from infobip_channels.core.models import PostHeaders, ResponseBase
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
@@ -77,24 +72,6 @@ class SMSChannel(Channel):
     SMS_URL_TEMPLATE_VERSION_1 = "/sms/1/"
     SMS_URL_TEMPLATE_VERSION_2 = "/sms/2/"
 
-    @staticmethod
-    def validate_query_parameter(
-        parameter: Union[QueryParameter, Dict], parameter_type: Type[QueryParameter]
-    ) -> QueryParameter:
-        """
-        Validate the query parameter by trying to instantiate the provided class.
-        If the passed parameter is already of that type, just return it as is.
-
-        :param parameter: Query parameter to validate
-        :param parameter_type: Type of the query parameter
-        :return: Class instance corresponding to the provided parameter type
-        """
-        return (
-            parameter
-            if isinstance(parameter, parameter_type)
-            else parameter_type(**parameter)
-        )
-
     def _get_custom_response_class(
         self,
         raw_response: Union[requests.Response, Any],
@@ -103,7 +80,7 @@ class SMSChannel(Channel):
         **kwargs
     ) -> Type[ResponseBase]:
 
-        if raw_response.status_code in (HTTPStatus.OK,):
+        if raw_response.status_code == HTTPStatus.OK:
             return response_class
         elif raw_response.status_code in (
             HTTPStatus.BAD_REQUEST,
@@ -151,7 +128,6 @@ class SMSChannel(Channel):
         response = self._client.post(
             self.SMS_URL_TEMPLATE_VERSION_2 + "binary/advanced",
             message.dict(by_alias=True),
-            PostHeaders(authorization=self._client.auth.api_key),
         )
         return self._construct_response(response, SendSMSResponse)
 
@@ -192,7 +168,6 @@ class SMSChannel(Channel):
         response = self._client.post(
             self.SMS_URL_TEMPLATE_VERSION_1 + "preview",
             message.dict(by_alias=True),
-            PostHeaders(authorization=self._client.auth.api_key),
         )
         return self._construct_response(response, PreviewSMSMessageResponse)
 
@@ -200,7 +175,7 @@ class SMSChannel(Channel):
         self,
         query_parameters: Union[
             GetOutboundSMSDeliveryReportsQueryParameters, Dict
-        ] = {},
+        ] = None,
     ) -> Union[ResponseBase, Any]:
         """If you are for any reason unable to receive real-time delivery reports on
         your endpoint, you can use this API method to learn if and when the message
@@ -212,7 +187,7 @@ class SMSChannel(Channel):
         :return: Received response
         """
         query_parameters = self.validate_query_parameter(
-            query_parameters, GetOutboundSMSDeliveryReportsQueryParameters
+            query_parameters or {}, GetOutboundSMSDeliveryReportsQueryParameters
         )
 
         response = self._client.get(
@@ -223,7 +198,7 @@ class SMSChannel(Channel):
 
     def get_outbound_sms_message_logs(
         self,
-        query_parameters: Union[GetOutboundSMSLogsQueryParameters, Dict] = {},
+        query_parameters: Union[GetOutboundSMSLogsQueryParameters, Dict] = None,
     ) -> Union[ResponseBase, Any]:
         """Use this method for displaying logs for example in the user interface.
         Available are the logs for the last 48 hours and you can only retrieve
@@ -234,7 +209,7 @@ class SMSChannel(Channel):
         :return: Received response
         """
         query_parameters = self.validate_query_parameter(
-            query_parameters, GetOutboundSMSLogsQueryParameters
+            query_parameters or {}, GetOutboundSMSLogsQueryParameters
         )
 
         response = self._client.get(
@@ -245,7 +220,7 @@ class SMSChannel(Channel):
 
     def get_inbound_sms_messages(
         self,
-        query_parameters: Union[GetInboundSMSMessagesQueryParameters, Dict] = {},
+        query_parameters: Union[GetInboundSMSMessagesQueryParameters, Dict] = None,
     ) -> Union[ResponseBase, Any]:
         """If for some reason you are unable to receive incoming SMS to the endpoint
         of your choice in real time, you can use this API call to fetch messages.
@@ -256,7 +231,7 @@ class SMSChannel(Channel):
         :return: Received response
         """
         query_parameters = self.validate_query_parameter(
-            query_parameters, GetInboundSMSMessagesQueryParameters
+            query_parameters or {}, GetInboundSMSMessagesQueryParameters
         )
 
         response = self._client.get(
@@ -304,8 +279,7 @@ class SMSChannel(Channel):
         response = self._client.put(
             self.SMS_URL_TEMPLATE_VERSION_1 + "bulks",
             message.dict(by_alias=True),
-            PutHeaders(authorization=self._client.auth.api_key),
-            query_parameters.dict(by_alias=True),
+            params=query_parameters.dict(by_alias=True),
         )
 
         return self._construct_response(response, RescheduleSMSMessagesResponse)
@@ -351,8 +325,7 @@ class SMSChannel(Channel):
         response = self._client.put(
             self.SMS_URL_TEMPLATE_VERSION_1 + "bulks/status",
             message.dict(by_alias=True),
-            PutHeaders(authorization=self._client.auth.api_key),
-            query_parameters.dict(by_alias=True),
+            params=query_parameters.dict(by_alias=True),
         )
 
         return self._construct_response(
