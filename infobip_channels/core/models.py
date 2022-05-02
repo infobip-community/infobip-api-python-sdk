@@ -2,7 +2,7 @@ import json
 import os
 import urllib.parse
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 from http import HTTPStatus
 from io import IOBase
@@ -65,18 +65,35 @@ class UrlLengthValidatorMixin:
         return value
 
 
-class ConvertTimeToCorrectFormat:
+class DateTimeValidator:
+    _MAX_TIME_LIMIT = 180
+
     @classmethod
-    def convert_time_to_correct_format(cls, value):
+    def convert_to_date_time_format(cls, value):
         if not value:
             return
-
         if isinstance(value, str):
             value = datetime.fromisoformat(value)
 
-        time_with_microseconds = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        return value
 
-        return time_with_microseconds.split("Z")[0][:-3] + "Z"
+    @classmethod
+    def convert_time_to_correct_format(cls, value) -> str:
+        date_time_format = cls.convert_to_date_time_format(value)
+
+        return date_time_format.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    @classmethod
+    def convert_time_to_correct_format_validate_limit(cls, value):
+
+        date_time_format = cls.convert_to_date_time_format(value)
+
+        if date_time_format > datetime.now() + timedelta(days=cls._MAX_TIME_LIMIT):
+            raise ValueError(
+                "Scheduled message must me sooner than 180 days from today"
+            )
+        else:
+            return value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 class CamelCaseModel(BaseModel):

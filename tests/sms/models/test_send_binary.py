@@ -171,7 +171,10 @@ def test_when_notify_url_is_invalid__validation_error_is_raised(notify_url):
         )
 
 
-@pytest.mark.parametrize("send_at", [{}, "Test", "22-03-2022", date.today()])
+@pytest.mark.parametrize(
+    "send_at",
+    [{}, "Test", "22-03-2022", date.today(), datetime.now() + timedelta(days=181)],
+)
 def test_when_send_at_is_invalid__validation_error_is_raised(send_at):
     with pytest.raises(ValidationError):
         GenerateBinarySMSMessageBodyFactory.build(

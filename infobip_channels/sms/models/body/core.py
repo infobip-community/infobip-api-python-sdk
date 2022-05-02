@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
@@ -13,7 +13,7 @@ from pydantic import (
     validator,
 )
 
-from infobip_channels.core.models import CamelCaseModel
+from infobip_channels.core.models import CamelCaseModel, DateTimeValidator
 
 MINIMUM_DELIVERY_WINDOW_MINUTES = 60
 
@@ -100,7 +100,7 @@ class DeliveryTimeWindow(CamelCaseModel):
             )
 
 
-class CoreMessage(CamelCaseModel):
+class CoreMessage(CamelCaseModel, DateTimeValidator):
     callback_data: Optional[constr(min_length=0, max_length=4000)] = None
     delivery_time_window: Optional[DeliveryTimeWindow] = None
     destinations: List[Destination]
@@ -114,20 +114,8 @@ class CoreMessage(CamelCaseModel):
     validity_period: Optional[conint(gt=0, le=2880)]
 
     @validator("send_at")
-    def convert_send_at_to_correct_format(cls, value):
-        if not value:
-            return
-
-        if isinstance(value, str):
-            value = datetime.fromisoformat(value)
-
-        time_with_microseconds = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        if value > datetime.now() + timedelta(days=180):
-            raise ValueError(
-                "Scheduled message must me sooner than 180 days from today"
-            )
-        else:
-            return time_with_microseconds.split("Z")[0][:-3] + "Z"
+    def convert_send_at_time_to_correct_format_validate_limit(cls, value):
+        return super().convert_time_to_correct_format_validate_limit(value)
 
 
 class SendingSpeedLimit(CamelCaseModel):

@@ -4,13 +4,13 @@ from typing import List, Optional, Union
 from pydantic import Field, conint, validator
 
 from infobip_channels.core.models import (
-    ConvertTimeToCorrectFormat,
+    DateTimeValidator,
     GeneralStatus,
     QueryParameter,
 )
 
 
-class GetOutboundSMSLogsQueryParameters(QueryParameter, ConvertTimeToCorrectFormat):
+class GetOutboundSMSLogsQueryParameters(QueryParameter, DateTimeValidator):
     from_name: Optional[str] = Field(alias="from", default=None)
     to: Optional[str] = None
     bulk_id: Optional[List[str]] = None

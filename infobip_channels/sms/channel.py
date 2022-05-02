@@ -161,8 +161,6 @@ class SMSChannel(Channel):
         """
         All message parameters of the message can be defined in the query string. Use
         this method only if Send SMS message is not an option for your use case!
-        Note: Make sure that special characters and user credentials are properly
-        encoded
 
         :param query_parameters: Query parameters to send with the request
         :return: Received response

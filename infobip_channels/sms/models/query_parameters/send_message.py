@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
 from typing import List, Optional, Union
 
 from pydantic import AnyHttpUrl, Field, StrictBool, conint, validator
 
-from infobip_channels.core.models import QueryParameter, url_encoding
+from infobip_channels.core.models import DateTimeValidator, QueryParameter, url_encoding
 
 
 class TransliterationEnum(str, Enum):
@@ -27,7 +27,7 @@ class TrackEnum(str, Enum):
     URL = "URL"
 
 
-class SendSMSMessageQueryParameters(QueryParameter):
+class SendSMSMessageQueryParameters(QueryParameter, DateTimeValidator):
     username: str
     password: str
     bulk_id: Optional[str] = None
@@ -54,17 +54,5 @@ class SendSMSMessageQueryParameters(QueryParameter):
         self.password = url_encoding(self.password)
 
     @validator("send_at")
-    def convert_send_at_to_correct_format(cls, value):
-        if not value:
-            return
-
-        if isinstance(value, str):
-            value = datetime.fromisoformat(value)
-
-        time_with_microseconds = value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        if value > datetime.now() + timedelta(days=180):
-            raise ValueError(
-                "Scheduled message must me sooner than 180 days from today"
-            )
-        else:
-            return time_with_microseconds.split("Z")[0][:-3] + "Z"
+    def convert_send_at_time_to_correct_format_validate_limit(cls, value):
+        return super().convert_time_to_correct_format_validate_limit(value)
