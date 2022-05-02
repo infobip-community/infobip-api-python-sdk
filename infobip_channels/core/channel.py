@@ -10,6 +10,7 @@ from infobip_channels.core.models import (
     GetHeaders,
     MessageBodyBase,
     PostHeaders,
+    QueryParameter,
     ResponseBase,
 )
 from infobip_channels.web_rtc.models.path_parameters.core import PathParameter
@@ -61,6 +62,24 @@ class Channel(ABC):
         :return: Instance of the subclass
         """
         return cls(client)
+
+    @staticmethod
+    def validate_query_parameter(
+        parameter: Union[QueryParameter, Dict], parameter_type: Type[QueryParameter]
+    ) -> QueryParameter:
+        """
+        Validate the query parameter by trying to instantiate the provided class.
+        If the passed parameter is already of that type, just return it as is.
+
+        :param parameter: Query parameter to validate
+        :param parameter_type: Type of the query parameter
+        :return: Class instance corresponding to the provided parameter type
+        """
+        return (
+            parameter
+            if isinstance(parameter, parameter_type)
+            else parameter_type(**parameter)
+        )
 
     @staticmethod
     def validate_auth_params(
