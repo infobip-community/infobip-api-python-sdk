@@ -12,6 +12,7 @@ Python client for Infobip's  API channels.
 ---
 
 ## 📡 Supported channels
+- [SMS Reference](https://www.infobip.com/docs/api#channels/sms)
 - [Whatsapp Reference](https://www.infobip.com/docs/api#channels/whatsapp)
 - [WebRTC Reference](https://www.infobip.com/docs/api#channels/webrtc/)
 - [MMS Reference](https://www.infobip.com/docs/api#channels/mms)
