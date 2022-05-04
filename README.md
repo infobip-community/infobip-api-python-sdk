@@ -56,7 +56,7 @@ Similar can be done for other channels.
 First step is to import necessary channel, in this case WhatsApp channel.
 
 ```python
-from infobip_channels import WhatsAppChannel
+from infobip_channels.whatsapp.channel import WhatsAppChannel
 ```
 
 Now you can create instance of `WhatsAppChannel` with your `base_url` and `api_key`.
