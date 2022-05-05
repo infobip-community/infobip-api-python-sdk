@@ -9,7 +9,7 @@ from io import IOBase
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
-from pydantic import AnyHttpUrl, BaseModel, constr, validator
+from pydantic import AnyHttpUrl, BaseModel, StrictBool, constr, validator
 from urllib3 import encode_multipart_formdata
 
 
@@ -250,6 +250,21 @@ class MessageStatus(str, Enum):
     FAILED = "FAILED"
 
 
+class DaysEnum(str, Enum):
+    MONDAY = "MONDAY"
+    TUESDAY = "TUESDAY"
+    WEDNESDAY = "WEDNESDAY"
+    THURSDAY = "THURSDAY"
+    FRIDAY = "FRIDAY"
+    SATURDAY = "SATURDAY"
+    SUNDAY = "SUNDAY"
+
+
+class ContentTypeEnum(str, Enum):
+    APPLICATION_JSON = "application/json"
+    APPLICATION_XML = "application/xml"
+
+
 class MultipartMixin:
     """Mixin used for allowing models to export their fields to a multipart/form-data
     format. Field types currently supported are listed in the
@@ -259,6 +274,7 @@ class MultipartMixin:
 
     _FIELD_TYPE_TO_MULTIPART_INFO_MAP: Dict = {
         str: {"is_file": False, "content_type": "text/plain"},
+        StrictBool: {"is_file": False, "content_type": "text/plain"},
         IOBase: {"is_file": True, "content_type": ""},
         XML: {"is_file": False, "content_type": "application/xml"},
     }
@@ -291,7 +307,7 @@ class MultipartMixin:
         for field_name, field_object in self.__fields__.items():
             self._add_multipart_tuple(
                 multipart_fields,
-                to_camel_case(field_name),
+                field_object.alias,
                 getattr(self, field_name),
                 field_object.type_,
             )
@@ -328,13 +344,3 @@ class MultipartMixin:
             model_aliased = model.dict(by_alias=True)
 
         return json.dumps(model_aliased)
-
-
-class DaysEnum(str, Enum):
-    MONDAY = "MONDAY"
-    TUESDAY = "TUESDAY"
-    WEDNESDAY = "WEDNESDAY"
-    THURSDAY = "THURSDAY"
-    FRIDAY = "FRIDAY"
-    SATURDAY = "SATURDAY"
-    SUNDAY = "SUNDAY"

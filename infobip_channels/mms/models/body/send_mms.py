@@ -23,8 +23,6 @@ from infobip_channels.core.models import (
     MultipartMixin,
 )
 
-MINIMUM_DELIVERY_WINDOW_MINUTES = 60
-
 
 class Time(CamelCaseModel):
     hour: conint(ge=0, le=23)

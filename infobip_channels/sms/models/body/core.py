@@ -15,15 +15,11 @@ from pydantic import (
 
 from infobip_channels.core.models import (
     CamelCaseModel,
+    ContentTypeEnum,
     DateTimeValidator,
     DaysEnum,
     FromAndToTimeValidator,
 )
-
-
-class ContentTypeEnum(str, Enum):
-    APPLICATION_JSON = "application/json"
-    APPLICATION_XML = "application/xml"
 
 
 class TrackEnum(str, Enum):
