@@ -5,11 +5,10 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from enum import Enum
 from http import HTTPStatus
-from io import IOBase
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
-from pydantic import AnyHttpUrl, BaseModel, StrictBool, constr, validator
+from pydantic import AnyHttpUrl, BaseModel, constr, validator
 from urllib3 import encode_multipart_formdata
 
 
@@ -273,10 +272,15 @@ class MultipartMixin:
     """
 
     _FIELD_TYPE_TO_MULTIPART_INFO_MAP: Dict = {
-        str: {"is_file": False, "content_type": "text/plain"},
-        StrictBool: {"is_file": False, "content_type": "text/plain"},
-        IOBase: {"is_file": True, "content_type": ""},
-        XML: {"is_file": False, "content_type": "application/xml"},
+        "str": {"is_file": False, "content_type": "text/plain"},
+        "int": {"is_file": False, "content_type": "text/plain"},
+        "AnyHttpUrl": {"is_file": False, "content_type": "text/plain"},
+        "StrictBool": {"is_file": False, "content_type": "text/plain"},
+        "ContentTypeEnum": {"is_file": False, "content_type": "text/plain"},
+        "ConstrainedStrValue": {"is_file": False, "content_type": "text/plain"},
+        "datetime": {"is_file": False, "content_type": "text/plain"},
+        "IOBase": {"is_file": True, "content_type": ""},
+        "XML": {"is_file": False, "content_type": "application/xml"},
     }
 
     _JSON_INFO: Dict = {"is_file": False, "content_type": "application/json"}
@@ -320,9 +324,15 @@ class MultipartMixin:
         if not field_value:
             return
 
-        field_info = self._FIELD_TYPE_TO_MULTIPART_INFO_MAP.get(
-            field_type, self._JSON_INFO
-        )
+        if hasattr(field_type, "__name__"):
+            field_info = self._FIELD_TYPE_TO_MULTIPART_INFO_MAP.get(
+                field_type.__name__, self._JSON_INFO
+            )
+        else:
+            field_info = self._FIELD_TYPE_TO_MULTIPART_INFO_MAP.get(
+                "str", self._JSON_INFO
+            )
+
         multipart_fields[field_name] = self._get_multipart_tuple(
             field_value, field_info
         )

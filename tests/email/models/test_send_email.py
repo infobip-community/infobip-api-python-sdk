@@ -1,4 +1,6 @@
 from datetime import date
+from io import open
+from tempfile import NamedTemporaryFile
 
 import pytest
 from pydantic.error_wrappers import ValidationError
@@ -116,7 +118,6 @@ def test_when_templateid_is_invalid__validation_error_is_raised():
 
 @pytest.mark.parametrize("attachment", [[], {}, get_random_string(3)])
 def test_when_attachment_is_invalid__validation_error_is_raised(attachment):
-
     with pytest.raises(ValidationError):
         EmailMessageBody(
             **{
@@ -325,3 +326,46 @@ def test_when_landing_page_id_is_invalid__validation_error_is_raised():
                 "landingPageId": {},
             }
         )
+
+
+def test_when_input_data_is_valid__validation_error_is_not_raised():
+    f = NamedTemporaryFile("wb")
+    f.write(b"random bytes")
+    f.flush()
+    attachment = open(f.name, "rb")
+    in_line_image = open(f.name, "rb")
+
+    try:
+        EmailMessageBody(
+            **{
+                "from": "jane.smith@somecompany.com",
+                "to": "john.smith@somedomain.com",
+                "cc": "john.smith2@somedomain.com",
+                "bcc": "john.smith3@somedomain.com",
+                "subject": "Mail subject text",
+                "text": "Mail body text",
+                "bulkId": "BULK-ID-123-xyz",
+                "messageId": "MESSAGE-ID-123-xyz",
+                "templateid": 1,
+                "attachment": attachment,
+                "inlineImage": in_line_image,
+                "HTML": "<h1>Mail HTML text</h1>",
+                "replyto": "john.smith3@somedomain.com",
+                "defaultplaceholders": "placeholder",
+                "preserverecipients": True,
+                "trackingUrl": "https://someurl.com",
+                "trackclicks": True,
+                "trackopens": True,
+                "track": True,
+                "callbackData": "https://someurl.com",
+                "intermediateReport": True,
+                "notifyUrl": "https://someurl.com",
+                "notifyContentType": "application/json",
+                "sendAt": "2022-05-06T22:29:17.437992",
+                "landingPagePlaceholders": "Landing page placeholders",
+                "landingPageId": "LANDING-PAGE-ID-123-xyz",
+            }
+        )
+        f.close()
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
