@@ -324,13 +324,24 @@ class MultipartMixin:
         if not field_value:
             return
 
-        if hasattr(field_type, "__name__"):
-            field_info = self._FIELD_TYPE_TO_MULTIPART_INFO_MAP.get(
-                field_type.__name__, self._JSON_INFO
-            )
+        """
+        In case of Union we have complex field type
+        str(field_type) is 'typing.Union[str, int, NoneType]'
+        """
+        if "Union" in str(field_type):
+            """
+            field_subtypes gives ['str', 'int', 'NoneType']
+            """
+            field_subtypes = str(field_type).split("[")[1].strip("]").split(", ")
+            for f in field_subtypes:
+                if f in self._FIELD_TYPE_TO_MULTIPART_INFO_MAP:
+                    field_info = self._FIELD_TYPE_TO_MULTIPART_INFO_MAP[f]
+                    break
+            else:
+                field_info = self._JSON_INFO
         else:
             field_info = self._FIELD_TYPE_TO_MULTIPART_INFO_MAP.get(
-                "str", self._JSON_INFO
+                field_type.__name__, self._JSON_INFO
             )
 
         multipart_fields[field_name] = self._get_multipart_tuple(
