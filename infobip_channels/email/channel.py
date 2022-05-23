@@ -6,14 +6,21 @@ import requests
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, ResponseBase
 from infobip_channels.email.models.body.send_email import EmailMessageBody
+from infobip_channels.email.models.query_parameters.delivery_reports import (
+    DeliveryReportsQueryParameters,
+)
 from infobip_channels.email.models.response.core import EmailResponseError
+from infobip_channels.email.models.response.delivery_reports import (
+    DeliveryReportsResponse,
+)
 from infobip_channels.email.models.response.send_email import SendEmailResponse
 
 
 class EmailChannel(Channel):
     """Class used for interaction with the Infobip's Email API."""
 
-    EMAIL_URL_TEMPLATE = "/email/2/"
+    EMAIL_URL_TEMPLATE_V1 = "/email/1/"
+    EMAIL_URL_TEMPLATE_V2 = "/email/2/"
 
     def _get_custom_response_class(
         self,
@@ -50,10 +57,30 @@ class EmailChannel(Channel):
         body, content_type = message.to_multipart()
 
         response = self._client.post(
-            self.EMAIL_URL_TEMPLATE + "send",
+            self.EMAIL_URL_TEMPLATE_V2 + "send",
             body,
             PostHeaders(
                 content_type=content_type, authorization=self._client.auth.api_key
             ),
         )
         return self._construct_response(response, SendEmailResponse)
+
+    def email_delivery_reports(
+        self, query_parameters: Union[DeliveryReportsQueryParameters, Dict] = None
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        Get one-time delivery reports for all sent emails.
+
+        :param query_parameters: Body of the message to send
+        :return: Received response
+        """
+
+        query_parameters = self.validate_query_parameter(
+            query_parameters or {}, DeliveryReportsQueryParameters
+        )
+
+        response = self._client.get(
+            self.EMAIL_URL_TEMPLATE_V1 + "reports",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, DeliveryReportsResponse)
