@@ -33,16 +33,6 @@ ENDPOINT_TEST_ARGUMENTS = {
         "request_data": get_email_delivery_reports_query_parameters(),
         "method_name": "email_delivery_reports",
     },
-    # "get_inbound_mms_messages": {
-    #     "response_content": get_inbound_mms_messages_response(),
-    #     "endpoint": "/mms/1/inbox/reports",
-    #     "http_method": "GET",
-    #     "expected_headers": get_expected_get_headers(),
-    #     "expected_query_parameters": "limit=1",
-    #     "expected_data": None,
-    #     "request_data": get_inbound_mms_messages_query_parameters(),
-    #     "method_name": "get_inbound_mms_messages",
-    # },
 }
 
 
