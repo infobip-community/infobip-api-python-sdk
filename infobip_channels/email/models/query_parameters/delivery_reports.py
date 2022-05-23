@@ -4,6 +4,6 @@ from infobip_channels.core.models import QueryParameter
 
 
 class DeliveryReportsQueryParameters(QueryParameter):
-    bulkId: Optional[str]
-    messageId: Optional[str]
+    bulk_id: Optional[str]
+    message_id: Optional[str]
     limit: Optional[str]

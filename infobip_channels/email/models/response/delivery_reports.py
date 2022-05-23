@@ -4,8 +4,8 @@ from infobip_channels.core.models import CamelCaseModel, ResponseBase, ResponseS
 
 
 class Error(CamelCaseModel):
-    groupId: int
-    groupName: str
+    group_id: int
+    group_name: str
     id: int
     name: str
     description: str
@@ -13,17 +13,17 @@ class Error(CamelCaseModel):
 
 
 class Price(CamelCaseModel):
-    pricePerMessage: int
+    price_per_message: int
     currency: str
 
 
 class Result(CamelCaseModel):
-    bulkId: Optional[str] = None
-    messageId: str
+    bulk_id: Optional[str] = None
+    message_id: str
     to: str
-    sentAt: str
-    doneAt: str
-    messageCount: int
+    sent_at: str
+    done_at: str
+    message_count: int
     price: Price
     status: ResponseStatus
     error: Error

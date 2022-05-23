@@ -125,6 +125,43 @@ def get_sent_email_response():
     }
 
 
+def get_email_delivery_reports_response():
+    return {
+        "results": [
+            {
+                "bulkId": "string",
+                "messageId": "string",
+                "to": "string",
+                "sentAt": "2022-05-23T07:10:44Z",
+                "doneAt": "2022-05-23T07:10:44Z",
+                "messageCount": 0,
+                "price": {"pricePerMessage": 0, "currency": "string"},
+                "status": {
+                    "groupId": 0,
+                    "groupName": "string",
+                    "id": 0,
+                    "name": "string",
+                    "description": "string",
+                    "action": "string",
+                },
+                "error": {
+                    "groupId": 0,
+                    "groupName": "string",
+                    "id": 0,
+                    "name": "string",
+                    "description": "string",
+                    "permanent": True,
+                },
+                "channel": "EMAIL",
+            }
+        ]
+    }
+
+
+def get_email_delivery_reports_query_parameters():
+    return {"messageId": "abc-123", "limit": 1}
+
+
 def get_email_request_error_response():
     return {
         "requestError": {"serviceException": {"messageId": "error", "text": "error"}}
