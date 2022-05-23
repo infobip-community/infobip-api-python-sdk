@@ -129,9 +129,9 @@ def get_email_delivery_reports_response():
     return {
         "results": [
             {
-                "bulkId": "string",
-                "messageId": "string",
-                "to": "string",
+                "bulkId": "bulk-123",
+                "messageId": "abc-123",
+                "to": "some@some.com",
                 "sentAt": "2022-05-23T07:10:44Z",
                 "doneAt": "2022-05-23T07:10:44Z",
                 "messageCount": 0,
@@ -158,6 +158,32 @@ def get_email_delivery_reports_response():
     }
 
 
+def get_email_logs_response():
+    return {
+        "results": [
+            {
+                "bulkId": "bulk-123",
+                "messageId": "abc-123",
+                "to": "string",
+                "from": "string",
+                "text": "string",
+                "sentAt": "2022-05-23T10:24:59Z",
+                "doneAt": "2022-05-23T10:24:59Z",
+                "messageCount": 0,
+                "price": {"pricePerMessage": 0, "currency": "string"},
+                "status": {
+                    "groupId": 0,
+                    "groupName": "string",
+                    "id": 0,
+                    "name": "string",
+                    "description": "string",
+                    "action": "string",
+                },
+            }
+        ]
+    }
+
+
 def get_email_delivery_reports_query_parameters():
     return {"messageId": "abc-123", "limit": 1}
 
@@ -166,3 +192,7 @@ def get_email_request_error_response():
     return {
         "requestError": {"serviceException": {"messageId": "error", "text": "error"}}
     }
+
+
+def get_email_logs_query_parameters():
+    return {"messageId": "abc-123", "limit": 1}

@@ -1,6 +1,7 @@
-from typing import List, Optional
+from typing import List
 
-from infobip_channels.core.models import CamelCaseModel, ResponseBase, ResponseStatus
+from infobip_channels.core.models import CamelCaseModel, ResponseBase
+from infobip_channels.email.models.response.core import ResultBase
 
 
 class Error(CamelCaseModel):
@@ -12,20 +13,7 @@ class Error(CamelCaseModel):
     permanent: bool
 
 
-class Price(CamelCaseModel):
-    price_per_message: int
-    currency: str
-
-
-class Result(CamelCaseModel):
-    bulk_id: Optional[str] = None
-    message_id: str
-    to: str
-    sent_at: str
-    done_at: str
-    message_count: int
-    price: Price
-    status: ResponseStatus
+class Result(ResultBase):
     error: Error
     channel: str
 

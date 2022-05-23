@@ -5,6 +5,8 @@ from tests.email.conftest import (
     get_email_body_multipart,
     get_email_delivery_reports_query_parameters,
     get_email_delivery_reports_response,
+    get_email_logs_query_parameters,
+    get_email_logs_response,
     get_email_request_error_response,
     get_mms_body_request,
     get_sent_email_response,
@@ -33,6 +35,16 @@ ENDPOINT_TEST_ARGUMENTS = {
         "request_data": get_email_delivery_reports_query_parameters(),
         "method_name": "email_delivery_reports",
     },
+    "get_email_logs": {
+        "response_content": get_email_logs_response(),
+        "endpoint": "/email/1/logs",
+        "http_method": "GET",
+        "expected_headers": get_expected_get_headers(),
+        "expected_query_parameters": "messageId=abc-123&limit=1",
+        "expected_data": None,
+        "request_data": get_email_logs_query_parameters(),
+        "method_name": "get_email_logs",
+    },
 }
 
 
@@ -45,6 +57,8 @@ def case__supported_status(endpoint_type, status_code):
     response_content = get_sent_email_response
     if endpoint_type == "email_delivery_reports":
         response_content = get_email_delivery_reports_response
+    if endpoint_type == "get_email_logs":
+        response_content = get_email_logs_response
     if status_code == 400 or status_code == 500:
         response_content = get_email_request_error_response
 

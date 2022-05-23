@@ -9,10 +9,14 @@ from infobip_channels.email.models.body.send_email import EmailMessageBody
 from infobip_channels.email.models.query_parameters.delivery_reports import (
     DeliveryReportsQueryParameters,
 )
+from infobip_channels.email.models.query_parameters.get_logs import (
+    GetLogsQueryParameters,
+)
 from infobip_channels.email.models.response.core import EmailResponseError
 from infobip_channels.email.models.response.delivery_reports import (
     DeliveryReportsResponse,
 )
+from infobip_channels.email.models.response.get_logs import GetLogsResponse
 from infobip_channels.email.models.response.send_email import SendEmailResponse
 
 
@@ -84,3 +88,24 @@ class EmailChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, DeliveryReportsResponse)
+
+    def get_email_logs(
+        self, query_parameters: Union[GetLogsQueryParameters, Dict] = None
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This method allows you to get email logs of sent Email messagesId for
+        request. Email logs are available for the last 48 hours.
+
+        :param query_parameters: Body of the message to send
+        :return: Received response
+        """
+
+        query_parameters = self.validate_query_parameter(
+            query_parameters or {}, GetLogsQueryParameters
+        )
+
+        response = self._client.get(
+            self.EMAIL_URL_TEMPLATE_V1 + "logs",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, GetLogsResponse)
