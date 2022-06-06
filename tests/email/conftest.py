@@ -1,7 +1,31 @@
 import os
 
+from pydantic_factories import ModelFactory
 
-def get_mms_body_request():
+from infobip_channels.email.models.body.reschedule_messages import (
+    RescheduleMessagesMessageBody,
+)
+from infobip_channels.email.models.body.update_scheduled_status import (
+    UpdateScheduledStatusMessageBody,
+)
+
+
+class GenerateRescheduleEmailMessagesFactory(ModelFactory):
+    __model__ = RescheduleMessagesMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return RescheduleMessagesMessageBody(
+            **{"sendAt": "2022-06-01T18:00:00.00+00:00"}
+        )
+
+
+class GenerateUpdateScheduledEmailMessagesStatusFactory(ModelFactory):
+    __model__ = UpdateScheduledStatusMessageBody
+
+
+def get_email_body_request():
     with open("attachment", "wb") as f:
         f.write(b"random bytes")
         f.flush()
@@ -38,7 +62,7 @@ def get_mms_body_request():
         "intermediateReport": True,
         "notifyUrl": "https://someurl3.com",
         "notifyContentType": "application/json",
-        "sendAt": "2022-05-06T22:29:17.437992",
+        "sendAt": "2022-11-09T11:35:39.214+00:00",
         "landingPagePlaceholders": "Landing page placeholders",
         "landingPageId": "LANDING-PAGE-ID-123-xyz",
     }
@@ -97,7 +121,7 @@ def get_email_body_multipart():
         b'-Disposition: form-data; name="notifyContentType"\r\nContent-Type: '
         b"text/plain\r\n\r\napplication/json\r\n--mockBoundary\r\nContent-Disposition"
         b': form-data; name="sendAt"\r\nContent-Type: '
-        b"text/plain\r\n\r\n2022-05-06T22:29:17.437992Z\r\n--mockBoundary\r\nContent"
+        b"text/plain\r\n\r\n2022-11-09T11:35:39.214+00:00\r\n--mockBoundary\r\nContent"
         b'-Disposition: form-data; name="landingPagePlaceholders"\r\nContent-Type: '
         b"text/plain\r\n\r\nLanding page "
         b"placeholders\r\n--mockBoundary\r\nContent-Disposition: form-data; "
@@ -123,6 +147,10 @@ def get_sent_email_response():
             }
         ]
     }
+
+
+def get_reschedule_email_messages_response():
+    return {"bulkId": "xyz-123-444", "sendAt": "2022-06-01T18:00:00.00+00:00"}
 
 
 def get_email_delivery_reports_response():
@@ -184,6 +212,17 @@ def get_email_logs_response():
     }
 
 
+def get_sent_email_bulks_response():
+    return {
+        "externalBulkId": "string",
+        "bulks": [{"bulkId": "xyz-123-444", "sendAt": "2022-06-06T17:00:00.00+00:00"}],
+    }
+
+
+def get_update_scheduled_email_messages_status_response():
+    return {"bulkId": "xyz-123-444", "status": "PENDING"}
+
+
 def get_email_delivery_reports_query_parameters():
     return {"messageId": "abc-123", "limit": 1}
 
@@ -196,3 +235,7 @@ def get_email_request_error_response():
 
 def get_email_logs_query_parameters():
     return {"messageId": "abc-123", "limit": 1}
+
+
+def get_sent_email_bulk_id_query_parameter():
+    return {"bulkId": "xyz-123-444"}

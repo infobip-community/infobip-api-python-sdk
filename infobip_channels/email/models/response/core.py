@@ -28,5 +28,13 @@ class ResultBase(CamelCaseModel):
     status: ResponseStatus
 
 
+class BulksBase(ResponseBase):
+    external_bulk_id: str
+
+
+class BulkBase(CamelCaseModel):
+    bulk_id: str
+
+
 class EmailResponseError(ResponseBase):
     request_error: RequestError

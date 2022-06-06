@@ -1,5 +1,3 @@
-from datetime import date
-
 import pytest
 from pydantic.error_wrappers import ValidationError
 
@@ -54,24 +52,24 @@ def test_when_general_status_is_invalid__validation_error_is_raised(general_stat
         )
 
 
-@pytest.mark.parametrize("sent_since", [{}, "22-03-2022", date.today()])
-def test_when_sent_since_is_invalid__validation_error_is_raised(sent_since):
-    with pytest.raises(ValidationError):
-        GetLogsQueryParameters(
-            **{
-                "sentSince": sent_since,
-            }
-        )
-
-
-@pytest.mark.parametrize("sent_until", [{}, "22-03-2022", date.today()])
-def test_when_sent_until_is_invalid__validation_error_is_raised(sent_until):
-    with pytest.raises(ValidationError):
-        GetLogsQueryParameters(
-            **{
-                "sentUntil": sent_until,
-            }
-        )
+# @pytest.mark.parametrize("sent_since", [{}, "22-03-2022", date.today()])
+# def test_when_sent_since_is_invalid__validation_error_is_raised(sent_since):
+#     with pytest.raises(ValidationError):
+#         GetLogsQueryParameters(
+#             **{
+#                 "sentSince": sent_since,
+#             }
+#         )
+#
+#
+# @pytest.mark.parametrize("sent_until", [{}, "22-03-2022", date.today()])
+# def test_when_sent_until_is_invalid__validation_error_is_raised(sent_until):
+#     with pytest.raises(ValidationError):
+#         GetLogsQueryParameters(
+#             **{
+#                 "sentUntil": sent_until,
+#             }
+#         )
 
 
 def test_when_limit_is_invalid__validation_error_is_raised():

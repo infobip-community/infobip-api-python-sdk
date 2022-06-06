@@ -1,8 +1,7 @@
-from datetime import datetime
 from io import IOBase
-from typing import Optional, Union
+from typing import Optional
 
-from pydantic import AnyHttpUrl, Field, StrictBool, constr, validator
+from pydantic import AnyHttpUrl, Field, StrictBool, constr
 
 from infobip_channels.core.models import (
     CamelCaseModel,
@@ -37,13 +36,9 @@ class EmailMessageBody(MultipartMixin, MessageBodyBase, DateTimeValidator):
     intermediateReport: Optional[StrictBool] = False
     notify_url: Optional[AnyHttpUrl] = None
     notify_content_type: Optional[ContentTypeEnum] = None
-    send_at: Optional[Union[datetime, str]] = None
+    send_at: Optional[str] = None
     landing_page_placeholders: Optional[str] = None
     landing_page_id: Optional[str] = None
 
     class Config(CamelCaseModel.Config):
         arbitrary_types_allowed = True
-
-    @validator("send_at")
-    def convert_send_at_to_correct_format(cls, value):
-        return super().convert_time_to_correct_format(value)
