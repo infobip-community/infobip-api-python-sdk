@@ -2,11 +2,14 @@ from pytest_cases import parametrize
 
 from tests.conftest import get_expected_post_headers, get_expected_put_headers
 from tests.email.conftest import (
-    AddNewDomainFactory,
+    GenerateAddNewDomainFactory,
     GenerateRescheduleEmailMessagesFactory,
     GenerateUpdateScheduledEmailMessagesStatusFactory,
-    ValidateEmailAddressesFactory,
+    GenerateUpdateTrackingEventsFactory,
+    GenerateValidateEmailAddressesFactory,
     get_add_new_domain_response,
+    get_domain,
+    get_domain_response,
     get_email_request_error_response,
     get_reschedule_email_messages_response,
     get_sent_email_bulk_id_query_parameter,
@@ -23,6 +26,7 @@ ENDPOINT_TEST_ARGUMENTS = {
         "expected_query_parameters": "bulkId=xyz-123-444",
         "expected_json": GenerateRescheduleEmailMessagesFactory,
         "request_query_parameters": get_sent_email_bulk_id_query_parameter(),
+        "request_path_parameters": None,
         "method_name": "reschedule_email_messages",
     },
     "update_scheduled_email_messages": {
@@ -33,6 +37,7 @@ ENDPOINT_TEST_ARGUMENTS = {
         "expected_query_parameters": "bulkId=xyz-123-444",
         "expected_json": GenerateUpdateScheduledEmailMessagesStatusFactory,
         "request_query_parameters": get_sent_email_bulk_id_query_parameter(),
+        "request_path_parameters": None,
         "method_name": "update_scheduled_email_messages",
     },
     "validate_email_addresses": {
@@ -41,8 +46,9 @@ ENDPOINT_TEST_ARGUMENTS = {
         "http_method": "POST",
         "expected_headers": get_expected_post_headers(),
         "expected_query_parameters": None,
-        "expected_json": ValidateEmailAddressesFactory,
+        "expected_json": GenerateValidateEmailAddressesFactory,
         "request_query_parameters": None,
+        "request_path_parameters": None,
         "method_name": "validate_email_addresses",
     },
     "add_new_domain": {
@@ -51,9 +57,21 @@ ENDPOINT_TEST_ARGUMENTS = {
         "http_method": "POST",
         "expected_headers": get_expected_post_headers(),
         "expected_query_parameters": None,
-        "expected_json": AddNewDomainFactory,
+        "expected_json": GenerateAddNewDomainFactory,
         "request_query_parameters": None,
+        "request_path_parameters": None,
         "method_name": "add_new_domain",
+    },
+    "update_tracking_events": {
+        "response_content": get_domain_response(),
+        "endpoint": "/email/1/domains/newDomain.com/tracking",
+        "http_method": "PUT",
+        "expected_headers": get_expected_put_headers(),
+        "expected_query_parameters": None,
+        "expected_json": GenerateUpdateTrackingEventsFactory,
+        "request_query_parameters": None,
+        "request_path_parameters": get_domain(),
+        "method_name": "update_tracking_events",
     },
 }
 
@@ -67,6 +85,8 @@ def case__supported_status(endpoint_type, status_code):
         response_content = get_validate_email_addresses_response
     if endpoint_type == "add_new_domain":
         response_content = get_add_new_domain_response
+    if endpoint_type == "update_tracking_events":
+        response_content = get_domain_response
     if status_code == 400 or status_code == 500:
         response_content = get_email_request_error_response
 
@@ -79,6 +99,7 @@ def case__supported_status(endpoint_type, status_code):
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_query_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_json"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["request_query_parameters"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["request_path_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["method_name"],
     )
 
@@ -94,5 +115,6 @@ def case__unsupported_status(endpoint_type):
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_query_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["expected_json"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["request_query_parameters"],
+        ENDPOINT_TEST_ARGUMENTS[endpoint_type]["request_path_parameters"],
         ENDPOINT_TEST_ARGUMENTS[endpoint_type]["method_name"],
     )

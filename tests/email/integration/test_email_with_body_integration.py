@@ -17,6 +17,7 @@ def set_up_mock_server_and_send_request(
     expected_query_parameters,
     expected_json,
     request_query_parameters,
+    request_path_parameters,
     method_name,
 ):
     message_body_instance = message_body = expected_json.build()
@@ -31,8 +32,12 @@ def set_up_mock_server_and_send_request(
     email_channel = EmailChannel.from_auth_params(
         {"base_url": httpserver.url_for("/"), "api_key": "secret"}
     )
-    if request_query_parameters is None:
+    if request_query_parameters is None and request_path_parameters is None:
         return getattr(email_channel, method_name)(message_body)
+    if request_query_parameters is None and request_path_parameters is not None:
+        return getattr(email_channel, method_name)(
+            request_path_parameters, message_body
+        )
     else:
         return getattr(email_channel, method_name)(
             request_query_parameters, message_body
@@ -42,7 +47,7 @@ def set_up_mock_server_and_send_request(
 @parametrize_with_cases(
     "status_code, response_content, endpoint, http_method, expected_headers, "
     "expected_query_parameters, expected_json, "
-    "request_query_parameters, method_name",
+    "request_query_parameters, request_path_parameters, method_name",
     prefix="case__supported_status",
 )
 def test_sms_endpoints__supported_status(
@@ -55,6 +60,7 @@ def test_sms_endpoints__supported_status(
     expected_query_parameters,
     expected_json,
     request_query_parameters,
+    request_path_parameters,
     method_name,
 ):
 
@@ -68,6 +74,7 @@ def test_sms_endpoints__supported_status(
         expected_query_parameters,
         expected_json,
         request_query_parameters,
+        request_path_parameters,
         method_name,
     )
     response_dict = EmailChannel.convert_model_to_dict(response)
@@ -86,7 +93,7 @@ def test_sms_endpoints__supported_status(
 @parametrize_with_cases(
     "status_code, response_content, endpoint, http_method, expected_headers, "
     "expected_query_parameters, expected_json, "
-    "request_query_parameters, method_name",
+    "request_query_parameters, request_path_parameters, method_name",
     prefix="case__unsupported_status",
 )
 def test_sms_endpoints__unsupported_status(
@@ -99,6 +106,7 @@ def test_sms_endpoints__unsupported_status(
     expected_query_parameters,
     expected_json,
     request_query_parameters,
+    request_path_parameters,
     method_name,
 ):
 
@@ -112,6 +120,7 @@ def test_sms_endpoints__unsupported_status(
         expected_query_parameters,
         expected_json,
         request_query_parameters,
+        request_path_parameters,
         method_name,
     )
     assert isinstance(response, ResponseBase) is False

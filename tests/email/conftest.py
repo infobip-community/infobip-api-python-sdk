@@ -9,6 +9,9 @@ from infobip_channels.email.models.body.reschedule_messages import (
 from infobip_channels.email.models.body.update_scheduled_status import (
     UpdateScheduledStatusMessageBody,
 )
+from infobip_channels.email.models.body.update_tracking_events import (
+    UpdateTrackingEventsMessageBody,
+)
 from infobip_channels.email.models.body.validate_email_adresses import (
     ValidateEmailAddressesMessageBody,
 )
@@ -29,7 +32,7 @@ class GenerateUpdateScheduledEmailMessagesStatusFactory(ModelFactory):
     __model__ = UpdateScheduledStatusMessageBody
 
 
-class ValidateEmailAddressesFactory(ModelFactory):
+class GenerateValidateEmailAddressesFactory(ModelFactory):
     __model__ = ValidateEmailAddressesMessageBody
 
     @classmethod
@@ -38,13 +41,17 @@ class ValidateEmailAddressesFactory(ModelFactory):
         return ValidateEmailAddressesMessageBody(**{"to": "test@test"})
 
 
-class AddNewDomainFactory(ModelFactory):
+class GenerateAddNewDomainFactory(ModelFactory):
     __model__ = AddNewDomainMessageBody
 
     @classmethod
     def build(cls, *args, **kwargs):
         """Needed because factory classes don't play well with custom validation."""
         return AddNewDomainMessageBody(**{"domainName": "newDomain.com"})
+
+
+class GenerateUpdateTrackingEventsFactory(ModelFactory):
+    __model__ = UpdateTrackingEventsMessageBody
 
 
 def get_email_body_request():
@@ -300,7 +307,7 @@ def get_all_domains_for_account_response():
     }
 
 
-def get_domain_details_response():
+def get_domain_response():
     return {
         "domainId": 1,
         "domainName": "newDomain.com",
@@ -349,5 +356,5 @@ def get_all_domains_for_account():
     return {"size": "20", "page": "0"}
 
 
-def get_get_domain():
+def get_domain():
     return {"domainName": "newDomain.com"}
