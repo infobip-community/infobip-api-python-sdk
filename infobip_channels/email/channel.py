@@ -16,6 +16,9 @@ from infobip_channels.email.models.body.update_scheduled_status import (
 from infobip_channels.email.models.body.validate_email_adresses import (
     ValidateEmailAddressesMessageBody,
 )
+from infobip_channels.email.models.path_paramaters.delete_existing_domain import (
+    DeleteExistingDomainPathParameter,
+)
 from infobip_channels.email.models.path_paramaters.get_domain_details import (
     GetDomainDetailsPathParameter,
 )
@@ -328,3 +331,21 @@ class EmailChannel(Channel):
             message.dict(by_alias=True),
         )
         return self._construct_response(response, AddNewDomainResponse)
+
+    def delete_existing_domain(
+        self, parameter: Union[DeleteExistingDomainPathParameter, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This method allows you to delete an existing domain.
+
+        :parameter: Domain name which needs to be deleted.
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, DeleteExistingDomainPathParameter
+        )
+
+        response = self._client.delete(
+            self.EMAIL_URL_TEMPLATE_V1 + "domains/" + path_parameter.domain_name,
+        )
+        return response
