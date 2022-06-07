@@ -15,6 +15,9 @@ from infobip_channels.email.models.body.update_scheduled_status import (
 from infobip_channels.email.models.body.validate_email_adresses import (
     ValidateEmailAddressesMessageBody,
 )
+from infobip_channels.email.models.path_paramaters.get_domain_details import (
+    GetDomainDetailsPathParameter,
+)
 from infobip_channels.email.models.query_parameters.delivery_reports import (
     DeliveryReportsQueryParameters,
 )
@@ -42,6 +45,9 @@ from infobip_channels.email.models.response.delivery_reports import (
 )
 from infobip_channels.email.models.response.get_all_domains import (
     GetAllDomainsForAccountResponse,
+)
+from infobip_channels.email.models.response.get_domain_details import (
+    GetDomainDetailsResponse,
 )
 from infobip_channels.email.models.response.get_logs import GetLogsResponse
 from infobip_channels.email.models.response.get_sent_bulk_status import (
@@ -282,3 +288,23 @@ class EmailChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, GetAllDomainsForAccountResponse)
+
+    def get_domain_details(
+        self,
+        parameter: Union[GetDomainDetailsPathParameter, Dict],
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This API provides with the details of the domain like the DNS records,
+        Tracking details, Active/Blocked status,etc.
+
+        :param parameter: Domain for which the details need to be viewed.
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, GetDomainDetailsPathParameter
+        )
+
+        response = self._client.get(
+            self.EMAIL_URL_TEMPLATE_V1 + "domains/" + path_parameter.domain_name,
+        )
+        return self._construct_response(response, GetDomainDetailsResponse)

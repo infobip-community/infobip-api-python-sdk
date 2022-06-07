@@ -267,6 +267,25 @@ def get_all_domains_for_account_response():
     }
 
 
+def get_domain_details_response():
+    return {
+        "domainId": 1,
+        "domainName": "newDomain.com",
+        "active": False,
+        "tracking": {"clicks": True, "opens": True, "unsubscribe": True},
+        "dnsRecords": [
+            {
+                "recordType": "string",
+                "name": "string",
+                "expectedValue": "string",
+                "verified": True,
+            }
+        ],
+        "blocked": False,
+        "createdAt": "2022-05-05T17:32:28.777+01:00",
+    }
+
+
 def get_update_scheduled_email_messages_status_response():
     return {"bulkId": "xyz-123-444", "status": "PENDING"}
 
@@ -295,3 +314,7 @@ def get_validate_email_addresses():
 
 def get_all_domains_for_account():
     return {"size": "20", "page": "0"}
+
+
+def get_get_domain_details():
+    return {"domainName": "newDomain.com"}
