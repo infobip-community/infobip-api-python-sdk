@@ -1,5 +1,5 @@
-from infobip_channels.core.models import CamelCaseModel
+from infobip_channels.core.models import PathParameter
 
 
-class PathParameter(CamelCaseModel):
+class EmailPathParameter(PathParameter):
     domain_name: str

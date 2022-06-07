@@ -13,6 +13,9 @@ from infobip_channels.email.models.body.send_email import EmailMessageBody
 from infobip_channels.email.models.body.update_scheduled_status import (
     UpdateScheduledStatusMessageBody,
 )
+from infobip_channels.email.models.body.update_tracking_events import (
+    UpdateTrackingEventsMessageBody,
+)
 from infobip_channels.email.models.body.validate_email_adresses import (
     ValidateEmailAddressesMessageBody,
 )
@@ -21,6 +24,9 @@ from infobip_channels.email.models.path_paramaters.delete_existing_domain import
 )
 from infobip_channels.email.models.path_paramaters.get_domain_details import (
     GetDomainDetailsPathParameter,
+)
+from infobip_channels.email.models.path_paramaters.update_tracking_events import (
+    UpdateTrackingEventsPathParameter,
 )
 from infobip_channels.email.models.path_paramaters.verify_domain import (
     VerifyDomainPathParameter,
@@ -70,6 +76,9 @@ from infobip_channels.email.models.response.reschedule_messages import (
 from infobip_channels.email.models.response.send_email import SendEmailResponse
 from infobip_channels.email.models.response.update_scheduled_status import (
     UpdateScheduledStatusResponse,
+)
+from infobip_channels.email.models.response.update_tracking_events import (
+    UpdateTrackingEventsResponse,
 )
 from infobip_channels.email.models.response.validate_email_adresses import (
     ValidateEmailAddressesResponse,
@@ -341,7 +350,7 @@ class EmailChannel(Channel):
         """
         This method allows you to delete an existing domain.
 
-        :parameter: Domain name which needs to be deleted.
+        :param parameter: Domain name which needs to be deleted.
         :return: Received response
         """
         path_parameter = self.validate_path_parameter(
@@ -360,7 +369,7 @@ class EmailChannel(Channel):
         API request to verify records(TXT, MX, DKIM) associated with the provided
         domain.
 
-        :parameter: Domain name which needs to be deleted.
+        :param parameter: Domain name which needs to be deleted.
         :return: Received response
         """
         path_parameter = self.validate_path_parameter(
@@ -374,3 +383,31 @@ class EmailChannel(Channel):
             + "/verify"
         )
         return response
+
+    def update_tracking_events(
+        self,
+        parameter: Union[UpdateTrackingEventsPathParameter, Dict],
+        message: Union[UpdateTrackingEventsMessageBody, Dict],
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        API to update tracking events for the provided domain. Tracking events can be
+        updated only for CLICKS, OPENS and UNSUBSCRIBES.
+
+        :param parameter: Domain name which needs to be deleted.
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, UpdateTrackingEventsPathParameter
+        )
+
+        message = self.validate_message_body(message, UpdateTrackingEventsMessageBody)
+
+        response = self._client.put(
+            self.EMAIL_URL_TEMPLATE_V1
+            + "domains/"
+            + path_parameter.domain_name
+            + "/tracking",
+            message.dict(by_alias=True),
+        )
+        return self._construct_response(response, UpdateTrackingEventsResponse)

@@ -1,5 +1,5 @@
-from infobip_channels.email.models.path_paramaters.core import PathParameter
+from infobip_channels.email.models.path_paramaters.core import EmailPathParameter
 
 
-class DeleteExistingDomainPathParameter(PathParameter):
+class DeleteExistingDomainPathParameter(EmailPathParameter):
     pass
