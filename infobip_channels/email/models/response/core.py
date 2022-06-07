@@ -41,9 +41,9 @@ class EmailResponseError(ResponseBase):
 
 
 class Tracking(CamelCaseModel):
-    clicks: int
-    opens: int
-    unsubscribe: int
+    clicks: bool
+    opens: bool
+    unsubscribe: bool
 
 
 class DnsRecord(CamelCaseModel):

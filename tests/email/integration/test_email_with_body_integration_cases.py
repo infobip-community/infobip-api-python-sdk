@@ -2,9 +2,11 @@ from pytest_cases import parametrize
 
 from tests.conftest import get_expected_post_headers, get_expected_put_headers
 from tests.email.conftest import (
+    AddNewDomainFactory,
     GenerateRescheduleEmailMessagesFactory,
     GenerateUpdateScheduledEmailMessagesStatusFactory,
     ValidateEmailAddressesFactory,
+    get_add_new_domain_response,
     get_email_request_error_response,
     get_reschedule_email_messages_response,
     get_sent_email_bulk_id_query_parameter,
@@ -43,6 +45,16 @@ ENDPOINT_TEST_ARGUMENTS = {
         "request_query_parameters": None,
         "method_name": "validate_email_addresses",
     },
+    "add_new_domain": {
+        "response_content": get_add_new_domain_response(),
+        "endpoint": "/email/1/domains",
+        "http_method": "POST",
+        "expected_headers": get_expected_post_headers(),
+        "expected_query_parameters": None,
+        "expected_json": AddNewDomainFactory,
+        "request_query_parameters": None,
+        "method_name": "add_new_domain",
+    },
 }
 
 
@@ -53,6 +65,8 @@ def case__supported_status(endpoint_type, status_code):
         response_content = get_update_scheduled_email_messages_status_response
     if endpoint_type == "validate_email_addresses":
         response_content = get_validate_email_addresses_response
+    if endpoint_type == "add_new_domain":
+        response_content = get_add_new_domain_response
     if status_code == 400 or status_code == 500:
         response_content = get_email_request_error_response
 

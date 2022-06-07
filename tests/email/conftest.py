@@ -2,6 +2,7 @@ import os
 
 from pydantic_factories import ModelFactory
 
+from infobip_channels.email.models.body.add_new_domain import AddNewDomainMessageBody
 from infobip_channels.email.models.body.reschedule_messages import (
     RescheduleMessagesMessageBody,
 )
@@ -35,6 +36,15 @@ class ValidateEmailAddressesFactory(ModelFactory):
     def build(cls, *args, **kwargs):
         """Needed because factory classes don't play well with custom validation."""
         return ValidateEmailAddressesMessageBody(**{"to": "test@test"})
+
+
+class AddNewDomainFactory(ModelFactory):
+    __model__ = AddNewDomainMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return AddNewDomainMessageBody(**{"domainName": "newDomain.com"})
 
 
 def get_email_body_request():
@@ -170,6 +180,25 @@ def get_validate_email_addresses_response():
         "disposable": False,
         "roleBased": False,
         "reason": "INBOX_FULL",
+    }
+
+
+def get_add_new_domain_response():
+    return {
+        "domainId": 1,
+        "domainName": "newDomain.com",
+        "active": False,
+        "tracking": {"clicks": False, "opens": True, "unsubscribe": True},
+        "dnsRecords": [
+            {
+                "recordType": "string",
+                "name": "string",
+                "expectedValue": "string",
+                "verified": True,
+            }
+        ],
+        "blocked": False,
+        "createdAt": "2022-05-05T17:32:28.777+01:00",
     }
 
 

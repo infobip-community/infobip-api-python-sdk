@@ -5,6 +5,7 @@ import requests
 
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, ResponseBase
+from infobip_channels.email.models.body.add_new_domain import AddNewDomainMessageBody
 from infobip_channels.email.models.body.reschedule_messages import (
     RescheduleMessagesMessageBody,
 )
@@ -39,6 +40,7 @@ from infobip_channels.email.models.query_parameters.reschedule_messages import (
 from infobip_channels.email.models.query_parameters.update_scheduled_status import (
     UpdateScheduledStatusQueryParameters,
 )
+from infobip_channels.email.models.response.add_new_domain import AddNewDomainResponse
 from infobip_channels.email.models.response.core import EmailResponseError
 from infobip_channels.email.models.response.delivery_reports import (
     DeliveryReportsResponse,
@@ -308,3 +310,21 @@ class EmailChannel(Channel):
             self.EMAIL_URL_TEMPLATE_V1 + "domains/" + path_parameter.domain_name,
         )
         return self._construct_response(response, GetDomainDetailsResponse)
+
+    def add_new_domain(
+        self, message: Union[AddNewDomainMessageBody, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This method allows you to add new domains with a limit to create a maximum of
+        10 domains in a day.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        message = self.validate_message_body(message, AddNewDomainMessageBody)
+
+        response = self._client.post(
+            self.EMAIL_URL_TEMPLATE_V1 + "domains",
+            message.dict(by_alias=True),
+        )
+        return self._construct_response(response, AddNewDomainResponse)
