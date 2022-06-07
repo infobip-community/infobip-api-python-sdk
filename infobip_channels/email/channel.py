@@ -18,6 +18,9 @@ from infobip_channels.email.models.body.validate_email_adresses import (
 from infobip_channels.email.models.query_parameters.delivery_reports import (
     DeliveryReportsQueryParameters,
 )
+from infobip_channels.email.models.query_parameters.get_all_domains import (
+    GetAllDomainsForAccountQueryParameters,
+)
 from infobip_channels.email.models.query_parameters.get_logs import (
     GetLogsQueryParameters,
 )
@@ -36,6 +39,9 @@ from infobip_channels.email.models.query_parameters.update_scheduled_status impo
 from infobip_channels.email.models.response.core import EmailResponseError
 from infobip_channels.email.models.response.delivery_reports import (
     DeliveryReportsResponse,
+)
+from infobip_channels.email.models.response.get_all_domains import (
+    GetAllDomainsForAccountResponse,
 )
 from infobip_channels.email.models.response.get_logs import GetLogsResponse
 from infobip_channels.email.models.response.get_sent_bulk_status import (
@@ -253,3 +259,26 @@ class EmailChannel(Channel):
             message.dict(by_alias=True),
         )
         return self._construct_response(response, ValidateEmailAddressesResponse)
+
+    def get_all_domains_for_account(
+        self,
+        query_parameters: Union[GetAllDomainsForAccountQueryParameters, Dict] = None,
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This API is to get all domain associated with the account. It also provides
+        details of the retrieved domain like the DNS records, Tracking details,
+        Active/Blocked status,etc.
+
+        :param query_parameters: Query parameters to send with the request
+        :return: Received response
+        """
+
+        query_parameters = self.validate_query_parameter(
+            query_parameters or {}, GetAllDomainsForAccountQueryParameters
+        )
+
+        response = self._client.get(
+            self.EMAIL_URL_TEMPLATE_V1 + "domains",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, GetAllDomainsForAccountResponse)
