@@ -31,8 +31,12 @@ def set_up_mock_server_and_send_request(
     email_channel = EmailChannel.from_auth_params(
         {"base_url": httpserver.url_for("/"), "api_key": "secret"}
     )
-
-    return getattr(email_channel, method_name)(request_query_parameters, message_body)
+    if request_query_parameters is None:
+        return getattr(email_channel, method_name)(message_body)
+    else:
+        return getattr(email_channel, method_name)(
+            request_query_parameters, message_body
+        )
 
 
 @parametrize_with_cases(

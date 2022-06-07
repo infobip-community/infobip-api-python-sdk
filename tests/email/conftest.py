@@ -8,6 +8,9 @@ from infobip_channels.email.models.body.reschedule_messages import (
 from infobip_channels.email.models.body.update_scheduled_status import (
     UpdateScheduledStatusMessageBody,
 )
+from infobip_channels.email.models.body.validate_email_adresses import (
+    ValidateEmailAddressesMessageBody,
+)
 
 
 class GenerateRescheduleEmailMessagesFactory(ModelFactory):
@@ -23,6 +26,15 @@ class GenerateRescheduleEmailMessagesFactory(ModelFactory):
 
 class GenerateUpdateScheduledEmailMessagesStatusFactory(ModelFactory):
     __model__ = UpdateScheduledStatusMessageBody
+
+
+class ValidateEmailAddressesFactory(ModelFactory):
+    __model__ = ValidateEmailAddressesMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return ValidateEmailAddressesMessageBody(**{"to": "test@test"})
 
 
 def get_email_body_request():
@@ -149,6 +161,18 @@ def get_sent_email_response():
     }
 
 
+def get_validate_email_addresses_response():
+    return {
+        "to": "abc@zxc.com",
+        "validMailbox": "unknown",
+        "validSyntax": True,
+        "catchAll": False,
+        "disposable": False,
+        "roleBased": False,
+        "reason": "INBOX_FULL",
+    }
+
+
 def get_reschedule_email_messages_response():
     return {"bulkId": "xyz-123-444", "sendAt": "2022-06-01T18:00:00.00+00:00"}
 
@@ -239,3 +263,7 @@ def get_email_logs_query_parameters():
 
 def get_sent_email_bulk_id_query_parameter():
     return {"bulkId": "xyz-123-444"}
+
+
+def get_validate_email_addresses():
+    return {"to": "test@test.com"}

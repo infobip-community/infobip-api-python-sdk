@@ -12,6 +12,9 @@ from infobip_channels.email.models.body.send_email import EmailMessageBody
 from infobip_channels.email.models.body.update_scheduled_status import (
     UpdateScheduledStatusMessageBody,
 )
+from infobip_channels.email.models.body.validate_email_adresses import (
+    ValidateEmailAddressesMessageBody,
+)
 from infobip_channels.email.models.query_parameters.delivery_reports import (
     DeliveryReportsQueryParameters,
 )
@@ -47,6 +50,9 @@ from infobip_channels.email.models.response.reschedule_messages import (
 from infobip_channels.email.models.response.send_email import SendEmailResponse
 from infobip_channels.email.models.response.update_scheduled_status import (
     UpdateScheduledStatusResponse,
+)
+from infobip_channels.email.models.response.validate_email_adresses import (
+    ValidateEmailAddressesResponse,
 )
 
 
@@ -230,3 +236,20 @@ class EmailChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, UpdateScheduledStatusResponse)
+
+    def validate_email_addresses(
+        self, message: Union[ValidateEmailAddressesMessageBody, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        Run validation to identify poor quality emails to clean up your recipient list.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        message = self.validate_message_body(message, ValidateEmailAddressesMessageBody)
+
+        response = self._client.post(
+            self.EMAIL_URL_TEMPLATE_V2 + "validation",
+            message.dict(by_alias=True),
+        )
+        return self._construct_response(response, ValidateEmailAddressesResponse)
