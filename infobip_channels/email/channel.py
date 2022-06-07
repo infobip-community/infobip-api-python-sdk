@@ -22,6 +22,9 @@ from infobip_channels.email.models.path_paramaters.delete_existing_domain import
 from infobip_channels.email.models.path_paramaters.get_domain_details import (
     GetDomainDetailsPathParameter,
 )
+from infobip_channels.email.models.path_paramaters.verify_domain import (
+    VerifyDomainPathParameter,
+)
 from infobip_channels.email.models.query_parameters.delivery_reports import (
     DeliveryReportsQueryParameters,
 )
@@ -347,5 +350,27 @@ class EmailChannel(Channel):
 
         response = self._client.delete(
             self.EMAIL_URL_TEMPLATE_V1 + "domains/" + path_parameter.domain_name,
+        )
+        return response
+
+    def verify_domain(
+        self, parameter: Union[VerifyDomainPathParameter, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        API request to verify records(TXT, MX, DKIM) associated with the provided
+        domain.
+
+        :parameter: Domain name which needs to be deleted.
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, VerifyDomainPathParameter
+        )
+
+        response = self._client.post(
+            self.EMAIL_URL_TEMPLATE_V1
+            + "domains/"
+            + path_parameter.domain_name
+            + "/verify"
         )
         return response

@@ -37,7 +37,10 @@ class _HttpClient:
         )
 
     def post(
-        self, endpoint: str, body: Union[Dict, bytes], headers: RequestHeaders = None
+        self,
+        endpoint: str,
+        body: Union[Dict, bytes] = None,
+        headers: RequestHeaders = None,
     ) -> requests.Response:
         """Send an HTTP post request to base_url + endpoint.
 
