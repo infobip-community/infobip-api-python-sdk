@@ -152,6 +152,10 @@ def get_email_body_multipart():
     )
 
 
+def get_empty_response():
+    return ""
+
+
 def get_sent_email_response():
     return {
         "messages": [
@@ -345,5 +349,5 @@ def get_all_domains_for_account():
     return {"size": "20", "page": "0"}
 
 
-def get_get_domain_details():
+def get_get_domain():
     return {"domainName": "newDomain.com"}

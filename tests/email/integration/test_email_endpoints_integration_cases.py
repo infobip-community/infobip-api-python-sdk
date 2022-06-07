@@ -1,6 +1,10 @@
 from pytest_cases import parametrize
 
-from tests.conftest import get_expected_get_headers, get_expected_post_headers
+from tests.conftest import (
+    get_expected_delete_headers,
+    get_expected_get_headers,
+    get_expected_post_headers,
+)
 from tests.email.conftest import (
     get_all_domains_for_account,
     get_all_domains_for_account_response,
@@ -12,7 +16,8 @@ from tests.email.conftest import (
     get_email_logs_query_parameters,
     get_email_logs_response,
     get_email_request_error_response,
-    get_get_domain_details,
+    get_empty_response,
+    get_get_domain,
     get_sent_email_bulk_id_query_parameter,
     get_sent_email_bulks_response,
     get_sent_email_response,
@@ -78,8 +83,28 @@ ENDPOINT_TEST_ARGUMENTS = {
         "expected_headers": get_expected_get_headers(),
         "expected_query_parameters": None,
         "expected_data": None,
-        "request_data": get_get_domain_details(),
+        "request_data": get_get_domain(),
         "method_name": "get_domain_details",
+    },
+    "delete_existing_domain": {
+        "response_content": None,
+        "endpoint": "/email/1/domains/newDomain.com",
+        "http_method": "DELETE",
+        "expected_headers": get_expected_delete_headers(),
+        "expected_query_parameters": None,
+        "expected_data": None,
+        "request_data": get_get_domain(),
+        "method_name": "delete_existing_domain",
+    },
+    "verify_domain": {
+        "response_content": None,
+        "endpoint": "/email/1/domains/newDomain.com/verify",
+        "http_method": "POST",
+        "expected_headers": get_expected_post_headers(),
+        "expected_query_parameters": None,
+        "expected_data": None,
+        "request_data": get_get_domain(),
+        "method_name": "verify_domain",
     },
 }
 
@@ -101,6 +126,12 @@ def case__supported_status(endpoint_type, status_code):
         response_content = get_all_domains_for_account_response
     if endpoint_type == "get_domain_details":
         response_content = get_domain_details_response
+    if endpoint_type == "delete_existing_domain" and status_code == 200:
+        response_content = get_empty_response
+        status_code = 204
+    if endpoint_type == "verify_domain" and status_code == 200:
+        response_content = get_empty_response
+        status_code = 202
     if status_code == 400 or status_code == 500:
         response_content = get_email_request_error_response
 
