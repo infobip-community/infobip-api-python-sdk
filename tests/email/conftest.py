@@ -2,11 +2,18 @@ import os
 
 from pydantic_factories import ModelFactory
 
+from infobip_channels.email.models.body.add_new_domain import AddNewDomainMessageBody
 from infobip_channels.email.models.body.reschedule_messages import (
     RescheduleMessagesMessageBody,
 )
 from infobip_channels.email.models.body.update_scheduled_status import (
     UpdateScheduledStatusMessageBody,
+)
+from infobip_channels.email.models.body.update_tracking_events import (
+    UpdateTrackingEventsMessageBody,
+)
+from infobip_channels.email.models.body.validate_email_adresses import (
+    ValidateEmailAddressesMessageBody,
 )
 
 
@@ -15,7 +22,10 @@ class GenerateRescheduleEmailMessagesFactory(ModelFactory):
 
     @classmethod
     def build(cls, *args, **kwargs):
-        """Needed because factory classes don't play well with custom validation."""
+        """
+        Needed because we do not want to generate any random string.
+        We will add custom validation to this field when datetime format changes.
+        """
         return RescheduleMessagesMessageBody(
             **{"sendAt": "2022-06-01T18:00:00.00+00:00"}
         )
@@ -23,6 +33,28 @@ class GenerateRescheduleEmailMessagesFactory(ModelFactory):
 
 class GenerateUpdateScheduledEmailMessagesStatusFactory(ModelFactory):
     __model__ = UpdateScheduledStatusMessageBody
+
+
+class GenerateValidateEmailAddressesFactory(ModelFactory):
+    __model__ = ValidateEmailAddressesMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because we do not want to generate any random string."""
+        return ValidateEmailAddressesMessageBody(**{"to": "test@test"})
+
+
+class GenerateAddNewDomainFactory(ModelFactory):
+    __model__ = AddNewDomainMessageBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because we do not want to generate any random string."""
+        return AddNewDomainMessageBody(**{"domainName": "newDomain.com"})
+
+
+class GenerateUpdateTrackingEventsFactory(ModelFactory):
+    __model__ = UpdateTrackingEventsMessageBody
 
 
 def get_email_body_request():
@@ -130,6 +162,10 @@ def get_email_body_multipart():
     )
 
 
+def get_empty_response():
+    return ""
+
+
 def get_sent_email_response():
     return {
         "messages": [
@@ -146,6 +182,37 @@ def get_sent_email_response():
                 },
             }
         ]
+    }
+
+
+def get_validate_email_addresses_response():
+    return {
+        "to": "abc@zxc.com",
+        "validMailbox": "unknown",
+        "validSyntax": True,
+        "catchAll": False,
+        "disposable": False,
+        "roleBased": False,
+        "reason": "INBOX_FULL",
+    }
+
+
+def get_add_new_domain_response():
+    return {
+        "domainId": 1,
+        "domainName": "newDomain.com",
+        "active": False,
+        "tracking": {"clicks": False, "opens": True, "unsubscribe": True},
+        "dnsRecords": [
+            {
+                "recordType": "string",
+                "name": "string",
+                "expectedValue": "string",
+                "verified": True,
+            }
+        ],
+        "blocked": False,
+        "createdAt": "2022-05-05T17:32:28.777+01:00",
     }
 
 
@@ -219,6 +286,49 @@ def get_sent_email_bulks_response():
     }
 
 
+def get_all_domains_for_account_response():
+    return {
+        "paging": {"page": 20, "size": 0, "totalPages": 0, "totalResults": 0},
+        "results": [
+            {
+                "domainId": 1,
+                "domainName": "newDomain.com",
+                "active": False,
+                "tracking": {"clicks": True, "opens": True, "unsubscribe": True},
+                "dnsRecords": [
+                    {
+                        "recordType": "string",
+                        "name": "string",
+                        "expectedValue": "string",
+                        "verified": True,
+                    }
+                ],
+                "blocked": True,
+                "createdAt": "2022-05-05T17:32:28.777+01:00",
+            }
+        ],
+    }
+
+
+def get_domain_response():
+    return {
+        "domainId": 1,
+        "domainName": "newDomain.com",
+        "active": False,
+        "tracking": {"clicks": True, "opens": True, "unsubscribe": True},
+        "dnsRecords": [
+            {
+                "recordType": "string",
+                "name": "string",
+                "expectedValue": "string",
+                "verified": True,
+            }
+        ],
+        "blocked": False,
+        "createdAt": "2022-05-05T17:32:28.777+01:00",
+    }
+
+
 def get_update_scheduled_email_messages_status_response():
     return {"bulkId": "xyz-123-444", "status": "PENDING"}
 
@@ -239,3 +349,15 @@ def get_email_logs_query_parameters():
 
 def get_sent_email_bulk_id_query_parameter():
     return {"bulkId": "xyz-123-444"}
+
+
+def get_validate_email_addresses():
+    return {"to": "test@test.com"}
+
+
+def get_all_domains_for_account():
+    return {"size": "20", "page": "0"}
+
+
+def get_domain():
+    return {"domainName": "newDomain.com"}

@@ -9,11 +9,11 @@ from infobip_channels.core.models import (
     Authentication,
     GetHeaders,
     MessageBodyBase,
+    PathParameter,
     PostHeaders,
     QueryParameter,
     ResponseBase,
 )
-from infobip_channels.web_rtc.models.path_parameters.core import PathParameter
 
 
 class Channel(ABC):
@@ -137,7 +137,7 @@ class Channel(ABC):
     @staticmethod
     def validate_path_parameter(
         parameter: Union[PathParameter, Dict], parameter_type: Type[PathParameter]
-    ) -> PathParameter:
+    ) -> Union[PathParameter]:
         """
         Validate path parameter by trying to instantiate the provided class and
         extract valid path parameter.

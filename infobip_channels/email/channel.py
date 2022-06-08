@@ -5,6 +5,7 @@ import requests
 
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, ResponseBase
+from infobip_channels.email.models.body.add_new_domain import AddNewDomainMessageBody
 from infobip_channels.email.models.body.reschedule_messages import (
     RescheduleMessagesMessageBody,
 )
@@ -12,8 +13,29 @@ from infobip_channels.email.models.body.send_email import EmailMessageBody
 from infobip_channels.email.models.body.update_scheduled_status import (
     UpdateScheduledStatusMessageBody,
 )
+from infobip_channels.email.models.body.update_tracking_events import (
+    UpdateTrackingEventsMessageBody,
+)
+from infobip_channels.email.models.body.validate_email_adresses import (
+    ValidateEmailAddressesMessageBody,
+)
+from infobip_channels.email.models.path_paramaters.delete_existing_domain import (
+    DeleteExistingDomainPathParameter,
+)
+from infobip_channels.email.models.path_paramaters.get_domain_details import (
+    GetDomainDetailsPathParameter,
+)
+from infobip_channels.email.models.path_paramaters.update_tracking_events import (
+    UpdateTrackingEventsPathParameter,
+)
+from infobip_channels.email.models.path_paramaters.verify_domain import (
+    VerifyDomainPathParameter,
+)
 from infobip_channels.email.models.query_parameters.delivery_reports import (
     DeliveryReportsQueryParameters,
+)
+from infobip_channels.email.models.query_parameters.get_all_domains import (
+    GetAllDomainsForAccountQueryParameters,
 )
 from infobip_channels.email.models.query_parameters.get_logs import (
     GetLogsQueryParameters,
@@ -30,9 +52,16 @@ from infobip_channels.email.models.query_parameters.reschedule_messages import (
 from infobip_channels.email.models.query_parameters.update_scheduled_status import (
     UpdateScheduledStatusQueryParameters,
 )
+from infobip_channels.email.models.response.add_new_domain import AddNewDomainResponse
 from infobip_channels.email.models.response.core import EmailResponseError
 from infobip_channels.email.models.response.delivery_reports import (
     DeliveryReportsResponse,
+)
+from infobip_channels.email.models.response.get_all_domains import (
+    GetAllDomainsForAccountResponse,
+)
+from infobip_channels.email.models.response.get_domain_details import (
+    GetDomainDetailsResponse,
 )
 from infobip_channels.email.models.response.get_logs import GetLogsResponse
 from infobip_channels.email.models.response.get_sent_bulk_status import (
@@ -47,6 +76,12 @@ from infobip_channels.email.models.response.reschedule_messages import (
 from infobip_channels.email.models.response.send_email import SendEmailResponse
 from infobip_channels.email.models.response.update_scheduled_status import (
     UpdateScheduledStatusResponse,
+)
+from infobip_channels.email.models.response.update_tracking_events import (
+    UpdateTrackingEventsResponse,
+)
+from infobip_channels.email.models.response.validate_email_adresses import (
+    ValidateEmailAddressesResponse,
 )
 
 
@@ -230,3 +265,149 @@ class EmailChannel(Channel):
             params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, UpdateScheduledStatusResponse)
+
+    def validate_email_addresses(
+        self, message: Union[ValidateEmailAddressesMessageBody, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        Run validation to identify poor quality emails to clean up your recipient list.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        message = self.validate_message_body(message, ValidateEmailAddressesMessageBody)
+
+        response = self._client.post(
+            self.EMAIL_URL_TEMPLATE_V2 + "validation",
+            message.dict(by_alias=True),
+        )
+        return self._construct_response(response, ValidateEmailAddressesResponse)
+
+    def get_all_domains_for_account(
+        self,
+        query_parameters: Union[GetAllDomainsForAccountQueryParameters, Dict] = None,
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This API is to get all domain associated with the account. It also provides
+        details of the retrieved domain like the DNS records, Tracking details,
+        Active/Blocked status,etc.
+
+        :param query_parameters: Query parameters to send with the request
+        :return: Received response
+        """
+
+        query_parameters = self.validate_query_parameter(
+            query_parameters or {}, GetAllDomainsForAccountQueryParameters
+        )
+
+        response = self._client.get(
+            self.EMAIL_URL_TEMPLATE_V1 + "domains",
+            params=query_parameters.dict(by_alias=True),
+        )
+        return self._construct_response(response, GetAllDomainsForAccountResponse)
+
+    def get_domain_details(
+        self,
+        parameter: Union[GetDomainDetailsPathParameter, Dict],
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This API provides with the details of the domain like the DNS records,
+        Tracking details, Active/Blocked status,etc.
+
+        :param parameter: Domain for which the details need to be viewed.
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, GetDomainDetailsPathParameter
+        )
+
+        response = self._client.get(
+            self.EMAIL_URL_TEMPLATE_V1 + "domains/" + path_parameter.domain_name,
+        )
+        return self._construct_response(response, GetDomainDetailsResponse)
+
+    def add_new_domain(
+        self, message: Union[AddNewDomainMessageBody, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This method allows you to add new domains with a limit to create a maximum of
+        10 domains in a day.
+
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        message = self.validate_message_body(message, AddNewDomainMessageBody)
+
+        response = self._client.post(
+            self.EMAIL_URL_TEMPLATE_V1 + "domains",
+            message.dict(by_alias=True),
+        )
+        return self._construct_response(response, AddNewDomainResponse)
+
+    def delete_existing_domain(
+        self, parameter: Union[DeleteExistingDomainPathParameter, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        This method allows you to delete an existing domain.
+
+        :param parameter: Domain name which needs to be deleted.
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, DeleteExistingDomainPathParameter
+        )
+
+        response = self._client.delete(
+            self.EMAIL_URL_TEMPLATE_V1 + "domains/" + path_parameter.domain_name,
+        )
+        return response
+
+    def verify_domain(
+        self, parameter: Union[VerifyDomainPathParameter, Dict]
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        API request to verify records(TXT, MX, DKIM) associated with the provided
+        domain.
+
+        :param parameter: Domain name which needs to be deleted.
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, VerifyDomainPathParameter
+        )
+
+        response = self._client.post(
+            self.EMAIL_URL_TEMPLATE_V1
+            + "domains/"
+            + path_parameter.domain_name
+            + "/verify"
+        )
+        return response
+
+    def update_tracking_events(
+        self,
+        parameter: Union[UpdateTrackingEventsPathParameter, Dict],
+        message: Union[UpdateTrackingEventsMessageBody, Dict],
+    ) -> Union[ResponseBase, requests.Response, Any]:
+        """
+        API to update tracking events for the provided domain. Tracking events can be
+        updated only for CLICKS, OPENS and UNSUBSCRIBES.
+
+        :param parameter: Domain name which needs to be deleted.
+        :param message: Body of the message to send
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, UpdateTrackingEventsPathParameter
+        )
+
+        message = self.validate_message_body(message, UpdateTrackingEventsMessageBody)
+
+        response = self._client.put(
+            self.EMAIL_URL_TEMPLATE_V1
+            + "domains/"
+            + path_parameter.domain_name
+            + "/tracking",
+            message.dict(by_alias=True),
+        )
+        return self._construct_response(response, UpdateTrackingEventsResponse)

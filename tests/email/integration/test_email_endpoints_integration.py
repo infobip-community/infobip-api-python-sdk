@@ -67,17 +67,20 @@ def test_mms_endpoints__supported_status(
         request_data,
         method_name,
     )
-    response_dict = EmailChannel.convert_model_to_dict(response)
-    raw_response = response_dict.pop("rawResponse")
-    expected_response_dict = {
-        **response_content,
-        "statusCode": HTTPStatus(status_code),
-    }
+    if method_name == "delete_existing_domain" or method_name == "verify_domain":
+        assert response.status_code == status_code
+    else:
+        response_dict = EmailChannel.convert_model_to_dict(response)
+        raw_response = response_dict.pop("rawResponse")
+        expected_response_dict = {
+            **response_content,
+            "statusCode": HTTPStatus(status_code),
+        }
 
-    assert isinstance(response, ResponseBase) is True
-    assert response.status_code == status_code
-    assert response_dict == expected_response_dict
-    assert raw_response is not None
+        assert isinstance(response, ResponseBase) is True
+        assert response.status_code == status_code
+        assert response_dict == expected_response_dict
+        assert raw_response is not None
 
 
 @patch("urllib3.filepost.choose_boundary", return_value="mockBoundary")

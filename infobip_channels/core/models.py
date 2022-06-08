@@ -186,7 +186,7 @@ class DeleteHeaders(RequestHeaders):
 
 
 class PathParameter(CamelCaseModel):
-    sender: str
+    pass
 
 
 class QueryParameter(CamelCaseModel):
