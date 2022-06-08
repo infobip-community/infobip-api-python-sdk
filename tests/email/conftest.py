@@ -22,7 +22,10 @@ class GenerateRescheduleEmailMessagesFactory(ModelFactory):
 
     @classmethod
     def build(cls, *args, **kwargs):
-        """Needed because factory classes don't play well with custom validation."""
+        """
+        Needed because we do not want to generate any random string.
+        We will add custom validation to this field when datetime format changes.
+        """
         return RescheduleMessagesMessageBody(
             **{"sendAt": "2022-06-01T18:00:00.00+00:00"}
         )
@@ -37,7 +40,7 @@ class GenerateValidateEmailAddressesFactory(ModelFactory):
 
     @classmethod
     def build(cls, *args, **kwargs):
-        """Needed because factory classes don't play well with custom validation."""
+        """Needed because we do not want to generate any random string."""
         return ValidateEmailAddressesMessageBody(**{"to": "test@test"})
 
 
@@ -46,7 +49,7 @@ class GenerateAddNewDomainFactory(ModelFactory):
 
     @classmethod
     def build(cls, *args, **kwargs):
-        """Needed because factory classes don't play well with custom validation."""
+        """Needed because we do not want to generate any random string."""
         return AddNewDomainMessageBody(**{"domainName": "newDomain.com"})
 
 
