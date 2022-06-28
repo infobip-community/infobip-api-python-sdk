@@ -1,6 +1,6 @@
 # Contributing to Infobip Community
 
-First off, thanks for taking the time to contribute!
+✨✨ First off, thanks for taking the time to contribute! ✨✨
 
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md). By participating, 
 you are expected to uphold this code. Please report unacceptable behavior to DevRel@infobip.com.
@@ -10,7 +10,7 @@ which are hosted in the [Infobip Organisation](https://github.com/infobip-commun
 These are mostly guidelines, not rules. Use your best judgment, 
 and feel free to propose changes to this document in a pull request.
 
-# Issues
+# Issues 🚩
 How to report a bug?
 
 Bugs are tracked as [GitHub issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues). After you've determined which repository your bug is related to, 
@@ -25,16 +25,16 @@ Explain the problem and include additional details to help maintainers reproduce
 * **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
 How to submit changes
 
-# Asking for General Help
+# Asking for General Help ℹ️
 
 The [Infobip's website](https://www.infobip.com/docs/api) has a list of resources for getting programming help and more.
 For any question contributors are available at [DevRel@infobip.com](mailto:DevRel@infobip.com).
 Please use the issue tracker for bugs only!
 
-# Pull request
+# Pull request 👩‍💻👨‍💻
 
 ## Setting up your local environment
-### Step 1: Fork
+### Step 1: Fork 🍴
 Fork the project on GitHub and clone your fork locally.
 Example for Python SDK repository:
 ```bash
@@ -43,12 +43,12 @@ cd infobip-api-python-sdk
 git remote add upstream https://github.com/infobip-community/infobip-api-python-sdk.git
 git fetch upstream
 ```
-### Step 2: Build
+### Step 2: Build 🧰
 Please run all tests that are in repository, all test should pass.
 Please check do you need to activate some additional features that are repository or langauge specific.
 For example in infobip-api-python-sdk, pre-commit hooks must be enabled. [Python Readme](README.md)
 
-### Step 3: Branch
+### Step 3: Branch 🎋
 To keep your development environment organized, create local branches to hold your work. 
 These should be branched directly off of the main branch.
 
@@ -56,13 +56,13 @@ These should be branched directly off of the main branch.
 git checkout -b my-branch -t upstream/main
 ```
 
-### Step 4: Code
+### Step 4: Code 👨‍💻👩‍💻
 Please follow code structure and naming structure that is already in specific repositories. 
 Please be sure to run linters for specific repository from time to time on any code changes to ensure that they follow the project's code style.
 Ex. for Python repository we conform to [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/).
 Across Python repository we set line limit to **88 characters**.
 
-### Step 5: Commit
+### Step 5: Commit 🔒
 It is recommended to keep your changes grouped logically within individual commits. 
 Many contributors find it easier to review changes that are split across multiple commits. 
 There is no limit to the number of commits in a pull request.
@@ -80,33 +80,33 @@ Commit message should:
 * Be entirely in lowercase with the exception of proper nouns, acronyms, 
 and the words that refer to code, like function/variable names
 
-#### Breaking Changes
+#### Breaking Changes ⚠️
 
 When commit has the breaking change first line of commit text should be BREAKING CHANGE. 
 
-### Step 6: Rebase
+### Step 6: Rebase 📌
 Once you have committed your changes, it is a good idea to use git rebase (not git merge) to synchronize your work with the main repository.
 ```bash
 git fetch upstream
 git rebase upstream/main
 ```
 
-### Step 7: Tests
+### Step 7: Tests 🧪
 Bug fixes and features should always come with tests. Looking at other tests to see how they should be structured can also help.
 Before submitting your changes in a pull request, always run the full test suite.
 Make sure the linter does not report any issues and that all tests pass. Please do not submit patches that fail either check.
 
-### Step 8: Push
+### Step 8: Push 🚀
 Once your commits are ready to go -- with passing tests and linting -- begin the process of opening a pull request by pushing your working branch to your fork on GitHub.
 ```bash
 git push origin my-branch
 ```
 
-### Step 9: Opening the Pull Request
+### Step 9: Opening the Pull Request 📬
 From within GitHub, open new pull request. Add repository admins as reviewers.
 Your PR may be delayed in being merged as maintainers seek more information or clarify ambiguities.
 
-### Step 10: Discuss and update
+### Step 10: Discuss and update 🤼
 You will probably get feedback or requests for changes to your pull request. 
 This is a big part of the submission process so don't be discouraged! 
 Some contributors may sign off on the pull request right away. 
@@ -124,7 +124,7 @@ git push origin my-branch
 
 Feel free to post a comment in the pull request to ping reviewers if you are awaiting an answer on something.
 
-### Step 11: Landing
+### Step 11: Landing 🌍
 
 In order to land, a pull request needs to be reviewed and approved by at least one repository Owner and pass CI. 
 After that, if there are no objections from other contributors, the pull request can be merged.
@@ -137,13 +137,13 @@ This means that all tests pass and there are no linting errors.
 However, it is not uncommon for the CI infrastructure itself to fail on specific platforms or for so-called "flaky" tests to fail ("be red"). 
 Each CI failure must be manually inspected to determine the cause.
 
-## Code of Conduct
+## Code of Conduct 📜
 
 This project and everyone participating in it is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). 
 By participating, you are expected to uphold this code. 
 Please report unacceptable behavior to [DevRel@infobip.com](mailto:DevRel@infobip.com).
 
-## Further Reading
+## Further Reading 📚
 
 For more in-depth guides on developing SDKs, see
 [Readme](README.md) and [Infobip's website](https://www.infobip.com/docs/api)
