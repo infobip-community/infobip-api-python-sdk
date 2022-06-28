@@ -57,8 +57,13 @@ git checkout -b my-branch -t upstream/main
 ### 👨‍💻👩‍💻 Step 4: Code 
 Please follow code structure and naming structure that is already in specific repositories. 
 Please be sure to run linters for specific repository from time to time on any code changes to ensure that they follow the project's code style.
-For Python repository we conform to [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/).
-Across Python repository we set line limit to **88 characters**.
+For Python repository we mostly conform to [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/).
+There are some deviations from PEP8.
+Most important things to keep in mind are:
+* Codebase has four-space indentation
+* Codebase is using Pascal case for classes (ex. MessageBodyBase)
+* Codebase is using snake case for methods (ex. send_sms_message)
+* 88 character line limits rather than 79. (differ from PEP-8)
 
 ### 🔒 Step 5: Commit 
 It is recommended to keep your changes grouped logically within individual commits. 
