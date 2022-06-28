@@ -10,7 +10,7 @@ which are hosted in the [Infobip Organisation](https://github.com/infobip-commun
 These are mostly guidelines, not rules. Use your best judgment, 
 and feel free to propose changes to this document in a pull request.
 
-# Issues 🚩
+## Issues 🚩
 How to report a bug?
 
 Bugs are tracked as [GitHub issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues). After you've determined which repository your bug is related to, 
@@ -25,15 +25,14 @@ Explain the problem and include additional details to help maintainers reproduce
 * **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
 How to submit changes
 
-# Asking for General Help ℹ️
+## Asking for General Help ℹ️
 
 The [Infobip's website](https://www.infobip.com/docs/api) has a list of resources for getting programming help and more.
 For any question contributors are available at [DevRel@infobip.com](mailto:DevRel@infobip.com).
 Please use the issue tracker for bugs only!
 
-# Pull request 👩‍💻👨‍💻
+## Pull request 👩‍💻👨‍💻
 
-## Setting up your local environment
 ### Step 1: Fork 🍴
 Fork the project on GitHub and clone your fork locally.
 Example for Python SDK repository:
