@@ -127,5 +127,5 @@ should be the first thing you do.
 
 This library is distributed under the MIT license found in the [License](LICENSE).
 
-## Want to help or improve open source SDK?
-Check out our [contributing guide](CONTRIBUTING.md) and [code of conduct](CODE_OF_CONDUCT.md)
+## 🆘 Want to help or improve open source SDK?
+Check out our [contributing guide](CONTRIBUTING.md) and [code of conduct](CODE_OF_CONDUCT.md).
