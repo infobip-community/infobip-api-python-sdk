@@ -5,7 +5,7 @@
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md). By participating, 
 you are expected to uphold this code. Please report unacceptable behavior to DevRel@infobip.com.
 
-The following is a set of guidelines for contributing to Infobip's SDKs any other projects, 
+The following is a set of guidelines for contributing to Infobip's SDKs or any other projects, 
 which are hosted in the [Infobip Organisation](https://github.com/infobip-community)  on GitHub. 
 These are mostly guidelines, not rules. Use your best judgment, 
 and feel free to propose changes to this document in a pull request.
@@ -23,7 +23,6 @@ Explain the problem and include additional details to help maintainers reproduce
 * **Describe the behavior you observed after following the steps**
 * **Explain which behavior you expected to see instead and why.**
 * **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
-How to submit changes
 
 ## ℹ️ Asking for General Help 
 
@@ -58,7 +57,7 @@ git checkout -b my-branch -t upstream/main
 ### 👨‍💻👩‍💻 Step 4: Code 
 Please follow code structure and naming structure that is already in specific repositories. 
 Please be sure to run linters for specific repository from time to time on any code changes to ensure that they follow the project's code style.
-Ex. for Python repository we conform to [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/).
+For Python repository we conform to [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/).
 Across Python repository we set line limit to **88 characters**.
 
 ### 🔒 Step 5: Commit 
@@ -76,7 +75,7 @@ A good commit message should describe what changed and why.
 Commit message should:
 
 * Contain a short description of the change (preferably 50 characters or less, and no more than 72 characters)
-* Be entirely in lowercase with the exception of proper nouns, acronyms, 
+* First letter should be capital and rest entirely in lowercase with the exception of proper nouns, acronyms, 
 and the words that refer to code, like function/variable names
 
 #### ⚠️ Breaking Changes 
@@ -128,7 +127,7 @@ Feel free to post a comment in the pull request to ping reviewers if you are awa
 In order to land, a pull request needs to be reviewed and approved by at least one repository Owner and pass CI. 
 After that, if there are no objections from other contributors, the pull request can be merged.
 
-Congratulations and thanks for your contribution!
+🎉🎊 Congratulations and thanks for your contribution! 🎊🎉
 
 Every pull request is tested on the Continuous Integration (CI) system to confirm that it works.
 Ideally, the pull request will pass ("be green") on all of CI's tests. 
