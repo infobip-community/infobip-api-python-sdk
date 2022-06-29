@@ -36,7 +36,7 @@ Please use the issue tracker for bugs only!
 Fork the project on GitHub and clone your fork locally.
 Example for Python SDK repository:
 ```bash
-git clone https://github.com/infobip-community/infobip-api-python-sdk.git
+git clone https://github.com/<your username>/infobip-api-python-sdk.git
 cd infobip-api-python-sdk
 git remote add upstream https://github.com/infobip-community/infobip-api-python-sdk.git
 git fetch upstream
