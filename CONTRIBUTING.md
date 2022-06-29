@@ -26,11 +26,11 @@ Explain the problem and include additional details to help maintainers reproduce
 
 ## ℹ️ Asking for General Help 
 
-The [Infobip's website](https://www.infobip.com/docs/api) has a list of resources for getting programming help and more.
+The [Infobip website](https://www.infobip.com/docs/api) has a list of resources for getting programming help and more.
 For any question contributors are available at [DevRel@infobip.com](mailto:DevRel@infobip.com).
 Please use the issue tracker for bugs only!
 
-## 👩‍💻👨‍💻 Pull request 
+## ⬇️ Pull request 
 
 ### 🍴 Step 1: Fork 
 Fork the project on GitHub and clone your fork locally.
@@ -41,12 +41,12 @@ cd infobip-api-python-sdk
 git remote add upstream https://github.com/infobip-community/infobip-api-python-sdk.git
 git fetch upstream
 ```
-### 🧰 Step 2: Build 
+### 🛠️ Step 2: Build 
 Please run all tests that are in repository, all test should pass.
 Please check do you need to activate some additional features that are repository or langauge specific.
 For example in infobip-api-python-sdk, pre-commit hooks must be enabled. [Python Readme](README.md)
 
-### 🎋 Step 3: Branch 
+### 🌱 Step 3: Branch 
 To keep your development environment organized, create local branches to hold your work. 
 These should be branched directly off of the main branch.
 
@@ -54,7 +54,7 @@ These should be branched directly off of the main branch.
 git checkout -b my-branch -t upstream/main
 ```
 
-### 👨‍💻👩‍💻 Step 4: Code 
+### 💻 Step 4: Code 
 Please follow code structure and naming structure that is already in specific repositories. 
 Please be sure to run linters for specific repository from time to time on any code changes to ensure that they follow the project's code style.
 For Python repository we mostly conform to [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/).
@@ -65,7 +65,7 @@ Most important things to keep in mind are:
 * Codebase is using snake case for methods (ex. send_sms_message)
 * 88 character line limits rather than 79. (differ from PEP-8)
 
-### 🔒 Step 5: Commit 
+### ✅ Step 5: Commit 
 It is recommended to keep your changes grouped logically within individual commits. 
 Many contributors find it easier to review changes that are split across multiple commits. 
 There is no limit to the number of commits in a pull request.
