@@ -112,7 +112,7 @@ def get_reschedule_sms_messages_query_parameters():
 
 
 def get_reschedule_sms_messages_message_body():
-    return {"sendAt": "2021-08-25T16:00:00.000"}
+    return {"sendAt": "2022-07-20T16:00:00.000+0000"}
 
 
 def get_sms_request_response():
@@ -135,7 +135,7 @@ def get_sms_request_response():
 
 
 def get_scheduled_sms_messages_response():
-    return {"bulkId": "BulkId-xyz-123", "sendAt": "2021-08-25T16:00:00.000"}
+    return {"bulkId": "BulkId-xyz-123", "sendAt": "2022-07-20T16:00:00.000+0000"}
 
 
 def get_update_scheduled_sms_messages_status_response():

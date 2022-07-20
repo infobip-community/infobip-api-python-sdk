@@ -2,7 +2,7 @@ import json
 import os
 import urllib.parse
 import xml.etree.ElementTree as ET
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 from http import HTTPStatus
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -98,7 +98,7 @@ class FromAndToTimeValidator:
 
 
 class DateTimeValidator:
-    _MAX_TIME_LIMIT = 180
+    _TIME_LIMIT = 180
     _EXPECTED_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
     @classmethod
@@ -120,8 +120,8 @@ class DateTimeValidator:
     def convert_time_to_correct_format_validate_limit(cls, value):
 
         date_time_format = cls.convert_to_date_time_format(value)
-
-        if date_time_format > datetime.now() + timedelta(days=cls._MAX_TIME_LIMIT):
+        date_time_limit = datetime.now(timezone.utc) + timedelta(days=cls._TIME_LIMIT)
+        if date_time_format > date_time_limit:
             raise ValueError(
                 "Scheduled message must be sooner than 180 days from today"
             )
