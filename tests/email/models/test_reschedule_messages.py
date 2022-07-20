@@ -29,11 +29,19 @@ def test_when_input_data_query_is_valid__validation_error_is_not_raised():
         pytest.fail("Unexpected ValidationError raised")
 
 
-def test_when_send_at_is_invalid__validation_error_is_raised():
+@pytest.mark.parametrize(
+    "send_at",
+    [
+        {},
+        "Test",
+        "22-03-2022",
+    ],
+)
+def test_when_send_at_is_invalid__validation_error_is_raised(send_at):
     with pytest.raises(ValidationError):
         RescheduleMessagesMessageBody(
             **{
-                "sendAt": {},
+                "sendAt": send_at,
             }
         )
 

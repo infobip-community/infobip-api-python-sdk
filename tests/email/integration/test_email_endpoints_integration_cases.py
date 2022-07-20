@@ -26,7 +26,7 @@ from tests.email.conftest import (
 ENDPOINT_TEST_ARGUMENTS = {
     "send_email_message": {
         "response_content": get_sent_email_response(),
-        "endpoint": "/email/2/send",
+        "endpoint": "/email/3/send",
         "http_method": "POST",
         "expected_headers": get_expected_post_headers(
             "multipart/form-data; boundary=mockBoundary"

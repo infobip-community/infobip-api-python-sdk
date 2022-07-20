@@ -94,7 +94,7 @@ def get_email_body_request():
         "intermediateReport": True,
         "notifyUrl": "https://someurl3.com",
         "notifyContentType": "application/json",
-        "sendAt": "2022-11-09T11:35:39.214+00:00",
+        "sendAt": "2022-06-01T18:00:00.00+00:00",
         "landingPagePlaceholders": "Landing page placeholders",
         "landingPageId": "LANDING-PAGE-ID-123-xyz",
     }
@@ -153,7 +153,7 @@ def get_email_body_multipart():
         b'-Disposition: form-data; name="notifyContentType"\r\nContent-Type: '
         b"text/plain\r\n\r\napplication/json\r\n--mockBoundary\r\nContent-Disposition"
         b': form-data; name="sendAt"\r\nContent-Type: '
-        b"text/plain\r\n\r\n2022-11-09T11:35:39.214+00:00\r\n--mockBoundary\r\nContent"
+        b"text/plain\r\n\r\n2022-06-01T18:00:00.000000Z\r\n--mockBoundary\r\nContent"
         b'-Disposition: form-data; name="landingPagePlaceholders"\r\nContent-Type: '
         b"text/plain\r\n\r\nLanding page "
         b"placeholders\r\n--mockBoundary\r\nContent-Disposition: form-data; "
@@ -212,7 +212,7 @@ def get_add_new_domain_response():
             }
         ],
         "blocked": False,
-        "createdAt": "2022-05-05T17:32:28.777+01:00",
+        "createdAt": "2022-06-01T18:00:00.00+00:00",
     }
 
 
@@ -227,8 +227,8 @@ def get_email_delivery_reports_response():
                 "bulkId": "bulk-123",
                 "messageId": "abc-123",
                 "to": "some@some.com",
-                "sentAt": "2022-05-23T07:10:44Z",
-                "doneAt": "2022-05-23T07:10:44Z",
+                "sentAt": "2022-06-01T18:00:00.00+00:00",
+                "doneAt": "2022-06-01T19:00:00.00+00:00",
                 "messageCount": 0,
                 "price": {"pricePerMessage": 0, "currency": "string"},
                 "status": {
@@ -262,8 +262,8 @@ def get_email_logs_response():
                 "to": "string",
                 "from": "string",
                 "text": "string",
-                "sentAt": "2022-05-23T10:24:59Z",
-                "doneAt": "2022-05-23T10:24:59Z",
+                "sentAt": "2022-06-01T18:00:00.00+00:00",
+                "doneAt": "2022-06-01T19:00:00.00+00:00",
                 "messageCount": 0,
                 "price": {"pricePerMessage": 0, "currency": "string"},
                 "status": {
@@ -304,7 +304,7 @@ def get_all_domains_for_account_response():
                     }
                 ],
                 "blocked": True,
-                "createdAt": "2022-05-05T17:32:28.777+01:00",
+                "createdAt": "2022-06-01T18:00:00.00+00:00",
             }
         ],
     }
@@ -325,7 +325,7 @@ def get_domain_response():
             }
         ],
         "blocked": False,
-        "createdAt": "2022-05-05T17:32:28.777+01:00",
+        "createdAt": "2022-06-01T18:00:00.00+00:00",
     }
 
 

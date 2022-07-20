@@ -290,17 +290,17 @@ def test_when_notify_content_type_is_invalid__validation_error_is_raised(
         )
 
 
-# @pytest.mark.parametrize("send_at", [{}, "22-03-2022", date.today()])
-# def test_when_send_at_is_invalid__validation_error_is_raised(send_at):
-#     with pytest.raises(ValidationError):
-#         EmailMessageBody(
-#             **{
-#                 "from": "jane.smith@somecompany.com",
-#                 "to": "john.smith@somedomain.com",
-#                 "subject": "Mail subject text",
-#                 "sendAt": send_at,
-#             }
-#         )
+@pytest.mark.parametrize("send_at", [{}, "Test", "22-03-2022"])
+def test_when_send_at_is_invalid__validation_error_is_raised(send_at):
+    with pytest.raises(ValidationError):
+        EmailMessageBody(
+            **{
+                "from": "jane.smith@somecompany.com",
+                "to": "john.smith@somedomain.com",
+                "subject": "Mail subject text",
+                "sendAt": send_at,
+            }
+        )
 
 
 def test_when_landing_page_placeholders_is_invalid__validation_error_is_raised():
