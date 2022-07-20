@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 import pytest
 from pydantic.error_wrappers import ValidationError
@@ -280,7 +280,11 @@ def test_when_time_unit_is_invalid__validation_error_is_raised(time_unit):
         )
 
 
-def test_when_input_data_is_valid__validation_error_is_not_raised():
+@pytest.mark.parametrize(
+    "send_at",
+    [datetime.now(timezone.utc) + timedelta(days=1), "2022-07-20T16:00:00.000+0000"],
+)
+def test_when_input_data_is_valid__validation_error_is_not_raised(send_at):
     try:
         BinarySMSMessageBody(
             **{
@@ -324,7 +328,7 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                         },
                         "destinations": [{"to": "41793026700"}],
                         "from": "41793026700",
-                        "sendAt": datetime.now() + timedelta(days=1),
+                        "sendAt": send_at,
                     },
                 ],
             }
