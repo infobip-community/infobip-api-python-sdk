@@ -90,6 +90,7 @@ class EmailChannel(Channel):
 
     EMAIL_URL_TEMPLATE_V1 = "/email/1/"
     EMAIL_URL_TEMPLATE_V2 = "/email/2/"
+    EMAIL_URL_TEMPLATE_V3 = "/email/3/"
 
     def _get_custom_response_class(
         self,
@@ -127,7 +128,7 @@ class EmailChannel(Channel):
         body, content_type = message.to_multipart()
 
         response = self._client.post(
-            self.EMAIL_URL_TEMPLATE_V2 + "send",
+            self.EMAIL_URL_TEMPLATE_V3 + "send",
             body,
             PostHeaders(
                 content_type=content_type, authorization=self._client.auth.api_key
