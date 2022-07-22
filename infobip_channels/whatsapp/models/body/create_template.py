@@ -89,18 +89,22 @@ class LanguageEnum(str, Enum):
 class HeaderText(CamelCaseModel):
     format: Literal["TEXT"]
     text: constr(max_length=60)
+    example: Optional[str] = None
 
 
 class HeaderImage(CamelCaseModel):
     format: Literal["IMAGE"]
+    example: Optional[AnyHttpUrl] = None
 
 
 class HeaderVideo(CamelCaseModel):
     format: Literal["VIDEO"]
+    example: Optional[AnyHttpUrl] = None
 
 
 class HeaderDocument(CamelCaseModel):
     format: Literal["DOCUMENT"]
+    example: Optional[AnyHttpUrl] = None
 
 
 class HeaderLocation(CamelCaseModel):
@@ -108,17 +112,9 @@ class HeaderLocation(CamelCaseModel):
 
 
 class CategoryEnum(str, Enum):
-    ACCOUNT_UPDATE = "ACCOUNT_UPDATE"
-    PAYMENT_UPDATE = "PAYMENT_UPDATE"
-    PERSONAL_FINANCE_UPDATE = "PERSONAL_FINANCE_UPDATE"
-    SHIPPING_UPDATE = "SHIPPING_UPDATE"
-    RESERVATION_UPDATE = "RESERVATION_UPDATE"
-    ISSUE_RESOLUTION = "ISSUE_RESOLUTION"
-    APPOINTMENT_UPDATE = "APPOINTMENT_UPDATE"
-    TRANSPORTATION_UPDATE = "TRANSPORTATION_UPDATE"
-    TICKET_UPDATE = "TICKET_UPDATE"
-    ALERT_UPDATE = "ALERT_UPDATE"
-    AUTO_REPLY = "AUTO_REPLY"
+    MARKETING = "MARKETING"
+    TRANSACTIONAL = "TRANSACTIONAL"
+    OTP = "OTP"
 
 
 class Button(CamelCaseModel):
@@ -143,12 +139,21 @@ class ButtonQuickReply(Button):
     type: Literal["QUICK_REPLY"]
 
 
+class Body(CamelCaseModel):
+    text: str
+    examples: Optional[List[str]] = None
+
+
+class Footer(CamelCaseModel):
+    text: constr(max_length=60)
+
+
 class Structure(CamelCaseModel):
     header: Optional[
         Union[HeaderText, HeaderImage, HeaderVideo, HeaderDocument, HeaderLocation]
     ] = None
-    body: str
-    footer: Optional[constr(max_length=60)] = None
+    body: Body
+    footer: Optional[Footer] = None
     buttons: Optional[
         Union[
             conlist(Union[ButtonPhoneNumber, ButtonUrl], max_items=2),

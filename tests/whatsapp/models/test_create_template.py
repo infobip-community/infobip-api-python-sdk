@@ -32,8 +32,10 @@ def test_when_name_is_invalid__validation_error_is_raised(name):
             **{
                 "name": name,
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
-                "structure": {"body": "example {{1}} body"},
+                "category": "OTP",
+                "structure": {
+                    "body": {"text": "body {{1}} content", "examples": ["example"]}
+                },
             }
         )
 
@@ -45,8 +47,10 @@ def test_when_language_is_invalid__validation_error_is_raised(language):
             **{
                 "name": "examplename",
                 "language": language,
-                "category": "ACCOUNT_UPDATE",
-                "structure": {"body": "example {{1}} body"},
+                "category": "OTP",
+                "structure": {
+                    "body": {"text": "body {{1}} content", "examples": ["example"]}
+                },
             }
         )
 
@@ -59,7 +63,9 @@ def test_when_category_is_invalid__validation_error_is_raised(category):
                 "name": "examplename",
                 "language": "en",
                 "category": category,
-                "structure": {"body": "example {{1}} body"},
+                "structure": {
+                    "body": {"text": "body {{1}} content", "examples": ["example"]}
+                },
             }
         )
 
@@ -83,7 +89,7 @@ def test_when_structure_is_invalid__validation_error_is_raised(structure):
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": structure,
             }
         )
@@ -96,10 +102,10 @@ def test_when_header_is_invalid__validation_error_is_raised(header):
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": {
                     "header": header,
-                    "body": "example {{1}} body",
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
                 },
             }
         )
@@ -112,7 +118,7 @@ def test_when_body_is_invalid__validation_error_is_raised(body):
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": {
                     "header": {"format": "TEXT", "text": "Text example"},
                     "body": body,
@@ -121,18 +127,53 @@ def test_when_body_is_invalid__validation_error_is_raised(body):
         )
 
 
-@pytest.mark.parametrize("footer", [{}, get_random_string(61)])
+@pytest.mark.parametrize("body_text", [None, {}])
+def test_when_body_text_is_invalid__validation_error_is_raised(body_text):
+    with pytest.raises(ValidationError):
+        CreateTemplateBodyFactory.build(
+            **{
+                "name": "examplename",
+                "language": "en",
+                "category": "OTP",
+                "structure": {
+                    "header": {"format": "TEXT", "text": "Text example"},
+                    "body": {
+                        "text": body_text,
+                    },
+                },
+            }
+        )
+
+
+@pytest.mark.parametrize("footer", [{}])
 def test_when_footer_is_invalid__validation_error_is_raised(footer):
     with pytest.raises(ValidationError):
         CreateTemplateBodyFactory.build(
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": {
                     "header": {"format": "TEXT", "text": "Text example"},
-                    "body": "text",
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
                     "footer": footer,
+                },
+            }
+        )
+
+
+@pytest.mark.parametrize("footer_text", [{}, get_random_string(61)])
+def test_when_footer_text_is_invalid__validation_error_is_raised(footer_text):
+    with pytest.raises(ValidationError):
+        CreateTemplateBodyFactory.build(
+            **{
+                "name": "examplename",
+                "language": "en",
+                "category": "OTP",
+                "structure": {
+                    "header": {"format": "TEXT", "text": "Text example"},
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
+                    "footer": {"text": footer_text},
                 },
             }
         )
@@ -162,8 +203,11 @@ def test_when_buttons_is_invalid__validation_error_is_raised(buttons):
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
-                "structure": {"body": "text", "buttons": buttons},
+                "category": "OTP",
+                "structure": {
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
+                    "buttons": buttons,
+                },
             }
         )
 
@@ -175,8 +219,11 @@ def test_when_button_type_is_invalid__validation_error_is_raised(button_type):
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
-                "structure": {"body": "text", "buttons": [{"type": button_type}]},
+                "category": "OTP",
+                "structure": {
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
+                    "buttons": [{"type": button_type}],
+                },
             }
         )
 
@@ -188,10 +235,10 @@ def test_when_quick_reply_button_text_is_invalid__validation_error_is_raised(tex
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": {
                     "header": {"format": "TEXT", "text": "Text example"},
-                    "body": "example {{1}} body",
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
                     "buttons": [{"type": "QUICK_REPLY", "text": text}],
                 },
             }
@@ -205,10 +252,10 @@ def test_when_phone_number_button_text_is_invalid__validation_error_is_raised(te
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": {
                     "header": {"format": "TEXT", "text": "Text example"},
-                    "body": "example {{1}} body",
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
                     "buttons": [
                         {"type": "PHONE_NUMBER", "text": text, "phoneNumber": "324561"}
                     ],
@@ -224,10 +271,10 @@ def test_when_phone_number_button_number_is_invalid__validation_error_is_raised(
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": {
                     "header": {"format": "TEXT", "text": "Text example"},
-                    "body": "example {{1}} body",
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
                     "buttons": [
                         {"type": "PHONE_NUMBER", "text": "test", "phoneNumber": number}
                     ],
@@ -243,10 +290,10 @@ def test_when_url_button_text_is_invalid__validation_error_is_raised(text):
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": {
                     "header": {"format": "TEXT", "text": "Text example"},
-                    "body": "example {{1}} body",
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
                     "buttons": [
                         {"type": "URL", "text": text, "url": "https://url.com"}
                     ],
@@ -271,10 +318,10 @@ def test_when_url_button_url_is_invalid__validation_error_is_raised(url):
             **{
                 "name": "examplename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": {
                     "header": {"format": "TEXT", "text": "Text example"},
-                    "body": "example {{1}} body",
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
                     "buttons": [{"type": "URL", "text": "Text example", "url": url}],
                 },
             }
@@ -287,11 +334,11 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
             **{
                 "name": "exampl_ename",
                 "language": "en",
-                "category": "ACCOUNT_UPDATE",
+                "category": "OTP",
                 "structure": {
                     "header": {"format": "TEXT", "text": "Text example"},
-                    "body": "example {{1}} body",
-                    "footer": "some footer",
+                    "body": {"text": "body {{1}} content", "examples": ["example"]},
+                    "footer": {"text": "footer content"},
                     "buttons": [
                         {"type": "URL", "text": "url", "url": "http://url.com"},
                         {
