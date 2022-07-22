@@ -21,6 +21,9 @@ from infobip_channels.whatsapp.models.body.sticker_message import StickerMessage
 from infobip_channels.whatsapp.models.body.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.path_parameters.delete_template import (
+    DeleteTemplatePathParameters,
+)
 from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
     ManageTemplatesPathParameters,
 )
@@ -44,6 +47,7 @@ class WhatsAppChannel(Channel):
 
     SEND_MESSAGE_URL_TEMPLATE = "/whatsapp/1/message/"
     MANAGE_URL_TEMPLATE = "/whatsapp/1/senders/"
+    DELETE_URL_TEMPLATE = "/whatsapp/2/senders/"
 
     def _get_custom_response_class(
         self,
@@ -337,3 +341,29 @@ class WhatsAppChannel(Channel):
             message.dict(by_alias=True),
         )
         return self._construct_response(response, CreateTemplateResponseOK)
+
+    def delete_template(
+        self, parameter: Union[DeleteTemplatePathParameters, Dict]
+    ) -> Union[ResponseBase, Any]:
+        """Delete a WhatsApp template. If registered in multiple languages, deleting
+        the message template will also delete all its languages. The template will be
+        deleted for all senders registered under the same WhatsApp Business Account (
+        WABA). The system will attempt to deliver sent messages for 30 days,
+        regardless of the template deletion. Once deleted, the name of the approved
+        template cannot be reused for 30 days.
+
+        :param parameter: Registered WhatsApp sender number, must be in international
+        format. Template name of WhatsApp template.
+        :return: Received response
+        """
+        path_parameter = self.validate_path_parameter(
+            parameter, DeleteTemplatePathParameters
+        )
+
+        response = self._client.delete(
+            self.DELETE_URL_TEMPLATE
+            + "".join(
+                [path_parameter.sender, "/templates/", path_parameter.template_name]
+            )
+        )
+        return response
