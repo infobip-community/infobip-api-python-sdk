@@ -33,6 +33,10 @@ class HttpTestClient:
         headers = headers or self.headers
         return requests.get(url=f"{self.url}" + endpoint, headers=headers)
 
+    def delete(self, endpoint, headers=None):
+        headers = headers or self.headers
+        return requests.delete(url=f"{self.url}" + endpoint, headers=headers)
+
 
 class Address(CamelCaseModel):
     street: str

@@ -22,6 +22,9 @@ from infobip_channels.whatsapp.models.body.sticker_message import StickerMessage
 from infobip_channels.whatsapp.models.body.template_message import TemplateMessageBody
 from infobip_channels.whatsapp.models.body.text_message import TextMessageBody
 from infobip_channels.whatsapp.models.body.video_message import VideoMessageBody
+from infobip_channels.whatsapp.models.path_parameters.delete_template import (
+    DeleteTemplatePathParameters,
+)
 from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
     ManageTemplatesPathParameters,
 )
@@ -187,6 +190,10 @@ class CreateTemplatesPathParametersFactory(ModelFactory):
     __model__ = ManageTemplatesPathParameters
 
 
+class DeleteTemplatePathParametersFactory(ModelFactory):
+    __model__ = DeleteTemplatePathParameters
+
+
 @pytest.fixture
 def authentication():
     return AuthenticationFactory.build()
@@ -209,6 +216,11 @@ class HttpTestClientUnofficial:
     def get(self, endpoint):
         return self.pool.request(
             "GET", url=f"{self.url}" + endpoint, headers=self.headers
+        )
+
+    def delete(self, endpoint):
+        return self.pool.request(
+            "DELETE", url=f"{self.url}" + endpoint, headers=self.headers
         )
 
 

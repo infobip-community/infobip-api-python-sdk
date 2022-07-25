@@ -7,10 +7,12 @@ from pydantic import AnyHttpUrl, BaseModel, ValidationError
 from infobip_channels.core.http_client import _HttpClient
 from infobip_channels.core.models import (
     Authentication,
+    DeleteHeaders,
     GetHeaders,
     MessageBodyBase,
     PathParameter,
     PostHeaders,
+    PutHeaders,
     QueryParameter,
     ResponseBase,
 )
@@ -106,6 +108,16 @@ class Channel(ABC):
         return PostHeaders(authorization=api_key).dict(by_alias=True)
 
     @staticmethod
+    def build_put_request_headers(api_key: str) -> Dict:
+        """Build the request headers dictionary which has to be used for each of the
+        put requests.
+
+        :param api_key: Key used for populating Authorization header
+        :return: Dictionary of headers to be used for post requests
+        """
+        return PutHeaders(authorization=api_key).dict(by_alias=True)
+
+    @staticmethod
     def build_get_request_headers(api_key: str) -> Dict:
         """Build the request headers dictionary which has to be used for each of the
         get requests.
@@ -114,6 +126,16 @@ class Channel(ABC):
         :return: Dictionary of headers to be used for get requests
         """
         return GetHeaders(authorization=api_key).dict(by_alias=True)
+
+    @staticmethod
+    def build_delete_request_headers(api_key: str) -> Dict:
+        """Build the request headers dictionary which has to be used for each of the
+        delete requests.
+
+        :param api_key: Key used for populating Authorization header
+        :return: Dictionary of headers to be used for get requests
+        """
+        return DeleteHeaders(authorization=api_key).dict(by_alias=True)
 
     @staticmethod
     def convert_model_to_dict(
