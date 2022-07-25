@@ -218,6 +218,11 @@ class HttpTestClientUnofficial:
             "GET", url=f"{self.url}" + endpoint, headers=self.headers
         )
 
+    def delete(self, endpoint):
+        return self.pool.request(
+            "DELETE", url=f"{self.url}" + endpoint, headers=self.headers
+        )
+
 
 @pytest.fixture
 def http_test_client_unofficial():
