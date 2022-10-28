@@ -45,6 +45,9 @@ from infobip_channels.sms.models.response.get_scheduled_messages import (
 from infobip_channels.sms.models.response.get_scheduled_messages_status import (
     GetScheduledSMSMessagesStatusResponse,
 )
+from infobip_channels.sms.models.response.get_tfa_applications import (
+    GetTFAApplicationsResponse,
+)
 from infobip_channels.sms.models.response.inbound_messages import (
     InboundSMSMessagesResponse,
 )
@@ -71,6 +74,7 @@ class SMSChannel(Channel):
 
     SMS_URL_TEMPLATE_VERSION_1 = "/sms/1/"
     SMS_URL_TEMPLATE_VERSION_2 = "/sms/2/"
+    TFA_URL_TEMPLATE_VERSION_2 = "/2fa/2/"
 
     def _get_custom_response_class(
         self,
@@ -331,3 +335,11 @@ class SMSChannel(Channel):
         return self._construct_response(
             response, UpdateScheduledSMSMessagesStatusResponse
         )
+
+    def get_tfa_applications(self) -> Union[ResponseBase, Any]:
+        """Get a list of all TFA applications.
+
+        :return: Received response
+        """
+        response = self._client.get(self.TFA_URL_TEMPLATE_VERSION_2 + "applications")
+        return self._construct_response(response, GetTFAApplicationsResponse)
