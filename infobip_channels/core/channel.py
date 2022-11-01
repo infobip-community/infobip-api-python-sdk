@@ -1,6 +1,7 @@
 import os
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Type, Union
+from dotenv import load_dotenv
 
 import requests
 from pydantic import AnyHttpUrl, BaseModel, ValidationError
@@ -54,6 +55,18 @@ class Channel(ABC):
         auth_params = {"base_url": base_url, "api_key": api_key}
         client = _HttpClient(Authentication(**auth_params))
         return cls(client)
+
+    @classmethod
+    def from_dotenv(cls) -> "Channel":
+        """Create an Authentication instance from a dotenv file and
+        use it to instantiate the Channel subclass. The IB_API_KEY and IB_BASE_URL environment variables must present.
+        The Channel subclass instantiated this way will use the default _HttpClient
+        class for making HTTP requests.
+
+        :return: Instance of the subclass
+        """
+        load_dotenv()
+        return cls.from_env()
 
     @classmethod
     def from_auth_instance(cls, auth_instance: Authentication) -> "Channel":
