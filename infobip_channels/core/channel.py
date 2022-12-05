@@ -74,7 +74,7 @@ class Channel(ABC):
         The Channel subclass instantiated this way will use the default _HttpClient
         class for making HTTP requests.
 
-        :param auth_instance: Authentication class instance
+        :param: auth_instance: Authentication class instance
         :return: Instance of the subclass
         """
         client = _HttpClient(auth_instance)

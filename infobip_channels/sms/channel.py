@@ -5,6 +5,7 @@ import requests
 
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, ResponseBase
+from infobip_channels.sms.models.body.create_tfa_application import CreateTFAApplicationBody
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
@@ -39,6 +40,7 @@ from infobip_channels.sms.models.query_parameters.update_scheduled_messages_stat
     UpdateScheduledSMSMessagesQueryParameters,
 )
 from infobip_channels.sms.models.response.core import SMSResponseError
+from infobip_channels.sms.models.response.create_tfa_application import CreateTFAApplicationResponse
 from infobip_channels.sms.models.response.get_scheduled_messages import (
     GetScheduledSMSMessagesResponse,
 )
@@ -337,9 +339,27 @@ class SMSChannel(Channel):
         )
 
     def get_tfa_applications(self) -> Union[ResponseBase, Any]:
-        """Get a list of all TFA applications.
+        """Use this method to list your applications.
 
         :return: Received response
         """
         response = self._client.get(self.TFA_URL_TEMPLATE_VERSION_2 + "applications")
         return self._construct_response(response, GetTFAApplicationsResponse)
+
+    def create_tfa_application(
+        self,
+        request_body: Union[CreateTFAApplicationBody, Dict],
+    ) -> Union[ResponseBase, CreateTFAApplicationResponse, Any]:
+        """Create and configure a new 2FA application.
+
+        :param request_body: Body of the message to send
+        :return: Received response
+        """
+        message = self.validate_message_body(request_body, CreateTFAApplicationBody)
+
+        response = self._client.post(
+            self.TFA_URL_TEMPLATE_VERSION_2 + "applications",
+            message.dict(by_alias=True),
+        )
+
+        return self._construct_response(response, CreateTFAApplicationResponse)
