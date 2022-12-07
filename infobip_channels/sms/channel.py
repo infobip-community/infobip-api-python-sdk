@@ -6,6 +6,7 @@ import requests
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, ResponseBase
 from infobip_channels.sms.models.body.create_tfa_application import CreateTFAApplicationBody
+from infobip_channels.sms.models.body.create_tfa_message_template import CreateTFAMessageTemplateBody
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
@@ -15,6 +16,8 @@ from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.body.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesMessageBody,
 )
+from infobip_channels.sms.models.body.update_tfa_application import UpdateTFAApplicationBody
+from infobip_channels.sms.models.body.update_tfa_message_template import UpdateTFAMessageTemplateBody
 from infobip_channels.sms.models.query_parameters.get_inbound_messages import (
     GetInboundSMSMessagesQueryParameters,
 )
@@ -41,6 +44,7 @@ from infobip_channels.sms.models.query_parameters.update_scheduled_messages_stat
 )
 from infobip_channels.sms.models.response.core import SMSResponseError
 from infobip_channels.sms.models.response.create_tfa_application import CreateTFAApplicationResponse
+from infobip_channels.sms.models.response.create_tfa_message_template import CreateTFAMessageTemplateResponse
 from infobip_channels.sms.models.response.get_scheduled_messages import (
     GetScheduledSMSMessagesResponse,
 )
@@ -48,8 +52,10 @@ from infobip_channels.sms.models.response.get_scheduled_messages_status import (
     GetScheduledSMSMessagesStatusResponse,
 )
 from infobip_channels.sms.models.response.get_tfa_applications import (
-    GetTFAApplicationsResponse,
+    GetTFAApplicationsResponse, GetTFAApplicationResponse,
 )
+from infobip_channels.sms.models.response.get_tfa_message_template import GetTFAMessageTemplateResponse
+from infobip_channels.sms.models.response.get_tfa_message_templates import GetTFAMessageTemplatesResponse
 from infobip_channels.sms.models.response.inbound_messages import (
     InboundSMSMessagesResponse,
 )
@@ -69,6 +75,8 @@ from infobip_channels.sms.models.response.send_message import SendSMSResponse
 from infobip_channels.sms.models.response.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesStatusResponse,
 )
+from infobip_channels.sms.models.response.update_tfa_application import UpdateTFAApplicationResponse
+from infobip_channels.sms.models.response.update_tfa_message_template import UpdateTFAMessageTemplateResponse
 
 
 class SMSChannel(Channel):
@@ -352,7 +360,7 @@ class SMSChannel(Channel):
     ) -> Union[ResponseBase, CreateTFAApplicationResponse, Any]:
         """Create and configure a new 2FA application.
 
-        :param request_body: Body of the message to send
+        :param request_body: Body of the TFA application to create
         :return: Received response
         """
         message = self.validate_message_body(request_body, CreateTFAApplicationBody)
@@ -363,3 +371,106 @@ class SMSChannel(Channel):
         )
 
         return self._construct_response(response, CreateTFAApplicationResponse)
+
+    def get_tfa_application(
+        self,
+        application_id: str,
+    ) -> Union[ResponseBase, Any]:
+        """Get a single 2FA application to see its configuration details.
+
+        :param application_id: ID of application for which configuration view was requested.
+        :return: Received response
+        """
+        response = self._client.get(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}"
+        )
+        return self._construct_response(response, GetTFAApplicationResponse)
+
+    def update_tfa_application(
+        self,
+        application_id: str,
+        request_body: Union[UpdateTFAApplicationBody, Dict],
+    ) -> Union[ResponseBase, Any]:
+        """Change configuration options for your existing 2FA application.
+
+        :param application_id: ID of application that should be updated.
+        :param request_body: Body of the TFA application to update
+        :return: Received response
+        """
+        message = self.validate_message_body(request_body, UpdateTFAApplicationBody)
+
+        response = self._client.put(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}",
+            message.dict(by_alias=True),
+        )
+
+        return self._construct_response(response, UpdateTFAApplicationResponse)
+
+    def get_tfa_message_templates(
+            self,
+            application_id: str,
+    ) -> Union[ResponseBase, Any]:
+        """Use this method to list your message templates.
+
+        :return: Received response
+        """
+        response = self._client.get(self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}/messages")
+        return self._construct_response(response, GetTFAMessageTemplatesResponse)
+
+    def create_tfa_message_template(self,
+            application_id: str,
+            request_body: Union[CreateTFAMessageTemplateBody, Dict],
+    ) -> Union[ResponseBase, CreateTFAMessageTemplateResponse, Any]:
+        """Once you have your 2FA application, create one or more message templates where your PIN will be dynamically
+        included when you send the PIN message.
+
+        :param application_id: ID of application for which requested message was created.
+        :param request_body: Body of the TFA message template to create
+        :return: Received response
+        """
+        message = self.validate_message_body(request_body, CreateTFAMessageTemplateBody)
+
+        response = self._client.post(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}/messages",
+            message.dict(by_alias=True),
+        )
+
+        return self._construct_response(response, CreateTFAMessageTemplateResponse)
+
+    def get_tfa_message_template(
+            self,
+            application_id: str,
+            message_id: str,
+    ) -> Union[ResponseBase, Any]:
+        """Get a single 2FA message template to see its configuration details.
+
+        :param application_id: ID of application for which requested message was created.
+        :param message_id: requested message ID
+        :return: Received response
+        """
+        response = self._client.get(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}/messages/{message_id}"
+        )
+        return self._construct_response(response, GetTFAMessageTemplateResponse)
+
+    def update_tfa_message_template(
+            self,
+            application_id: str,
+            message_id: str,
+            request_body: Union[UpdateTFAMessageTemplateBody, Dict],
+    ) -> Union[ResponseBase, Any]:
+        """Change configuration options for your existing 2FA message template.
+
+        :param application_id: ID of application for which requested message was created.
+        :param message_id: requested message ID
+        :param request_body: Body of the TFA message template to update
+        :return: Received response
+        """
+        message = self.validate_message_body(request_body, UpdateTFAMessageTemplateBody)
+
+        response = self._client.put(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}/messages/{message_id}",
+            message.dict(by_alias=True),
+        )
+
+        return self._construct_response(response, UpdateTFAMessageTemplateResponse)
