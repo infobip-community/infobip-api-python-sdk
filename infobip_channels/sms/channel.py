@@ -13,6 +13,7 @@ from infobip_channels.sms.models.body.reschedule_sms_messages import (
 )
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
+from infobip_channels.sms.models.body.send_pin_over_sms import SendPINOverSMSBody
 from infobip_channels.sms.models.body.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesMessageBody,
 )
@@ -39,6 +40,7 @@ from infobip_channels.sms.models.query_parameters.reschedule_messages import (
 from infobip_channels.sms.models.query_parameters.send_message import (
     SendSMSMessageQueryParameters,
 )
+from infobip_channels.sms.models.query_parameters.send_pin_over_sms import SendPINOverSMSQueryParameters
 from infobip_channels.sms.models.query_parameters.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesQueryParameters,
 )
@@ -51,8 +53,9 @@ from infobip_channels.sms.models.response.get_scheduled_messages import (
 from infobip_channels.sms.models.response.get_scheduled_messages_status import (
     GetScheduledSMSMessagesStatusResponse,
 )
+from infobip_channels.sms.models.response.get_tfa_application import GetTFAApplicationResponse
 from infobip_channels.sms.models.response.get_tfa_applications import (
-    GetTFAApplicationsResponse, GetTFAApplicationResponse,
+    GetTFAApplicationsResponse
 )
 from infobip_channels.sms.models.response.get_tfa_message_template import GetTFAMessageTemplateResponse
 from infobip_channels.sms.models.response.get_tfa_message_templates import GetTFAMessageTemplatesResponse
@@ -72,6 +75,7 @@ from infobip_channels.sms.models.response.reschedule_sms_messages import (
     RescheduleSMSMessagesResponse,
 )
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
+from infobip_channels.sms.models.response.send_pin_over_sms import SendPINOverSMSResponse
 from infobip_channels.sms.models.response.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesStatusResponse,
 )
@@ -474,3 +478,17 @@ class SMSChannel(Channel):
         )
 
         return self._construct_response(response, UpdateTFAMessageTemplateResponse)
+
+    def send_pin_over_sms(
+            self,
+            query_parameters: Union[SendPINOverSMSQueryParameters, Dict],
+            request_body: Union[SendPINOverSMSBody, Dict],
+    ) -> Union[ResponseBase, SendPINOverSMSResponse, Any]:
+        body = self.validate_message_body(request_body, SendPINOverSMSBody)
+
+        response = self._client.post(
+            self.TFA_URL_TEMPLATE_VERSION_2 + "pin",
+            body.dict(by_alias=True),
+            PostHeaders(authorization=self._client.auth.api_key),
+        )
+        return self._construct_response(response, SendPINOverSMSResponse)
