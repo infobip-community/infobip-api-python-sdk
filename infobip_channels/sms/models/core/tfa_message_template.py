@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from infobip_channels.core.models import CamelCaseModel
+from infobip_channels.core.models import CamelCaseModel, MessageBodyBase, ResponseBase
 from infobip_channels.sms.models.body.core import Regional
 
 
@@ -37,7 +37,7 @@ class LanguageEnum(str, Enum):
     ZH_TW = "zh-tw"
 
 
-class TFAMessageTemplate(CamelCaseModel):
+class TFAMessageTemplate(MessageBodyBase, ResponseBase, CamelCaseModel):
     application_id: Optional[str]
     language: Optional[LanguageEnum]
     message_id: Optional[str]
