@@ -11,14 +11,18 @@ from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
 )
+from infobip_channels.sms.models.body.resend_pin_over_sms import ResendPINOverSMSBody
+from infobip_channels.sms.models.body.resend_pin_over_voice import ResendPINOverVoiceBody
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.body.send_pin_over_sms import SendPINOverSMSBody
+from infobip_channels.sms.models.body.send_pin_over_voice import SendPINOverVoiceBody
 from infobip_channels.sms.models.body.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesMessageBody,
 )
 from infobip_channels.sms.models.body.update_tfa_application import UpdateTFAApplicationBody
 from infobip_channels.sms.models.body.update_tfa_message_template import UpdateTFAMessageTemplateBody
+from infobip_channels.sms.models.body.verify_phone_number import VerifyPhoneNumberBody
 from infobip_channels.sms.models.query_parameters.get_inbound_messages import (
     GetInboundSMSMessagesQueryParameters,
 )
@@ -34,6 +38,8 @@ from infobip_channels.sms.models.query_parameters.get_scheduled_messages import 
 from infobip_channels.sms.models.query_parameters.get_scheduled_messages_status import (
     GetScheduledSMSMessagesStatusQueryParameters,
 )
+from infobip_channels.sms.models.query_parameters.get_tfa_verification_status import \
+    GetTFAVerificationStatusQueryParameters
 from infobip_channels.sms.models.query_parameters.reschedule_messages import (
     RescheduleSMSMessagesQueryParameters,
 )
@@ -59,6 +65,7 @@ from infobip_channels.sms.models.response.get_tfa_applications import (
 )
 from infobip_channels.sms.models.response.get_tfa_message_template import GetTFAMessageTemplateResponse
 from infobip_channels.sms.models.response.get_tfa_message_templates import GetTFAMessageTemplatesResponse
+from infobip_channels.sms.models.response.get_tfa_verification_status import GetTFAVerificationStatusResponse
 from infobip_channels.sms.models.response.inbound_messages import (
     InboundSMSMessagesResponse,
 )
@@ -74,13 +81,17 @@ from infobip_channels.sms.models.response.preview_message import (
 from infobip_channels.sms.models.response.reschedule_sms_messages import (
     RescheduleSMSMessagesResponse,
 )
+from infobip_channels.sms.models.response.resend_pin_over_sms import ResendPINOverSMSResponse
+from infobip_channels.sms.models.response.resend_pin_over_voice import ResendPINOverVoiceResponse
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 from infobip_channels.sms.models.response.send_pin_over_sms import SendPINOverSMSResponse
+from infobip_channels.sms.models.response.send_pin_over_voice import SendPINOverVoiceResponse
 from infobip_channels.sms.models.response.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesStatusResponse,
 )
 from infobip_channels.sms.models.response.update_tfa_application import UpdateTFAApplicationResponse
 from infobip_channels.sms.models.response.update_tfa_message_template import UpdateTFAMessageTemplateResponse
+from infobip_channels.sms.models.response.verify_phone_number import VerifyPhoneNumberResponse
 
 
 class SMSChannel(Channel):
@@ -421,7 +432,8 @@ class SMSChannel(Channel):
         response = self._client.get(self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}/messages")
         return self._construct_response(response, GetTFAMessageTemplatesResponse)
 
-    def create_tfa_message_template(self,
+    def create_tfa_message_template(
+            self,
             application_id: str,
             request_body: Union[CreateTFAMessageTemplateBody, Dict],
     ) -> Union[ResponseBase, CreateTFAMessageTemplateResponse, Any]:
@@ -484,11 +496,124 @@ class SMSChannel(Channel):
             query_parameters: Union[SendPINOverSMSQueryParameters, Dict],
             request_body: Union[SendPINOverSMSBody, Dict],
     ) -> Union[ResponseBase, SendPINOverSMSResponse, Any]:
+        """Send a PIN code over SMS using a previously created message template.
+
+        :param query_parameters: Query parameters for the request
+        :param request_body: Body of the send PIN request
+        :return: Received response
+        """
+
+        query_parameters = self.validate_query_parameter(
+            query_parameters or {}, SendPINOverSMSQueryParameters
+        )
+
         body = self.validate_message_body(request_body, SendPINOverSMSBody)
 
         response = self._client.post(
             self.TFA_URL_TEMPLATE_VERSION_2 + "pin",
             body.dict(by_alias=True),
-            PostHeaders(authorization=self._client.auth.api_key),
+            PostHeaders(authorization=self._client.auth.api_key, params=query_parameters.dict(by_alias=True)), # TODO: check works
         )
         return self._construct_response(response, SendPINOverSMSResponse)
+
+    def resend_pin_over_sms(
+            self,
+            pin_id: str,
+            request_body: Union[ResendPINOverSMSBody, Dict],
+    ) -> Union[ResponseBase, ResendPINOverSMSResponse, Any]:
+        """If needed, you can resend the same (previously sent) PIN code over SMS.
+
+        :param pin_id: ID of the pin code that has to be verified
+        :param request_body: Body of the resend PIN request
+        :return: Received response
+        """
+        body = self.validate_message_body(request_body, ResendPINOverSMSBody)
+
+        response = self._client.post(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"pin/{pin_id}/resend",
+            body.dict(by_alias=True),
+            PostHeaders(authorization=self._client.auth.api_key),
+        )
+        return self._construct_response(response, ResendPINOverSMSResponse)
+
+    def send_pin_over_voice(
+            self,
+            request_body: Union[SendPINOverVoiceBody, Dict],
+    ) -> Union[ResponseBase, SendPINOverVoiceResponse, Any]:
+        """Send a PIN code over Voice using previously created message template.
+
+        :param request_body: Body of the TFA message template to create
+        :return: Received response
+        """
+        body = self.validate_message_body(request_body, SendPINOverVoiceBody)
+
+        response = self._client.post(
+            self.TFA_URL_TEMPLATE_VERSION_2 + "pin/voice",
+            body.dict(by_alias=True),
+            PostHeaders(authorization=self._client.auth.api_key),
+        )
+        return self._construct_response(response, SendPINOverVoiceResponse)
+
+    def resend_pin_over_voice(
+            self,
+            pin_id: str,
+            request_body: Union[ResendPINOverVoiceBody, Dict],
+    ) -> Union[ResponseBase, ResendPINOverVoiceResponse, Any]:
+        """If needed, you can resend the same (previously sent) PIN code over Voice.
+
+        :param pin_id: ID of the pin code that has to be verified
+        :param request_body: Body of the TFA message template to update
+        :return: Received response
+        """
+
+        body = self.validate_message_body(request_body, ResendPINOverVoiceBody)
+
+        response = self._client.post(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"pin/{pin_id}/resend/voice",
+            body.dict(by_alias=True),
+            PostHeaders(authorization=self._client.auth.api_key),
+        )
+        return self._construct_response(response, ResendPINOverVoiceResponse)
+
+    def verify_phone_number(
+            self,
+            pin_id: str,
+            request_body: Union[VerifyPhoneNumberBody, Dict],
+    ) -> Union[ResponseBase, VerifyPhoneNumberResponse, Any]:
+        """ Verify a phone number to confirm successful 2FA authentication.
+
+        :param pin_id: ID of the pin code that has to be verified
+        :param request_body: Body of the request to verify phone number
+        :return: Received response
+        """
+
+        body = self.validate_message_body(request_body, VerifyPhoneNumberBody)
+
+        response = self._client.post(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"pin/{pin_id}/verify",
+            body.dict(by_alias=True),
+            PostHeaders(authorization=self._client.auth.api_key),
+        )
+        return self._construct_response(response, VerifyPhoneNumberResponse)
+
+    def get_tfa_verification_status(
+            self,
+            app_id: str,
+            query_parameters: Union[GetTFAVerificationStatusQueryParameters, Dict],
+    ) -> Union[ResponseBase, GetTFAVerificationStatusResponse, Any]:
+        """Check if a phone number is already verified for a specific 2FA application.
+
+        :param app_id: ID of the pin code that has to be verified
+        :param query_parameters: Query parameters for the request
+        :return: Received response
+        """
+
+        query_parameters = self.validate_query_parameter(
+            query_parameters or {}, GetTFAVerificationStatusQueryParameters
+        )
+
+        response = self._client.get(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{app_id}/verifications",
+            params=query_parameters.dict(by_alias=True),
+            )
+        return self._construct_response(response, GetTFAVerificationStatusResponse)
