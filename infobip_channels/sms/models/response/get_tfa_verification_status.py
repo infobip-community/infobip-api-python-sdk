@@ -6,7 +6,7 @@ from infobip_channels.core.models import CamelCaseModel, ResponseBase
 class Verification(CamelCaseModel):
     msisdn: str
     verified: bool
-    verified_at: int # TODO: check datetime
+    verified_at: int
     sent_at: int
 
 

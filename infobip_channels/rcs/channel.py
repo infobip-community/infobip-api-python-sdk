@@ -24,7 +24,7 @@ class RCSChannel(Channel):
         raw_response: Union[requests.Response, Any],
         response_ok_class: Type[ResponseBase] = RCSResponseOK,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Type[ResponseBase]:
         if raw_response.status_code == HTTPStatus.OK:
             return response_ok_class

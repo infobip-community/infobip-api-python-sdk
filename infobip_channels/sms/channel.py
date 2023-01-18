@@ -5,14 +5,20 @@ import requests
 
 from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import PostHeaders, ResponseBase
-from infobip_channels.sms.models.body.create_tfa_application import CreateTFAApplicationBody
-from infobip_channels.sms.models.body.create_tfa_message_template import CreateTFAMessageTemplateBody
+from infobip_channels.sms.models.body.create_tfa_application import (
+    CreateTFAApplicationBody,
+)
+from infobip_channels.sms.models.body.create_tfa_message_template import (
+    CreateTFAMessageTemplateBody,
+)
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
 )
 from infobip_channels.sms.models.body.resend_pin_over_sms import ResendPINOverSMSBody
-from infobip_channels.sms.models.body.resend_pin_over_voice import ResendPINOverVoiceBody
+from infobip_channels.sms.models.body.resend_pin_over_voice import (
+    ResendPINOverVoiceBody,
+)
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.body.send_pin_over_sms import SendPINOverSMSBody
@@ -20,8 +26,12 @@ from infobip_channels.sms.models.body.send_pin_over_voice import SendPINOverVoic
 from infobip_channels.sms.models.body.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesMessageBody,
 )
-from infobip_channels.sms.models.body.update_tfa_application import UpdateTFAApplicationBody
-from infobip_channels.sms.models.body.update_tfa_message_template import UpdateTFAMessageTemplateBody
+from infobip_channels.sms.models.body.update_tfa_application import (
+    UpdateTFAApplicationBody,
+)
+from infobip_channels.sms.models.body.update_tfa_message_template import (
+    UpdateTFAMessageTemplateBody,
+)
 from infobip_channels.sms.models.body.verify_phone_number import VerifyPhoneNumberBody
 from infobip_channels.sms.models.query_parameters.get_inbound_messages import (
     GetInboundSMSMessagesQueryParameters,
@@ -38,36 +48,55 @@ from infobip_channels.sms.models.query_parameters.get_scheduled_messages import 
 from infobip_channels.sms.models.query_parameters.get_scheduled_messages_status import (
     GetScheduledSMSMessagesStatusQueryParameters,
 )
-from infobip_channels.sms.models.query_parameters.get_tfa_verification_status import \
-    GetTFAVerificationStatusQueryParameters
+from infobip_channels.sms.models.query_parameters.get_tfa_verification_status import (
+    GetTFAVerificationStatusQueryParameters,
+)
 from infobip_channels.sms.models.query_parameters.reschedule_messages import (
     RescheduleSMSMessagesQueryParameters,
 )
 from infobip_channels.sms.models.query_parameters.send_message import (
     SendSMSMessageQueryParameters,
 )
-from infobip_channels.sms.models.query_parameters.send_pin_over_sms import SendPINOverSMSQueryParameters
-from infobip_channels.sms.models.query_parameters.send_pin_over_voice import SendPINOverVoiceQueryParameters
+from infobip_channels.sms.models.query_parameters.send_pin_over_sms import (
+    SendPINOverSMSQueryParameters,
+)
+from infobip_channels.sms.models.query_parameters.send_pin_over_voice import (
+    SendPINOverVoiceQueryParameters,
+)
 from infobip_channels.sms.models.query_parameters.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesQueryParameters,
 )
-from infobip_channels.sms.models.query_parameters.verify_phone_number import VerifyPhoneNumberQueryParameters
+from infobip_channels.sms.models.query_parameters.verify_phone_number import (
+    VerifyPhoneNumberQueryParameters,
+)
 from infobip_channels.sms.models.response.core import SMSResponseError
-from infobip_channels.sms.models.response.create_tfa_application import CreateTFAApplicationResponse
-from infobip_channels.sms.models.response.create_tfa_message_template import CreateTFAMessageTemplateResponse
+from infobip_channels.sms.models.response.create_tfa_application import (
+    CreateTFAApplicationResponse,
+)
+from infobip_channels.sms.models.response.create_tfa_message_template import (
+    CreateTFAMessageTemplateResponse,
+)
 from infobip_channels.sms.models.response.get_scheduled_messages import (
     GetScheduledSMSMessagesResponse,
 )
 from infobip_channels.sms.models.response.get_scheduled_messages_status import (
     GetScheduledSMSMessagesStatusResponse,
 )
-from infobip_channels.sms.models.response.get_tfa_application import GetTFAApplicationResponse
-from infobip_channels.sms.models.response.get_tfa_applications import (
-    GetTFAApplicationsResponse
+from infobip_channels.sms.models.response.get_tfa_application import (
+    GetTFAApplicationResponse,
 )
-from infobip_channels.sms.models.response.get_tfa_message_template import GetTFAMessageTemplateResponse
-from infobip_channels.sms.models.response.get_tfa_message_templates import GetTFAMessageTemplatesResponse
-from infobip_channels.sms.models.response.get_tfa_verification_status import GetTFAVerificationStatusResponse
+from infobip_channels.sms.models.response.get_tfa_applications import (
+    GetTFAApplicationsResponse,
+)
+from infobip_channels.sms.models.response.get_tfa_message_template import (
+    GetTFAMessageTemplateResponse,
+)
+from infobip_channels.sms.models.response.get_tfa_message_templates import (
+    GetTFAMessageTemplatesResponse,
+)
+from infobip_channels.sms.models.response.get_tfa_verification_status import (
+    GetTFAVerificationStatusResponse,
+)
 from infobip_channels.sms.models.response.inbound_messages import (
     InboundSMSMessagesResponse,
 )
@@ -83,17 +112,31 @@ from infobip_channels.sms.models.response.preview_message import (
 from infobip_channels.sms.models.response.reschedule_sms_messages import (
     RescheduleSMSMessagesResponse,
 )
-from infobip_channels.sms.models.response.resend_pin_over_sms import ResendPINOverSMSResponse
-from infobip_channels.sms.models.response.resend_pin_over_voice import ResendPINOverVoiceResponse
+from infobip_channels.sms.models.response.resend_pin_over_sms import (
+    ResendPINOverSMSResponse,
+)
+from infobip_channels.sms.models.response.resend_pin_over_voice import (
+    ResendPINOverVoiceResponse,
+)
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
-from infobip_channels.sms.models.response.send_pin_over_sms import SendPINOverSMSResponse
-from infobip_channels.sms.models.response.send_pin_over_voice import SendPINOverVoiceResponse
+from infobip_channels.sms.models.response.send_pin_over_sms import (
+    SendPINOverSMSResponse,
+)
+from infobip_channels.sms.models.response.send_pin_over_voice import (
+    SendPINOverVoiceResponse,
+)
 from infobip_channels.sms.models.response.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesStatusResponse,
 )
-from infobip_channels.sms.models.response.update_tfa_application import UpdateTFAApplicationResponse
-from infobip_channels.sms.models.response.update_tfa_message_template import UpdateTFAMessageTemplateResponse
-from infobip_channels.sms.models.response.verify_phone_number import VerifyPhoneNumberResponse
+from infobip_channels.sms.models.response.update_tfa_application import (
+    UpdateTFAApplicationResponse,
+)
+from infobip_channels.sms.models.response.update_tfa_message_template import (
+    UpdateTFAMessageTemplateResponse,
+)
+from infobip_channels.sms.models.response.verify_phone_number import (
+    VerifyPhoneNumberResponse,
+)
 
 
 class SMSChannel(Channel):
@@ -108,7 +151,7 @@ class SMSChannel(Channel):
         raw_response: Union[requests.Response, Any],
         response_class: Type[ResponseBase] = SendSMSResponse,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Type[ResponseBase]:
 
         if raw_response.status_code == HTTPStatus.OK:
@@ -423,20 +466,22 @@ class SMSChannel(Channel):
         return self._construct_response(response, UpdateTFAApplicationResponse)
 
     def get_tfa_message_templates(
-            self,
-            application_id: str,
+        self,
+        application_id: str,
     ) -> Union[ResponseBase, Any]:
         """Use this method to list your message templates.
 
         :return: Received response
         """
-        response = self._client.get(self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}/messages")
+        response = self._client.get(
+            self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}/messages"
+        )
         return self._construct_response(response, GetTFAMessageTemplatesResponse)
 
     def create_tfa_message_template(
-            self,
-            application_id: str,
-            request_body: Union[CreateTFAMessageTemplateBody, Dict],
+        self,
+        application_id: str,
+        request_body: Union[CreateTFAMessageTemplateBody, Dict],
     ) -> Union[ResponseBase, CreateTFAMessageTemplateResponse, Any]:
         """Once you have your 2FA application, create one or more message templates where your PIN will be dynamically
         included when you send the PIN message.
@@ -455,9 +500,9 @@ class SMSChannel(Channel):
         return self._construct_response(response, CreateTFAMessageTemplateResponse)
 
     def get_tfa_message_template(
-            self,
-            application_id: str,
-            message_id: str,
+        self,
+        application_id: str,
+        message_id: str,
     ) -> Union[ResponseBase, GetTFAMessageTemplateResponse, Any]:
         """Get a single 2FA message template to see its configuration details.
 
@@ -466,15 +511,16 @@ class SMSChannel(Channel):
         :return: Received response
         """
         response = self._client.get(
-            self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}/messages/{message_id}"
+            self.TFA_URL_TEMPLATE_VERSION_2
+            + f"applications/{application_id}/messages/{message_id}"
         )
         return self._construct_response(response, GetTFAMessageTemplateResponse)
 
     def update_tfa_message_template(
-            self,
-            application_id: str,
-            message_id: str,
-            request_body: Union[UpdateTFAMessageTemplateBody, Dict],
+        self,
+        application_id: str,
+        message_id: str,
+        request_body: Union[UpdateTFAMessageTemplateBody, Dict],
     ) -> Union[ResponseBase, Any]:
         """Change configuration options for your existing 2FA message template.
 
@@ -486,16 +532,17 @@ class SMSChannel(Channel):
         message = self.validate_message_body(request_body, UpdateTFAMessageTemplateBody)
 
         response = self._client.put(
-            self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{application_id}/messages/{message_id}",
+            self.TFA_URL_TEMPLATE_VERSION_2
+            + f"applications/{application_id}/messages/{message_id}",
             message.dict(by_alias=True),
         )
 
         return self._construct_response(response, UpdateTFAMessageTemplateResponse)
 
     def send_pin_over_sms(
-            self,
-            query_parameters: Union[SendPINOverSMSQueryParameters, Dict],
-            request_body: Union[SendPINOverSMSBody, Dict],
+        self,
+        query_parameters: Union[SendPINOverSMSQueryParameters, Dict],
+        request_body: Union[SendPINOverSMSBody, Dict],
     ) -> Union[ResponseBase, SendPINOverSMSResponse, Any]:
         """Send a PIN code over SMS using a previously created message template.
 
@@ -519,9 +566,9 @@ class SMSChannel(Channel):
         return self._construct_response(response, SendPINOverSMSResponse)
 
     def resend_pin_over_sms(
-            self,
-            pin_id: str,
-            request_body: Union[ResendPINOverSMSBody, Dict],
+        self,
+        pin_id: str,
+        request_body: Union[ResendPINOverSMSBody, Dict],
     ) -> Union[ResponseBase, ResendPINOverSMSResponse, Any]:
         """If needed, you can resend the same (previously sent) PIN code over SMS.
 
@@ -539,9 +586,9 @@ class SMSChannel(Channel):
         return self._construct_response(response, ResendPINOverSMSResponse)
 
     def send_pin_over_voice(
-            self,
-            query_parameters: Union[SendPINOverVoiceQueryParameters, Dict],
-            request_body: Union[SendPINOverVoiceBody, Dict],
+        self,
+        query_parameters: Union[SendPINOverVoiceQueryParameters, Dict],
+        request_body: Union[SendPINOverVoiceBody, Dict],
     ) -> Union[ResponseBase, SendPINOverVoiceResponse, Any]:
         """Send a PIN code over Voice using previously created message template.
 
@@ -559,9 +606,9 @@ class SMSChannel(Channel):
         return self._construct_response(response, SendPINOverVoiceResponse)
 
     def resend_pin_over_voice(
-            self,
-            pin_id: str,
-            request_body: Union[ResendPINOverVoiceBody, Dict],
+        self,
+        pin_id: str,
+        request_body: Union[ResendPINOverVoiceBody, Dict],
     ) -> Union[ResponseBase, ResendPINOverVoiceResponse, Any]:
         """If needed, you can resend the same (previously sent) PIN code over Voice.
 
@@ -580,12 +627,12 @@ class SMSChannel(Channel):
         return self._construct_response(response, ResendPINOverVoiceResponse)
 
     def verify_phone_number(
-            self,
-            pin_id: str,
-            query_parameters: Union[VerifyPhoneNumberQueryParameters, Dict],
-            request_body: Union[VerifyPhoneNumberBody, Dict],
+        self,
+        pin_id: str,
+        query_parameters: Union[VerifyPhoneNumberQueryParameters, Dict],
+        request_body: Union[VerifyPhoneNumberBody, Dict],
     ) -> Union[ResponseBase, VerifyPhoneNumberResponse, Any]:
-        """ Verify a phone number to confirm successful 2FA authentication.
+        """Verify a phone number to confirm successful 2FA authentication.
 
         :param pin_id: ID of the pin code that has to be verified
         :param request_body: Body of the request to verify phone number
@@ -608,9 +655,9 @@ class SMSChannel(Channel):
         return self._construct_response(response, VerifyPhoneNumberResponse)
 
     def get_tfa_verification_status(
-            self,
-            app_id: str,
-            query_parameters: Union[GetTFAVerificationStatusQueryParameters, Dict],
+        self,
+        app_id: str,
+        query_parameters: Union[GetTFAVerificationStatusQueryParameters, Dict],
     ) -> Union[ResponseBase, GetTFAVerificationStatusResponse, Any]:
         """Check if a phone number is already verified for a specific 2FA application.
 
@@ -626,5 +673,5 @@ class SMSChannel(Channel):
         response = self._client.get(
             self.TFA_URL_TEMPLATE_VERSION_2 + f"applications/{app_id}/verifications",
             params=query_parameters.dict(by_alias=True),
-            )
+        )
         return self._construct_response(response, GetTFAVerificationStatusResponse)

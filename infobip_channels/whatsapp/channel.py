@@ -54,7 +54,7 @@ class WhatsAppChannel(Channel):
         raw_response: Union[requests.Response, Any],
         response_ok_model: Type[ResponseBase] = WhatsAppResponseOK,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Type[ResponseBase]:
 
         if raw_response.status_code in (HTTPStatus.OK, HTTPStatus.CREATED):

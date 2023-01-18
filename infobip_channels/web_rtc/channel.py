@@ -35,7 +35,7 @@ class WebRtcChannel(Channel):
         response: Union[requests.Response, Any],
         response_ok_model: Type[ResponseBase] = WebRtcResponseOK,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Type[ResponseBase]:
 
         if response.status_code == HTTPStatus.OK:
