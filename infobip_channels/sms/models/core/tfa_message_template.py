@@ -1,7 +1,10 @@
 from enum import Enum
 from typing import Optional
 
-from infobip_channels.core.models import CamelCaseModel, MessageBodyBase, ResponseBase
+from pydantic import Field
+from pydantic.types import constr
+
+from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
 from infobip_channels.sms.models.body.core import Regional
 
 
@@ -37,15 +40,15 @@ class LanguageEnum(str, Enum):
     ZH_TW = "zh-tw"
 
 
-class TFAMessageTemplate(MessageBodyBase, ResponseBase, CamelCaseModel):
+class TFAMessageTemplate(MessageBodyBase, CamelCaseModel):
     application_id: Optional[str]
     language: Optional[LanguageEnum]
     message_id: Optional[str]
-    message_text: Optional[str]
+    message_text: constr(min_length=1) = None
     pin_length: Optional[int]
-    pin_placeholder: Optional[str]
-    pin_type: Optional[PINTypeEnum]
-    regional: Optional[Regional]
-    repeat_dtmf: Optional[str]
+    pin_placeholder: constr(min_length=1) = None
+    pin_type: PINTypeEnum
+    regional: Optional[Regional] = None
+    repeat_dtmf: Optional[str] = Field(alias="repeatDTMF", default=None)
     sender_id: Optional[str]
     speech_rate: Optional[float]

@@ -47,9 +47,11 @@ from infobip_channels.sms.models.query_parameters.send_message import (
     SendSMSMessageQueryParameters,
 )
 from infobip_channels.sms.models.query_parameters.send_pin_over_sms import SendPINOverSMSQueryParameters
+from infobip_channels.sms.models.query_parameters.send_pin_over_voice import SendPINOverVoiceQueryParameters
 from infobip_channels.sms.models.query_parameters.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesQueryParameters,
 )
+from infobip_channels.sms.models.query_parameters.verify_phone_number import VerifyPhoneNumberQueryParameters
 from infobip_channels.sms.models.response.core import SMSResponseError
 from infobip_channels.sms.models.response.create_tfa_application import CreateTFAApplicationResponse
 from infobip_channels.sms.models.response.create_tfa_message_template import CreateTFAMessageTemplateResponse
@@ -173,7 +175,6 @@ class SMSChannel(Channel):
         query_parameters = self.validate_query_parameter(
             query_parameters, SendSMSMessageQueryParameters
         )
-        query_parameters.url_encode()
 
         response = self._client.get(
             self.SMS_URL_TEMPLATE_VERSION_1 + "text/query",
@@ -457,7 +458,7 @@ class SMSChannel(Channel):
             self,
             application_id: str,
             message_id: str,
-    ) -> Union[ResponseBase, Any]:
+    ) -> Union[ResponseBase, GetTFAMessageTemplateResponse, Any]:
         """Get a single 2FA message template to see its configuration details.
 
         :param application_id: ID of application for which requested message was created.
@@ -512,7 +513,8 @@ class SMSChannel(Channel):
         response = self._client.post(
             self.TFA_URL_TEMPLATE_VERSION_2 + "pin",
             body.dict(by_alias=True),
-            PostHeaders(authorization=self._client.auth.api_key, params=query_parameters.dict(by_alias=True)), # TODO: check works
+            headers=PostHeaders(authorization=self._client.auth.api_key),
+            params=query_parameters.dict(by_alias=True),
         )
         return self._construct_response(response, SendPINOverSMSResponse)
 
@@ -538,10 +540,12 @@ class SMSChannel(Channel):
 
     def send_pin_over_voice(
             self,
+            query_parameters: Union[SendPINOverVoiceQueryParameters, Dict],
             request_body: Union[SendPINOverVoiceBody, Dict],
     ) -> Union[ResponseBase, SendPINOverVoiceResponse, Any]:
         """Send a PIN code over Voice using previously created message template.
 
+        :param query_parameters: Query parameters for the request
         :param request_body: Body of the TFA message template to create
         :return: Received response
         """
@@ -578,21 +582,28 @@ class SMSChannel(Channel):
     def verify_phone_number(
             self,
             pin_id: str,
+            query_parameters: Union[VerifyPhoneNumberQueryParameters, Dict],
             request_body: Union[VerifyPhoneNumberBody, Dict],
     ) -> Union[ResponseBase, VerifyPhoneNumberResponse, Any]:
         """ Verify a phone number to confirm successful 2FA authentication.
 
         :param pin_id: ID of the pin code that has to be verified
         :param request_body: Body of the request to verify phone number
+        :param query_parameters: Query parameters for the request
         :return: Received response
         """
+
+        query_parameters = self.validate_query_parameter(
+            query_parameters or {}, VerifyPhoneNumberQueryParameters
+        )
 
         body = self.validate_message_body(request_body, VerifyPhoneNumberBody)
 
         response = self._client.post(
             self.TFA_URL_TEMPLATE_VERSION_2 + f"pin/{pin_id}/verify",
             body.dict(by_alias=True),
-            PostHeaders(authorization=self._client.auth.api_key),
+            params=query_parameters.dict(by_alias=True),
+            headers=PostHeaders(authorization=self._client.auth.api_key),
         )
         return self._construct_response(response, VerifyPhoneNumberResponse)
 
