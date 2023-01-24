@@ -126,7 +126,7 @@ class TFATestCase(unittest.TestCase):
         response = TFATestCase.channel.send_pin_over_sms(query_parameters, request_body)
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json()) # FIXME: Response cannot be converted to json.
+        self.assertIsNotNone(response.json())
 
     def test_resend_pin_over_sms(self):
         placeholders = {
