@@ -1,5 +1,6 @@
 from pydantic_factories import ModelFactory
 
+from infobip_channels.sms.models.body.create_tfa_application import CreateTFAApplicationBody
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
@@ -9,6 +10,7 @@ from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.body.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesMessageBody,
 )
+from infobip_channels.sms.models.body.update_tfa_application import UpdateTFAApplicationBody
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
 
@@ -59,6 +61,24 @@ class GenerateRescheduleSMSMessagesFactory(ModelFactory):
 
 class GenerateUpdateScheduledSMSMessagesStatusFactory(ModelFactory):
     __model__ = UpdateScheduledSMSMessagesMessageBody
+
+
+class GenerateCreateTFAApplicationBodyFactoryIntegration(ModelFactory):
+    __model__ = CreateTFAApplicationBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return CreateTFAApplicationBody(**get_create_tfa_application_body())
+
+
+class GenerateUpdateTFAApplicationBodyFactoryIntegration(ModelFactory):
+    __model__ = UpdateTFAApplicationBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return UpdateTFAApplicationBody(**get_update_tfa_application_body())
 
 
 def get_send_sms_message_body():
@@ -323,4 +343,40 @@ def get_inbound_sms_messages_query_parameters():
 def get_scheduled_sms_messages():
     return {
         "bulk_id": "BulkId-xyz-123",
+    }
+
+def get_tfa_application():
+    return {
+        "name": "2fa application name",
+        "enabled": True,
+        "configuration": {
+            "pinAttempts": 5,
+            "allowMultiplePinVerifications": True,
+            "pinTimeToLive": "10m",
+            "verifyPinLimit": "2/4s",
+            "sendPinPerApplicationLimit": "5000/12h",
+            "sendPinPerPhoneNumberLimit": "2/1d"
+        }
+    }
+
+def get_create_tfa_application_body():
+    return get_tfa_application()
+
+
+def get_update_tfa_application_body():
+    return get_tfa_application()
+
+
+def get_create_tfa_application_response():
+    return get_tfa_application()
+
+
+def get_tfa_request_error_response():
+    return {
+        "requestError": {
+            "serviceException": {
+                "messageId": "BAD_REQUEST",
+                "text": "Bad request",
+            }
+        }
     }
