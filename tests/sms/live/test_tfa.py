@@ -161,3 +161,22 @@ class TFATestCase(unittest.TestCase):
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertIsNotNone(response.json())
+
+    def test_verify_number(self):
+        pin_id = "B147E121929711EC4163A6FB5B44CD59"
+        request_body = {
+            "pin": "1234"
+        }
+
+        response = TFATestCase.channel.verify_phone_number(pin_id, request_body)
+
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+        self.assertIsNotNone(response.json())
+
+    def test_get_tfa_verification_status(self):
+        app_id = "02CC3CAAFD733136AA15DFAC720A0C42"
+        query_parameters = {"msisdn": "555555555555"}
+
+        response = TFATestCase.channel.get_tfa_verification_status(app_id, query_parameters)
+
+        self.assertEqual(HTTPStatus.OK, response.status_code)

@@ -66,9 +66,6 @@ from infobip_channels.sms.models.query_parameters.send_pin_over_voice import (
 from infobip_channels.sms.models.query_parameters.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesQueryParameters,
 )
-from infobip_channels.sms.models.query_parameters.verify_phone_number import (
-    VerifyPhoneNumberQueryParameters,
-)
 from infobip_channels.sms.models.response.core import SMSResponseError
 from infobip_channels.sms.models.response.create_tfa_application import (
     CreateTFAApplicationResponse,
@@ -629,27 +626,19 @@ class SMSChannel(Channel):
     def verify_phone_number(
         self,
         pin_id: str,
-        query_parameters: Union[VerifyPhoneNumberQueryParameters, Dict],
         request_body: Union[VerifyPhoneNumberBody, Dict],
     ) -> Union[ResponseBase, VerifyPhoneNumberResponse, Any]:
         """Verify a phone number to confirm successful 2FA authentication.
 
         :param pin_id: ID of the pin code that has to be verified
         :param request_body: Body of the request to verify phone number
-        :param query_parameters: Query parameters for the request
         :return: Received response
         """
-
-        query_parameters = self.validate_query_parameter(
-            query_parameters or {}, VerifyPhoneNumberQueryParameters
-        )
-
         body = self.validate_message_body(request_body, VerifyPhoneNumberBody)
 
         response = self._client.post(
             self.TFA_URL_TEMPLATE_VERSION_2 + f"pin/{pin_id}/verify",
             body.dict(by_alias=True),
-            params=query_parameters.dict(by_alias=True),
             headers=PostHeaders(authorization=self._client.auth.api_key),
         )
         return self._construct_response(response, VerifyPhoneNumberResponse)

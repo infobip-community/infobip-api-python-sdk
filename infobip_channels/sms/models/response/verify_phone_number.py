@@ -1,11 +1,6 @@
-from typing import Optional
-
 from infobip_channels.core.models import ResponseBase
+from infobip_channels.sms.models.core.tfa_pin_verification import PINVerification
 
 
 class VerifyPhoneNumberResponse(ResponseBase):
-    attempts_remaining: int
-    msisdn: str
-    pin_error: Optional[str]
-    pin_id: str
-    verified: bool
+    verification: PINVerification
