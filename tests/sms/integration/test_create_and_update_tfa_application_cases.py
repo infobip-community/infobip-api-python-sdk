@@ -2,9 +2,13 @@ from pytest_cases import parametrize
 
 from tests.conftest import get_expected_post_headers
 from tests.sms.conftest import (
-    GenerateCreateTFAApplicationBodyFactoryIntegration, get_create_tfa_application_body,
-    GenerateUpdateTFAApplicationBodyFactoryIntegration, get_update_tfa_application_body,
-    get_tfa_request_error_response, get_create_tfa_application_response)
+    GenerateCreateTFAApplicationBodyFactoryIntegration,
+    get_create_tfa_application_body,
+    GenerateUpdateTFAApplicationBodyFactoryIntegration,
+    get_update_tfa_application_body,
+    get_tfa_request_error_response,
+    get_create_tfa_application_response,
+)
 
 ENDPOINT_TEST_ARGUMENTS = {
     "create_tfa_application": {
@@ -33,8 +37,8 @@ ENDPOINT_TEST_ARGUMENTS = {
 @parametrize(
     endpoint_type=ENDPOINT_TEST_ARGUMENTS.keys(),
     responses=(
-            [200, get_create_tfa_application_response],
-            [400, get_tfa_request_error_response],
+        [200, get_create_tfa_application_response],
+        [400, get_tfa_request_error_response],
     ),
 )
 def case__supported_status(endpoint_type, responses):

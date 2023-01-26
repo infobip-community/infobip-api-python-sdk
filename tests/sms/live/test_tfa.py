@@ -26,8 +26,8 @@ class TFATestCase(unittest.TestCase):
                 "pinTimeToLive": "11m",
                 "verifyPinLimit": "2/4s",
                 "sendPinPerApplicationLimit": "5000/12h",
-                "sendPinPerPhoneNumberLimit": "2/1d"
-            }
+                "sendPinPerPhoneNumberLimit": "2/1d",
+            },
         }
         response = TFATestCase.channel.create_tfa_application(application)
 
@@ -35,7 +35,9 @@ class TFATestCase(unittest.TestCase):
         self.assertIsNotNone(response)
 
     def test_get_tfa_application(self):
-        response = TFATestCase.channel.get_tfa_application("02CC3CAAFD733136AA15DFAC720A0C42")
+        response = TFATestCase.channel.get_tfa_application(
+            "02CC3CAAFD733136AA15DFAC720A0C42"
+        )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertIsNotNone(response.json())
@@ -50,17 +52,21 @@ class TFATestCase(unittest.TestCase):
                 "pinTimeToLive": "11m",
                 "verifyPinLimit": "2/4s",
                 "sendPinPerApplicationLimit": "5000/12h",
-                "sendPinPerPhoneNumberLimit": "2/1d"
-            }
+                "sendPinPerPhoneNumberLimit": "2/1d",
+            },
         }
 
-        response = TFATestCase.channel.update_tfa_application("02CC3CAAFD733136AA15DFAC720A0C42", application)
+        response = TFATestCase.channel.update_tfa_application(
+            "02CC3CAAFD733136AA15DFAC720A0C42", application
+        )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertIsNotNone(response.json())
 
     def test_get_tfa_message_templates(self):
-        response = TFATestCase.channel.get_tfa_message_templates("02CC3CAAFD733136AA15DFAC720A0C42")
+        response = TFATestCase.channel.get_tfa_message_templates(
+            "02CC3CAAFD733136AA15DFAC720A0C42"
+        )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertIsNotNone(response.json())
@@ -75,7 +81,7 @@ class TFATestCase(unittest.TestCase):
             "language": "en",
             "senderId": "Infobip 2FA",
             "repeatDTMF": "1#",
-            "speechRate": 1
+            "speechRate": 1,
         }
 
         response = TFATestCase.channel.create_tfa_message_template(app_id, request_body)
@@ -103,10 +109,12 @@ class TFATestCase(unittest.TestCase):
             "language": "en",
             "senderId": "Infobip 2FA",
             "repeatDTMF": "2#",
-            "speechRate": 1
+            "speechRate": 1,
         }
 
-        response = TFATestCase.channel.update_tfa_message_template(app_id, message_id, request_body)
+        response = TFATestCase.channel.update_tfa_message_template(
+            app_id, message_id, request_body
+        )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertIsNotNone(response.json())
@@ -120,7 +128,7 @@ class TFATestCase(unittest.TestCase):
             "to": "555555555555",
             "placeholders": {
                 "name": "John",
-            }
+            },
         }
 
         response = TFATestCase.channel.send_pin_over_sms(query_parameters, request_body)
@@ -129,11 +137,11 @@ class TFATestCase(unittest.TestCase):
         self.assertIsNotNone(response.json())
 
     def test_resend_pin_over_sms(self):
-        placeholders = {
-            "placeholders": {"name": "John"}
-        }
+        placeholders = {"placeholders": {"name": "John"}}
 
-        response = TFATestCase.channel.resend_pin_over_sms("B147E121929711EC4163A6FB5B44CD59", placeholders)
+        response = TFATestCase.channel.resend_pin_over_sms(
+            "B147E121929711EC4163A6FB5B44CD59", placeholders
+        )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertIsNotNone(response.json())
@@ -147,26 +155,26 @@ class TFATestCase(unittest.TestCase):
             "to": "555555555555",
         }
 
-        response = TFATestCase.channel.send_pin_over_voice(query_parameters, request_body)
+        response = TFATestCase.channel.send_pin_over_voice(
+            query_parameters, request_body
+        )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertIsNotNone(response.json())
 
     def test_resend_pin_over_voice(self):
-        placeholders = {
-            "placeholders": {"name": "John"}
-        }
+        placeholders = {"placeholders": {"name": "John"}}
 
-        response = TFATestCase.channel.resend_pin_over_voice("B147E121929711EC4163A6FB5B44CD59", placeholders)
+        response = TFATestCase.channel.resend_pin_over_voice(
+            "B147E121929711EC4163A6FB5B44CD59", placeholders
+        )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
         self.assertIsNotNone(response.json())
 
     def test_verify_number(self):
         pin_id = "B147E121929711EC4163A6FB5B44CD59"
-        request_body = {
-            "pin": "1234"
-        }
+        request_body = {"pin": "1234"}
 
         response = TFATestCase.channel.verify_phone_number(pin_id, request_body)
 
@@ -177,6 +185,8 @@ class TFATestCase(unittest.TestCase):
         app_id = "02CC3CAAFD733136AA15DFAC720A0C42"
         query_parameters = {"msisdn": "555555555555"}
 
-        response = TFATestCase.channel.get_tfa_verification_status(app_id, query_parameters)
+        response = TFATestCase.channel.get_tfa_verification_status(
+            app_id, query_parameters
+        )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)

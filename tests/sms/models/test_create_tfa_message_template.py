@@ -1,7 +1,9 @@
 import pytest
 from pydantic import ValidationError
 
-from infobip_channels.sms.models.body.create_tfa_message_template import CreateTFAMessageTemplateBody
+from infobip_channels.sms.models.body.create_tfa_message_template import (
+    CreateTFAMessageTemplateBody,
+)
 from infobip_channels.sms.models.core.tfa_message_template import PINTypeEnum
 
 
@@ -17,7 +19,7 @@ def test_when_message_text_is_empty__validation_error_is_raised(message_text):
                     "indiaDlt": {
                         "principalEntityId": "some-id",
                     }
-                }
+                },
             }
         )
 
@@ -34,13 +36,15 @@ def test_when_pin_type_is_none_or_empty__validation_error_is_raised(pin_type):
                     "indiaDlt": {
                         "principalEntityId": "some-id",
                     }
-                }
+                },
             }
         )
 
 
 @pytest.mark.parametrize("principal_entity_id", ["", {}])
-def test_when_principal_entity_id_is_none_or_empty__validation_error_is_raised(principal_entity_id):
+def test_when_principal_entity_id_is_none_or_empty__validation_error_is_raised(
+    principal_entity_id,
+):
     with pytest.raises(ValidationError):
         CreateTFAMessageTemplateBody(
             **{
@@ -51,7 +55,7 @@ def test_when_principal_entity_id_is_none_or_empty__validation_error_is_raised(p
                     "indiaDlt": {
                         "principalEntityId": principal_entity_id,
                     }
-                }
+                },
             }
         )
 
@@ -68,7 +72,7 @@ def test_when_pin_placeholder_is_empty__validation_error_is_raised(pin_placehold
                     "indiaDlt": {
                         "principalEntityId": "some-id",
                     }
-                }
+                },
             }
         )
 
@@ -84,7 +88,7 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                     "indiaDlt": {
                         "principalEntityId": "some-id",
                     }
-                }
+                },
             }
         )
     except ValidationError:

@@ -13,9 +13,7 @@ def test_when_app_id_is_none_or_empty__validation_error_is_raised(app_id):
                 "messageId": "7654321",
                 "from": "Sender 1",
                 "to": "41793026727",
-                "placeholders": {
-                    "firstName": "John"
-                }
+                "placeholders": {"firstName": "John"},
             }
         )
 
@@ -29,9 +27,7 @@ def test_when_message_id_is_none_or_empty__validation_error_is_raised(message_id
                 "messageId": message_id,
                 "from": "Sender 1",
                 "to": "41793026727",
-                "placeholders": {
-                    "firstName": "John"
-                }
+                "placeholders": {"firstName": "John"},
             }
         )
 
@@ -45,9 +41,7 @@ def test_when_message_id_is_none_or_empty__validation_error_is_raised(to):
                 "messageId": "7654321",
                 "from": "Sender 1",
                 "to": to,
-                "placeholders": {
-                    "firstName": "John"
-                }
+                "placeholders": {"firstName": "John"},
             }
         )
 
@@ -60,9 +54,7 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                 "messageId": "7654321",
                 "from": "Sender 1",
                 "to": "41793026727",
-                "placeholders": {
-                    "firstName": "John"
-                }
+                "placeholders": {"firstName": "John"},
             }
         )
     except ValidationError:

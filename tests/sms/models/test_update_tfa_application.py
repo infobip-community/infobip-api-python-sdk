@@ -1,7 +1,9 @@
 import pytest
 from pydantic import ValidationError
 
-from infobip_channels.sms.models.body.update_tfa_application import UpdateTFAApplicationBody
+from infobip_channels.sms.models.body.update_tfa_application import (
+    UpdateTFAApplicationBody,
+)
 
 
 @pytest.mark.parametrize("name", ["", {}])

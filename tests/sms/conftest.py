@@ -1,6 +1,8 @@
 from pydantic_factories import ModelFactory
 
-from infobip_channels.sms.models.body.create_tfa_application import CreateTFAApplicationBody
+from infobip_channels.sms.models.body.create_tfa_application import (
+    CreateTFAApplicationBody,
+)
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
@@ -10,7 +12,9 @@ from infobip_channels.sms.models.body.send_message import SMSMessageBody
 from infobip_channels.sms.models.body.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesMessageBody,
 )
-from infobip_channels.sms.models.body.update_tfa_application import UpdateTFAApplicationBody
+from infobip_channels.sms.models.body.update_tfa_application import (
+    UpdateTFAApplicationBody,
+)
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
 
@@ -345,6 +349,7 @@ def get_scheduled_sms_messages():
         "bulk_id": "BulkId-xyz-123",
     }
 
+
 def get_tfa_application():
     return {
         "name": "2fa application name",
@@ -355,9 +360,10 @@ def get_tfa_application():
             "pinTimeToLive": "10m",
             "verifyPinLimit": "2/4s",
             "sendPinPerApplicationLimit": "5000/12h",
-            "sendPinPerPhoneNumberLimit": "2/1d"
-        }
+            "sendPinPerPhoneNumberLimit": "2/1d",
+        },
     }
+
 
 def get_create_tfa_application_body():
     return get_tfa_application()

@@ -1,6 +1,8 @@
 import unittest
 from infobip_channels.whatsapp.channel import WhatsAppChannel
-from infobip_channels.whatsapp.models.path_parameters.manage_templates import ManageTemplatesPathParameters
+from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
+    ManageTemplatesPathParameters,
+)
 
 
 class WhatsAppTestCase(unittest.TestCase):
@@ -13,5 +15,5 @@ class WhatsAppTestCase(unittest.TestCase):
         self.assertIsNotNone(response.raw_response)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
