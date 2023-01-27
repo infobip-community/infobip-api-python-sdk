@@ -1,5 +1,7 @@
+from pydantic.types import constr
+
 from infobip_channels.core.models import MessageBodyBase, CamelCaseModel
 
 
 class VerifyPhoneNumberBody(MessageBodyBase, CamelCaseModel):
-    pin: str
+    pin: constr(min_length=1)
