@@ -413,7 +413,7 @@ class SMSChannel(Channel):
     def create_tfa_application(
         self,
         request_body: Union[CreateTFAApplicationBody, Dict],
-    ) -> Union[ResponseBase, CreateTFAApplicationResponse, Any]:
+    ) -> Union[ResponseBase, Any]:
         """Create and configure a new 2FA application.
 
         :param request_body: Body of the TFA application to create
@@ -479,7 +479,7 @@ class SMSChannel(Channel):
         self,
         application_id: str,
         request_body: Union[CreateTFAMessageTemplateBody, Dict],
-    ) -> Union[ResponseBase, CreateTFAMessageTemplateResponse, Any]:
+    ) -> Union[ResponseBase, Any]:
         """Once you have your 2FA application, create one or more message templates where your PIN will be dynamically
         included when you send the PIN message.
 

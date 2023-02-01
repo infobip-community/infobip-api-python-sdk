@@ -4,8 +4,6 @@ from tests.conftest import get_expected_post_headers
 from tests.sms.conftest import (
     GenerateCreateTFAApplicationBodyFactoryIntegration,
     get_create_tfa_application_body,
-    GenerateUpdateTFAApplicationBodyFactoryIntegration,
-    get_update_tfa_application_body,
     get_tfa_request_error_response,
     get_create_tfa_application_response,
 )
@@ -15,21 +13,11 @@ ENDPOINT_TEST_ARGUMENTS = {
         "endpoint": "/2fa/2/applications",
         "http_method": "POST",
         "expected_headers": get_expected_post_headers(),
-        "expected_path_parameters": None,
+        "expected_path_parameters": "",
         "expected_query_parameters": None,
         "expected_json": GenerateCreateTFAApplicationBodyFactoryIntegration,
         "request_parameters": get_create_tfa_application_body(),
         "method_name": "create_tfa_application",
-    },
-    "update_tfa_application": {
-        "endpoint": "/2fa/2/applications/{appId}",
-        "http_method": "POST",
-        "expected_headers": get_expected_post_headers(),
-        "expected_path_parameters": "1234567890",
-        "expected_query_parameters": None,
-        "expected_json": GenerateUpdateTFAApplicationBodyFactoryIntegration,
-        "request_parameters": get_update_tfa_application_body(),
-        "method_name": "update_tfa_application",
     },
 }
 
@@ -44,9 +32,6 @@ ENDPOINT_TEST_ARGUMENTS = {
 def case__supported_status(endpoint_type, responses):
     status_code = responses[0]
     response_content = responses[1]
-
-    if endpoint_type == "create_tfa_application" and responses[0] == 200:
-        response_content = get_create_tfa_application_response()
 
     return (
         status_code,

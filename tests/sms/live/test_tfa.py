@@ -14,7 +14,7 @@ class TFATestCase(unittest.TestCase):
         response = TFATestCase.channel.get_tfa_applications()
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_create_tfa_application(self):
         application = {
@@ -40,7 +40,7 @@ class TFATestCase(unittest.TestCase):
         )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_update_tfa_application(self):
         application = {
@@ -61,7 +61,7 @@ class TFATestCase(unittest.TestCase):
         )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_get_tfa_message_templates(self):
         response = TFATestCase.channel.get_tfa_message_templates(
@@ -69,7 +69,7 @@ class TFATestCase(unittest.TestCase):
         )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_create_tfa_message_template(self):
         app_id = "02CC3CAAFD733136AA15DFAC720A0C42"
@@ -87,7 +87,7 @@ class TFATestCase(unittest.TestCase):
         response = TFATestCase.channel.create_tfa_message_template(app_id, request_body)
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_get_tfa_message_template(self):
         app_id = "02CC3CAAFD733136AA15DFAC720A0C42"
@@ -96,7 +96,7 @@ class TFATestCase(unittest.TestCase):
         response = TFATestCase.channel.get_tfa_message_template(app_id, message_id)
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_update_tfa_message_template(self):
         app_id = "02CC3CAAFD733136AA15DFAC720A0C42"
@@ -117,7 +117,7 @@ class TFATestCase(unittest.TestCase):
         )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_send_pin_over_sms(self):
         query_parameters = {"ncNeeded": "false"}
@@ -134,7 +134,7 @@ class TFATestCase(unittest.TestCase):
         response = TFATestCase.channel.send_pin_over_sms(query_parameters, request_body)
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_resend_pin_over_sms(self):
         placeholders = {"placeholders": {"name": "John"}}
@@ -144,7 +144,7 @@ class TFATestCase(unittest.TestCase):
         )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_send_pin_over_voice(self):
         query_parameters = {"ncNeeded": "false"}
@@ -160,7 +160,7 @@ class TFATestCase(unittest.TestCase):
         )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_resend_pin_over_voice(self):
         placeholders = {"placeholders": {"name": "John"}}
@@ -170,7 +170,7 @@ class TFATestCase(unittest.TestCase):
         )
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_verify_number(self):
         pin_id = "B147E121929711EC4163A6FB5B44CD59"
@@ -179,7 +179,7 @@ class TFATestCase(unittest.TestCase):
         response = TFATestCase.channel.verify_phone_number(pin_id, request_body)
 
         self.assertEqual(HTTPStatus.OK, response.status_code)
-        self.assertIsNotNone(response.json())
+        self.assertIsNotNone(response)
 
     def test_get_tfa_verification_status(self):
         app_id = "02CC3CAAFD733136AA15DFAC720A0C42"

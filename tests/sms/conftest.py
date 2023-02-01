@@ -3,6 +3,7 @@ from pydantic_factories import ModelFactory
 from infobip_channels.sms.models.body.create_tfa_application import (
     CreateTFAApplicationBody,
 )
+from infobip_channels.sms.models.body.create_tfa_message_template import CreateTFAMessageTemplateBody
 from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
@@ -15,6 +16,7 @@ from infobip_channels.sms.models.body.update_scheduled_messages_status import (
 from infobip_channels.sms.models.body.update_tfa_application import (
     UpdateTFAApplicationBody,
 )
+from infobip_channels.sms.models.body.update_tfa_message_template import UpdateTFAMessageTemplateBody
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
 
@@ -83,6 +85,25 @@ class GenerateUpdateTFAApplicationBodyFactoryIntegration(ModelFactory):
     def build(cls, *args, **kwargs):
         """Needed because factory classes don't play well with custom validation."""
         return UpdateTFAApplicationBody(**get_update_tfa_application_body())
+
+
+class GenerateCreateTFAMessageTemplateBodyFactoryIntegration(ModelFactory):
+    __model__ = CreateTFAMessageTemplateBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return CreateTFAMessageTemplateBody(**get_create_tfa_message_template_body())
+
+
+
+class GenerateUpdateTFAMessageTemplateBodyFactoryIntegration(ModelFactory):
+    __model__ = UpdateTFAMessageTemplateBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return UpdateTFAMessageTemplateBody(**get_update_tfa_message_template_body())
 
 
 def get_send_sms_message_body():
@@ -352,17 +373,19 @@ def get_scheduled_sms_messages():
 
 def get_tfa_application():
     return {
-        "name": "2fa application name",
-        "enabled": True,
+        "applicationId": "1234567890",
+        "name": "Application name",
         "configuration": {
             "pinAttempts": 5,
             "allowMultiplePinVerifications": True,
             "pinTimeToLive": "10m",
             "verifyPinLimit": "2/4s",
             "sendPinPerApplicationLimit": "5000/12h",
-            "sendPinPerPhoneNumberLimit": "2/1d",
+            "sendPinPerPhoneNumberLimit": "2/1d"
         },
+        "enabled": True
     }
+
 
 
 def get_create_tfa_application_body():
@@ -386,3 +409,46 @@ def get_tfa_request_error_response():
             }
         }
     }
+
+
+def get_update_tfa_application_response():
+    return get_tfa_application()
+
+
+def get_tfa_application_response():
+    return get_tfa_application()
+
+
+def get_tfa_applications_response():
+    return {"applications": [get_tfa_application()]}
+
+
+def get_create_tfa_message_template_response():
+    return get_tfa_message_template()
+
+
+def get_update_tfa_message_template_response():
+    return {
+        "template": get_tfa_message_template()
+    }
+
+
+def get_tfa_message_template():
+    return {
+        "pinPlaceholder": "{{pin}}",
+        "messageText": "Your pin is {{pin}}",
+        "pinLength": 4,
+        "pinType": "ALPHANUMERIC",
+        "language": "en",
+        "senderId": "Infobip 2FA",
+        "repeatDTMF": "1#",
+        "speechRate": 1
+    }
+
+
+def get_create_tfa_message_template_body():
+    return get_tfa_message_template()
+
+
+def get_update_tfa_message_template_body():
+    return get_tfa_message_template()
