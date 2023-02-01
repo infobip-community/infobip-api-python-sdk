@@ -3,8 +3,11 @@ from pytest_cases import parametrize
 from tests.conftest import get_expected_post_headers
 from tests.sms.conftest import (
     get_tfa_request_error_response,
-    get_create_tfa_application_response, GenerateUpdateTFAMessageTemplateBodyFactoryIntegration,
-    get_update_tfa_message_template_body, get_update_tfa_application_response, get_create_tfa_message_template_response,
+    get_create_tfa_application_response,
+    GenerateUpdateTFAMessageTemplateBodyFactoryIntegration,
+    get_update_tfa_message_template_body,
+    get_update_tfa_application_response,
+    get_create_tfa_message_template_response,
     get_update_tfa_message_template_response,
 )
 

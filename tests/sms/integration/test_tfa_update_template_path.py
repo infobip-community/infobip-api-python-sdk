@@ -33,8 +33,11 @@ def set_up_mock_server_and_send_request(
         {"base_url": httpserver.url_for("/"), "api_key": "secret"}
     )
 
-    return getattr(sms_channel, method_name)(expected_path_parameters["appId"], expected_path_parameters["msgId"],
-                                             request_body)
+    return getattr(sms_channel, method_name)(
+        expected_path_parameters["appId"],
+        expected_path_parameters["msgId"],
+        request_body,
+    )
 
 
 @parametrize_with_cases(

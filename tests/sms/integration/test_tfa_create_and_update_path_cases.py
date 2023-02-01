@@ -5,8 +5,11 @@ from tests.sms.conftest import (
     GenerateUpdateTFAApplicationBodyFactoryIntegration,
     get_update_tfa_application_body,
     get_tfa_request_error_response,
-    get_create_tfa_application_response, GenerateCreateTFAMessageTemplateBodyFactoryIntegration,
-    get_create_tfa_message_template_body, get_update_tfa_application_response, get_create_tfa_message_template_response,
+    get_create_tfa_application_response,
+    GenerateCreateTFAMessageTemplateBodyFactoryIntegration,
+    get_create_tfa_message_template_body,
+    get_update_tfa_application_response,
+    get_create_tfa_message_template_response,
 )
 
 ENDPOINT_TEST_ARGUMENTS = {

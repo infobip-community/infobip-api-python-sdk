@@ -8,17 +8,17 @@ from tests.conftest import get_response_object
 
 
 def set_up_mock_server_and_send_request(
-        httpserver,
-        status_code,
-        response_content,
-        endpoint,
-        http_method,
-        expected_headers,
-        expected_path_parameters,
-        expected_query_parameters,
-        expected_json,
-        request_parameters,
-        method_name,
+    httpserver,
+    status_code,
+    response_content,
+    endpoint,
+    http_method,
+    expected_headers,
+    expected_path_parameters,
+    expected_query_parameters,
+    expected_json,
+    request_parameters,
+    method_name,
 ):
 
     httpserver.expect_request(
@@ -42,17 +42,17 @@ def set_up_mock_server_and_send_request(
     prefix="case__supported_status",
 )
 def test_sms_endpoints__supported_status(
-        httpserver,
-        status_code,
-        response_content,
-        endpoint,
-        http_method,
-        expected_headers,
-        expected_path_parameters,
-        expected_query_parameters,
-        expected_json,
-        request_parameters,
-        method_name,
+    httpserver,
+    status_code,
+    response_content,
+    endpoint,
+    http_method,
+    expected_headers,
+    expected_path_parameters,
+    expected_query_parameters,
+    expected_json,
+    request_parameters,
+    method_name,
 ):
 
     response = set_up_mock_server_and_send_request(
@@ -88,17 +88,17 @@ def test_sms_endpoints__supported_status(
     prefix="case__unsupported_status",
 )
 def test_sms_endpoints__unsupported_status(
-        httpserver,
-        status_code,
-        response_content,
-        endpoint,
-        http_method,
-        expected_headers,
-        expected_path_parameters,
-        expected_query_parameters,
-        expected_json,
-        request_parameters,
-        method_name,
+    httpserver,
+    status_code,
+    response_content,
+    endpoint,
+    http_method,
+    expected_headers,
+    expected_path_parameters,
+    expected_query_parameters,
+    expected_json,
+    request_parameters,
+    method_name,
 ):
 
     response = set_up_mock_server_and_send_request(
