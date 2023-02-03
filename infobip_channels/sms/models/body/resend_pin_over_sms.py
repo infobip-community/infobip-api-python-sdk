@@ -1,6 +1,6 @@
-from typing import Optional, Dict
+from typing import Dict, Optional
 
-from infobip_channels.core.models import MessageBodyBase, CamelCaseModel
+from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
 
 
 class ResendPINOverSMSBody(MessageBodyBase, CamelCaseModel):

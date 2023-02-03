@@ -1,4 +1,5 @@
 import unittest
+
 from infobip_channels.whatsapp.channel import WhatsAppChannel
 from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
     ManageTemplatesPathParameters,

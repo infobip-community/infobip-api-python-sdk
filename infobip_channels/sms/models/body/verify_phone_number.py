@@ -1,6 +1,6 @@
 from pydantic.types import constr
 
-from infobip_channels.core.models import MessageBodyBase, CamelCaseModel
+from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
 
 
 class VerifyPhoneNumberBody(MessageBodyBase, CamelCaseModel):

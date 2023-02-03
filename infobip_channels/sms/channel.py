@@ -150,7 +150,6 @@ class SMSChannel(Channel):
         *args,
         **kwargs,
     ) -> Type[ResponseBase]:
-
         if raw_response.status_code == HTTPStatus.OK:
             return response_class
         elif raw_response.status_code in (

@@ -1,9 +1,9 @@
 import os
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Type, Union
-from dotenv import load_dotenv
 
 import requests
+from dotenv import load_dotenv
 from pydantic import AnyHttpUrl, BaseModel, ValidationError
 
 from infobip_channels.core.http_client import _HttpClient

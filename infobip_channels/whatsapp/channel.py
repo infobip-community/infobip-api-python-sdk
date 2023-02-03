@@ -56,7 +56,6 @@ class WhatsAppChannel(Channel):
         *args,
         **kwargs,
     ) -> Type[ResponseBase]:
-
         if raw_response.status_code in (HTTPStatus.OK, HTTPStatus.CREATED):
             return response_ok_model
 

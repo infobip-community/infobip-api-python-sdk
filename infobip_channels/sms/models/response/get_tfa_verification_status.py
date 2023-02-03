@@ -1,6 +1,6 @@
 from typing import List
 
-from infobip_channels.core.models import ResponseBase, CamelCaseModel
+from infobip_channels.core.models import CamelCaseModel, ResponseBase
 
 
 class Verification(CamelCaseModel):

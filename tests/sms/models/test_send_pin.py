@@ -33,7 +33,7 @@ def test_when_message_id_is_none_or_empty__validation_error_is_raised(message_id
 
 
 @pytest.mark.parametrize("to", ["", {}])
-def test_when_message_id_is_none_or_empty__validation_error_is_raised(to):
+def test_when_to_is_none_or_empty__validation_error_is_raised(to):
     with pytest.raises(ValidationError):
         SendPINOverSMSBody(
             **{

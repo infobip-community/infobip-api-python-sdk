@@ -130,7 +130,6 @@ class DateTimeValidator:
 
     @classmethod
     def convert_time_to_correct_format_validate_limit(cls, value):
-
         date_time_format = cls.convert_to_date_time_format(value)
         date_time_limit = datetime.now(timezone.utc) + timedelta(days=cls._TIME_LIMIT)
         if date_time_format > date_time_limit:

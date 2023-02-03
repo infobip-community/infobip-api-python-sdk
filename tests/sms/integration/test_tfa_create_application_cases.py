@@ -4,8 +4,8 @@ from tests.conftest import get_expected_post_headers
 from tests.sms.conftest import (
     GenerateCreateTFAApplicationBodyFactoryIntegration,
     get_create_tfa_application_body,
-    get_tfa_request_error_response,
     get_create_tfa_application_response,
+    get_tfa_request_error_response,
 )
 
 ENDPOINT_TEST_ARGUMENTS = {
@@ -49,7 +49,6 @@ def case__supported_status(endpoint_type, responses):
 
 @parametrize(endpoint_type=ENDPOINT_TEST_ARGUMENTS.keys())
 def case__unsupported_status(endpoint_type):
-
     return (
         201,
         get_tfa_request_error_response(),

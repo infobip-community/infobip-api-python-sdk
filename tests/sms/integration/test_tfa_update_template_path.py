@@ -59,7 +59,6 @@ def test_sms_endpoints__supported_status(
     request_query_parameters,
     method_name,
 ):
-
     response = set_up_mock_server_and_send_request(
         httpserver,
         status_code,
@@ -105,7 +104,6 @@ def test_sms_endpoints__unsupported_status(
     request_query_parameters,
     method_name,
 ):
-
     response = set_up_mock_server_and_send_request(
         httpserver,
         status_code,

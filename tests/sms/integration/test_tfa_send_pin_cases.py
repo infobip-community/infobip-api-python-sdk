@@ -2,13 +2,13 @@ from pytest_cases import parametrize
 
 from tests.conftest import get_expected_post_headers
 from tests.sms.conftest import (
-    get_tfa_request_error_response,
-    get_send_pin_over_sms_response,
-    get_send_pin_over_sms_body,
     GenerateSendPINOverSMSBodyFactoryIntegration,
     GenerateSendPINOverVoiceBodyFactoryIntegration,
+    get_send_pin_over_sms_body,
+    get_send_pin_over_sms_response,
     get_send_pin_over_voice_body,
     get_send_pin_over_voice_response,
+    get_tfa_request_error_response,
 )
 
 ENDPOINT_TEST_ARGUMENTS = {
@@ -68,7 +68,6 @@ def case__supported_status(endpoint_type, responses):
 
 @parametrize(endpoint_type=ENDPOINT_TEST_ARGUMENTS.keys())
 def case__unsupported_status(endpoint_type):
-
     return (
         201,
         get_tfa_request_error_response(),

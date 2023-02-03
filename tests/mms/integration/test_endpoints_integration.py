@@ -54,7 +54,6 @@ def test_mms_endpoints__supported_status(
     request_data,
     method_name,
 ):
-
     response = set_up_mock_server_and_send_request(
         httpserver,
         status_code,

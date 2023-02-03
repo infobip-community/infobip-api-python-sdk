@@ -37,7 +37,6 @@ class WebRtcChannel(Channel):
         *args,
         **kwargs,
     ) -> Type[ResponseBase]:
-
         if response.status_code == HTTPStatus.OK:
             return response_ok_model
 

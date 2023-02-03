@@ -2,8 +2,8 @@ from pytest_cases import parametrize
 
 from tests.conftest import get_expected_get_headers
 from tests.sms.conftest import (
-    get_tfa_request_error_response,
     get_tfa_applications_response,
+    get_tfa_request_error_response,
 )
 
 ENDPOINT_TEST_ARGUMENTS = {

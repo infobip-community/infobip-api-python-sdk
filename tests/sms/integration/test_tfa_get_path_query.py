@@ -20,7 +20,6 @@ def set_up_mock_server_and_send_request(
     request_parameters,
     method_name,
 ):
-
     httpserver.expect_request(
         endpoint,
         method=http_method,
@@ -56,7 +55,6 @@ def test_sms_endpoints__supported_status(
     request_parameters,
     method_name,
 ):
-
     response = set_up_mock_server_and_send_request(
         httpserver,
         status_code,
@@ -102,7 +100,6 @@ def test_sms_endpoints__unsupported_status(
     request_parameters,
     method_name,
 ):
-
     response = set_up_mock_server_and_send_request(
         httpserver,
         status_code,
