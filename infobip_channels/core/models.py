@@ -25,7 +25,7 @@ def to_header_specific_case(string: str) -> str:
 
 def get_package_version() -> str:
     sdk_version = ""
-    if "infobip-api-python-sdk" in sys.modules:
+    if "infobip_channels" in sys.modules:
         sdk_version = (
             "/" + pkg_resources.get_distribution("infobip-api-python-sdk").version
         )
