@@ -10,8 +10,14 @@ from infobip_channels.sms.models.body.preview_message import PreviewSMSMessage
 from infobip_channels.sms.models.body.reschedule_sms_messages import (
     RescheduleSMSMessagesMessageBody,
 )
+from infobip_channels.sms.models.body.resend_pin_over_sms import ResendPINOverSMSBody
+from infobip_channels.sms.models.body.resend_pin_over_voice import (
+    ResendPINOverVoiceBody,
+)
 from infobip_channels.sms.models.body.send_binary_message import BinarySMSMessageBody
 from infobip_channels.sms.models.body.send_message import SMSMessageBody
+from infobip_channels.sms.models.body.send_pin_over_sms import SendPINOverSMSBody
+from infobip_channels.sms.models.body.send_pin_over_voice import SendPINOverVoiceBody
 from infobip_channels.sms.models.body.update_scheduled_messages_status import (
     UpdateScheduledSMSMessagesMessageBody,
 )
@@ -21,6 +27,7 @@ from infobip_channels.sms.models.body.update_tfa_application import (
 from infobip_channels.sms.models.body.update_tfa_message_template import (
     UpdateTFAMessageTemplateBody,
 )
+from infobip_channels.sms.models.body.verify_phone_number import VerifyPhoneNumberBody
 from infobip_channels.sms.models.response.send_message import SendSMSResponse
 
 
@@ -107,6 +114,51 @@ class GenerateUpdateTFAMessageTemplateBodyFactoryIntegration(ModelFactory):
     def build(cls, *args, **kwargs):
         """Needed because factory classes don't play well with custom validation."""
         return UpdateTFAMessageTemplateBody(**get_update_tfa_message_template_body())
+
+
+class GenerateResendPINOverSMSBodyFactoryIntegration(ModelFactory):
+    __model__ = ResendPINOverSMSBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return ResendPINOverSMSBody(**get_resend_pin_over_sms_response())
+
+
+class GenerateResendPINOverVoiceBodyFactoryIntegration(ModelFactory):
+    __model__ = ResendPINOverVoiceBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return ResendPINOverVoiceBody(**get_resend_pin_over_voice_response())
+
+
+class GenerateSendPINOverSMSBodyFactoryIntegration(ModelFactory):
+    __model__ = SendPINOverSMSBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return SendPINOverSMSBody(**get_send_pin_over_sms_body())
+
+
+class GenerateSendPINOverVoiceBodyFactoryIntegration(ModelFactory):
+    __model__ = SendPINOverVoiceBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return SendPINOverVoiceBody(**get_send_pin_over_voice_body())
+
+
+class GenerateVerifyPhoneNumberBodyFactoryIntegration(ModelFactory):
+    __model__ = VerifyPhoneNumberBody
+
+    @classmethod
+    def build(cls, *args, **kwargs):
+        """Needed because factory classes don't play well with custom validation."""
+        return VerifyPhoneNumberBody(**get_verify_phone_number_body())
 
 
 def get_send_sms_message_body():
@@ -452,3 +504,98 @@ def get_create_tfa_message_template_body():
 
 def get_update_tfa_message_template_body():
     return get_tfa_message_template()
+
+
+def get_send_pin_body():
+    return {
+        "applicationId": "1234567",
+        "messageId": "7654321",
+        "from": "Sender 1",
+        "to": "41793026727",
+        "placeholders": {"firstName": "John"},
+    }
+
+
+def get_send_pin_over_sms_body():
+    return get_send_pin_body()
+
+
+def get_send_pin_over_voice_body():
+    return get_send_pin_body()
+
+
+def get_send_pin_over_sms_status():
+    return {
+        "pinId": "9C817C6F8AF3D48F9FE553282AFA2B67",
+        "to": "41793026727",
+        "ncStatus": "NC_DESTINATION_REACHABLE",
+        "smsStatus": "MESSAGE_SENT",
+    }
+
+
+def get_send_pin_over_voice_status():
+    return {
+        "pinId": "9C817C6F8AF3D48F9FE553282AFA2B67",
+        "to": "41793026727",
+        "callStatus": "PENDING_ACCEPTED",
+    }
+
+
+def get_resend_pin_over_body():
+    return {"placeholders": {"firstName": "John"}}
+
+
+def get_resend_pin_over_sms_body():
+    return get_resend_pin_over_body()
+
+
+def get_resend_pin_over_voice_body():
+    return get_resend_pin_over_body()
+
+
+def get_send_pin_over_sms_response():
+    return get_send_pin_over_sms_status()
+
+
+def get_send_pin_over_voice_response():
+    return get_send_pin_over_voice_status()
+
+
+def get_resend_pin_over_sms_response():
+    return get_send_pin_over_sms_status()
+
+
+def get_resend_pin_over_voice_response():
+    return get_send_pin_over_voice_status()
+
+
+def get_verify_phone_number_body():
+    return {"pin": "1598"}
+
+
+def get_verify_phone_number_response():
+    return {
+        "pinId": "9C817C6F8AF3D48F9FE553282AFA2B67",
+        "msisdn": "41793026727",
+        "verified": True,
+        "attemptsRemaining": 0,
+    }
+
+
+def get_get_tfa_verification_status_response():
+    return {
+        "verifications": [
+            {
+                "msisdn": "41793026727",
+                "verified": True,
+                "verifiedAt": 1418364366,
+                "sentAt": 1418364246,
+            },
+            {
+                "msisdn": "41793026746",
+                "verified": False,
+                "verifiedAt": 1418364226,
+                "sentAt": 1418333246,
+            },
+        ]
+    }

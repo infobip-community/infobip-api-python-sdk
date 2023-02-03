@@ -1,9 +1,9 @@
 from typing import List
 
-from infobip_channels.core.models import ResponseBase
+from infobip_channels.core.models import ResponseBase, CamelCaseModel
 
 
-class Verification(ResponseBase):
+class Verification(CamelCaseModel):
     msisdn: str
     verified: bool
     verified_at: int

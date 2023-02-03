@@ -3,21 +3,34 @@ from pytest_cases import parametrize
 from tests.conftest import get_expected_post_headers
 from tests.sms.conftest import (
     get_tfa_request_error_response,
-    GenerateUpdateTFAMessageTemplateBodyFactoryIntegration,
-    get_update_tfa_message_template_body,
-    get_update_tfa_message_template_response,
+    get_send_pin_over_sms_response,
+    get_send_pin_over_sms_body,
+    GenerateSendPINOverSMSBodyFactoryIntegration,
+    GenerateSendPINOverVoiceBodyFactoryIntegration,
+    get_send_pin_over_voice_body,
+    get_send_pin_over_voice_response,
 )
 
 ENDPOINT_TEST_ARGUMENTS = {
-    "update_tfa_message_template": {
-        "endpoint": "/2fa/2/applications/1234567890/messages/1234567890",
-        "http_method": "PUT",
+    "send_pin_over_sms": {
+        "endpoint": "/2fa/2/pin",
+        "http_method": "POST",
         "expected_headers": get_expected_post_headers(),
-        "expected_path_parameters": {"appId": 1234567890, "msgId": 1234567890},
+        "expected_path_parameters": None,
         "expected_query_parameters": None,
-        "expected_json": GenerateUpdateTFAMessageTemplateBodyFactoryIntegration,
-        "request_parameters": get_update_tfa_message_template_body(),
-        "method_name": "update_tfa_message_template",
+        "expected_json": GenerateSendPINOverSMSBodyFactoryIntegration,
+        "request_parameters": get_send_pin_over_sms_body(),
+        "method_name": "send_pin_over_sms",
+    },
+    "send_pin_over_voice": {
+        "endpoint": "/2fa/2/pin/voice",
+        "http_method": "POST",
+        "expected_headers": get_expected_post_headers(),
+        "expected_path_parameters": None,
+        "expected_query_parameters": None,
+        "expected_json": GenerateSendPINOverVoiceBodyFactoryIntegration,
+        "request_parameters": get_send_pin_over_voice_body(),
+        "method_name": "send_pin_over_voice",
     },
 }
 
@@ -25,13 +38,19 @@ ENDPOINT_TEST_ARGUMENTS = {
 @parametrize(
     endpoint_type=ENDPOINT_TEST_ARGUMENTS.keys(),
     responses=(
-        [200, get_update_tfa_message_template_response],
+        [200, get_send_pin_over_sms_response],
+        [200, get_send_pin_over_voice_response],
         [400, get_tfa_request_error_response],
     ),
 )
 def case__supported_status(endpoint_type, responses):
     status_code = responses[0]
     response_content = responses[1]
+
+    if endpoint_type == "send_pin_over_sms" and responses[0] == 200:
+        response_content = get_send_pin_over_sms_response
+    elif endpoint_type == "send_pin_over_voice" and responses[0] == 200:
+        response_content = get_send_pin_over_voice_response
 
     return (
         status_code,

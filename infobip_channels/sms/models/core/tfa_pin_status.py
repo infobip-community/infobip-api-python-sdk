@@ -1,9 +1,9 @@
 from typing import Optional
 
-from infobip_channels.core.models import ResponseBase
+from infobip_channels.core.models import CamelCaseModel
 
 
-class PINStatus(ResponseBase):
+class PINStatus(CamelCaseModel):
     pin_id: str
     to: str
     call_status: Optional[str]
