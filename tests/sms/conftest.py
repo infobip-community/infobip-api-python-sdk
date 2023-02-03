@@ -599,3 +599,7 @@ def get_get_tfa_verification_status_response():
             },
         ]
     }
+
+
+def get_get_tfa_message_templates_response():
+    return {"results": [get_tfa_message_template()]}
