@@ -482,7 +482,7 @@ def get_create_tfa_message_template_response():
 
 
 def get_update_tfa_message_template_response():
-    return {"template": get_tfa_message_template()}
+    return get_tfa_message_template()
 
 
 def get_tfa_message_template():
@@ -603,3 +603,7 @@ def get_get_tfa_verification_status_response():
 
 def get_get_tfa_message_templates_response():
     return {"results": [get_tfa_message_template()]}
+
+
+def get_get_tfa_message_template_response():
+    return get_tfa_message_template()

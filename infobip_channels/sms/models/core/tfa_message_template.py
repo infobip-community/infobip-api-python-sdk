@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import Field
 from pydantic.types import constr
 
-from infobip_channels.core.models import CamelCaseModel, MessageBodyBase
+from infobip_channels.core.models import CamelCaseModel
 from infobip_channels.sms.models.body.core import Regional
 
 
@@ -40,7 +40,7 @@ class LanguageEnum(str, Enum):
     ZH_TW = "zh-tw"
 
 
-class TFAMessageTemplate(MessageBodyBase, CamelCaseModel):
+class TFAMessageTemplate(CamelCaseModel):
     application_id: Optional[str]
     language: Optional[LanguageEnum]
     message_id: Optional[str]

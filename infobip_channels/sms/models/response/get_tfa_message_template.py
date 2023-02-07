@@ -2,5 +2,5 @@ from infobip_channels.core.models import ResponseBase
 from infobip_channels.sms.models.core.tfa_message_template import TFAMessageTemplate
 
 
-class GetTFAMessageTemplateResponse(ResponseBase):
-    template: TFAMessageTemplate
+class GetTFAMessageTemplateResponse(ResponseBase, TFAMessageTemplate):
+    pass
