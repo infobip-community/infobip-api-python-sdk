@@ -53,7 +53,6 @@ def test_send_message_from_all_instantiation_types_case__valid_content(
     message_body_type,
     whatsapp_channel_instantiation_type,
 ):
-
     response = set_up_mock_server_and_send_request(
         factory=message_body_factory,
         http_server=httpserver,

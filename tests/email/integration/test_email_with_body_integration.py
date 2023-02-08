@@ -63,7 +63,6 @@ def test_email_endpoints__supported_status(
     request_path_parameters,
     method_name,
 ):
-
     response = set_up_mock_server_and_send_request(
         httpserver,
         status_code,
@@ -109,7 +108,6 @@ def test_email_endpoints__unsupported_status(
     request_path_parameters,
     method_name,
 ):
-
     response = set_up_mock_server_and_send_request(
         httpserver,
         status_code,

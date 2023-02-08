@@ -40,7 +40,7 @@ class TimeUnitEnum(str, Enum):
 
 class IndiaDlt(CamelCaseModel):
     content_template_id: Optional[str] = None
-    principal_entity_id: str
+    principal_entity_id: constr(min_length=1, max_length=30) = None
 
 
 class Regional(CamelCaseModel):

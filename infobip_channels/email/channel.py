@@ -97,9 +97,8 @@ class EmailChannel(Channel):
         raw_response: Union[requests.Response, Any],
         response_class: Type[ResponseBase] = SendEmailResponse,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Type[ResponseBase]:
-
         if raw_response.status_code == HTTPStatus.OK:
             return response_class
         elif raw_response.status_code in (

@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import urllib.parse
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
@@ -7,6 +8,7 @@ from enum import Enum
 from http import HTTPStatus
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+import pkg_resources
 import requests
 from pydantic import AnyHttpUrl, BaseModel, constr, validator
 from urllib3 import encode_multipart_formdata
@@ -19,6 +21,16 @@ def to_camel_case(string: str) -> str:
 
 def to_header_specific_case(string: str) -> str:
     return "-".join(word.capitalize() for word in string.split("_"))
+
+
+def get_package_version() -> str:
+    sdk_version = ""
+    if "infobip_channels" in sys.modules:
+        sdk_version = (
+            "/" + pkg_resources.get_distribution("infobip-api-python-sdk").version
+        )
+
+    return sdk_version
 
 
 def url_encoding(string_to_encode: str, safe: str = "", encoding: str = "utf-8") -> str:
@@ -118,7 +130,6 @@ class DateTimeValidator:
 
     @classmethod
     def convert_time_to_correct_format_validate_limit(cls, value):
-
         date_time_format = cls.convert_to_date_time_format(value)
         date_time_limit = datetime.now(timezone.utc) + timedelta(days=cls._TIME_LIMIT)
         if date_time_format > date_time_limit:
@@ -159,6 +170,10 @@ class ResponseStatus(CamelCaseModel):
 class RequestHeaders(BaseModel):
     authorization: str
     accept: Optional[str] = "application/json"
+
+    user_agent: str = (
+        f"@infobip/python-sdk{get_package_version()} python/{sys.version.split(' ')[0]}"
+    )
 
     class Config:
         alias_generator = to_header_specific_case

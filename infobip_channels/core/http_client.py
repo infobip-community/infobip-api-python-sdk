@@ -41,12 +41,14 @@ class _HttpClient:
         endpoint: str,
         body: Union[Dict, bytes] = None,
         headers: RequestHeaders = None,
+        params: Dict = None,
     ) -> requests.Response:
         """Send an HTTP post request to base_url + endpoint.
 
         :param endpoint: Which endpoint to hit
         :param body: Body to send with the request
         :param headers: Request headers
+        :param params: Additional parameters
         :return: Received response
         """
         headers = headers or self.post_headers
@@ -56,6 +58,8 @@ class _HttpClient:
             kwargs = {"json": body}
         else:
             kwargs = {"data": body}
+
+        kwargs.setdefault("params", params)
 
         return requests.post(url=url, headers=headers.dict(by_alias=True), **kwargs)
 

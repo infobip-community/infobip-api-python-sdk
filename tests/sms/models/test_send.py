@@ -190,7 +190,7 @@ def test_when_validity_period_is_invalid__validation_error_is_raised(validity_pe
         )
 
 
-@pytest.mark.parametrize("principal_entity_id", [None, {}])
+@pytest.mark.parametrize("principal_entity_id", ["", {}])
 def test_when_principal_entity_id_is_invalid__validation_error_is_raised(
     principal_entity_id,
 ):
