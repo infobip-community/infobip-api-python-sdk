@@ -80,7 +80,7 @@ from infobip_channels.email.models.response.update_scheduled_status import (
 from infobip_channels.email.models.response.update_tracking_events import (
     UpdateTrackingEventsResponse,
 )
-from infobip_channels.email.models.response.validate_email_adresses import (
+from infobip_channels.email.models.response.validate_email_addresses import (
     ValidateEmailAddressesResponse,
 )
 
