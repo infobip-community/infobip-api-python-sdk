@@ -1,7 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.email.models.path_paramaters.delete_existing_domain import (
+from infobip_channels.email.models.path_parameters.delete_existing_domain import (
     DeleteExistingDomainPathParameter,
 )
 

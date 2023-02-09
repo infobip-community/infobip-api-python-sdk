@@ -5,4 +5,4 @@ from infobip_channels.sms.models.core.tfa_application import TFAApplication
 
 
 class GetTFAApplicationsResponse(ResponseBase):
-    applications: List[TFAApplication]
+    list: List[TFAApplication]
