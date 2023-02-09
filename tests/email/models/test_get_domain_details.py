@@ -1,7 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.email.models.path_paramaters.get_domain_details import (
+from infobip_channels.email.models.path_parameters.get_domain_details import (
     GetDomainDetailsPathParameter,
 )
 

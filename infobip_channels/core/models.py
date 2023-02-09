@@ -31,7 +31,7 @@ def get_package_version() -> str:
                 "/" + pkg_resources.get_distribution("infobip-api-python-sdk").version
             )
         except pkg_resources.DistributionNotFound:
-            print("infobip-api-python-sdk package not installed")
+            # Ignore as package is not installed in development environment.
             pass
 
     return sdk_version

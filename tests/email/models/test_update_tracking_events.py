@@ -4,7 +4,7 @@ from pydantic.error_wrappers import ValidationError
 from infobip_channels.email.models.body.update_tracking_events import (
     UpdateTrackingEventsMessageBody,
 )
-from infobip_channels.email.models.path_paramaters.update_tracking_events import (
+from infobip_channels.email.models.path_parameters.update_tracking_events import (
     UpdateTrackingEventsPathParameter,
 )
 
