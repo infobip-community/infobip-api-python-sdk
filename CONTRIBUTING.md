@@ -43,7 +43,7 @@ git fetch upstream
 ```
 ### 🛠️ Step 2: Build
 Please run all tests that are in repository, all test should pass.
-Please check do you need to activate some additional features that are repository or langauge specific.
+Please check do you need to activate some additional features that are repository or language specific.
 For example in infobip-api-python-sdk, pre-commit hooks must be enabled. See Commit section below.
 
 ### 🌱 Step 3: Branch
