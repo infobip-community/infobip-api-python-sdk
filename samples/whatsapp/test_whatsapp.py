@@ -11,7 +11,7 @@ from infobip_channels.whatsapp.models.path_parameters.manage_templates import (
 @pytest.mark.skip(reason="credentials needed, server state dependent")
 class WhatsAppTestCase(unittest.TestCase):
     def test_get_templates(self):
-        channel = WhatsAppChannel.from_dotenv()
+        channel = WhatsAppChannel.from_env()
         path_parameter = ManageTemplatesPathParameters(sender="447860099299")
         response = channel.get_templates(path_parameter)
 

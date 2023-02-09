@@ -8,7 +8,7 @@ from infobip_channels.sms.channel import SMSChannel
 
 @pytest.mark.skip(reason="credentials needed, server state dependent")
 class TFATestCase(unittest.TestCase):
-    channel = SMSChannel.from_dotenv()
+    channel = SMSChannel.from_env()
 
     def test_get_tfa_applications(self):
         response = TFATestCase.channel.get_tfa_applications()
