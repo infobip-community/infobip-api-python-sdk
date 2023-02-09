@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, Type, Union
 
 import requests
-from dotenv import load_dotenv
 from pydantic import AnyHttpUrl, BaseModel, ValidationError
 
 from infobip_channels.core.http_client import _HttpClient
@@ -45,7 +44,9 @@ class Channel(ABC):
         """Create an Authentication instance from the environment and
         use it to instantiate the Channel subclass. The IB_API_KEY and IB_BASE_URL environment variables must be set.
         The Channel subclass instantiated this way will use the default _HttpClient
-        class for making HTTP requests.
+        class for making HTTP requests. Keep in mind that you may have set those variables in another context; make
+        sure that the correct values are set in this process’ specific context and are not overridden somewhere else
+        in the program flow.
 
         :return: Instance of the subclass
         """
@@ -55,18 +56,6 @@ class Channel(ABC):
         auth_params = {"base_url": base_url, "api_key": api_key}
         client = _HttpClient(Authentication(**auth_params))
         return cls(client)
-
-    @classmethod
-    def from_dotenv(cls) -> "Channel":
-        """Create an Authentication instance from a dotenv file and
-        use it to instantiate the Channel subclass. The IB_API_KEY and IB_BASE_URL environment variables must present.
-        The Channel subclass instantiated this way will use the default _HttpClient
-        class for making HTTP requests.
-
-        :return: Instance of the subclass
-        """
-        load_dotenv()
-        return cls.from_env()
 
     @classmethod
     def from_auth_instance(cls, auth_instance: Authentication) -> "Channel":

@@ -5,4 +5,4 @@ from infobip_channels.sms.models.core.tfa_message_template import TFAMessageTemp
 
 
 class GetTFAMessageTemplatesResponse(ResponseBase):
-    results: List[TFAMessageTemplate]
+    list: List[TFAMessageTemplate]

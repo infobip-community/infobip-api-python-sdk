@@ -19,16 +19,16 @@ from infobip_channels.email.models.body.update_tracking_events import (
 from infobip_channels.email.models.body.validate_email_adresses import (
     ValidateEmailAddressesMessageBody,
 )
-from infobip_channels.email.models.path_paramaters.delete_existing_domain import (
+from infobip_channels.email.models.path_parameters.delete_existing_domain import (
     DeleteExistingDomainPathParameter,
 )
-from infobip_channels.email.models.path_paramaters.get_domain_details import (
+from infobip_channels.email.models.path_parameters.get_domain_details import (
     GetDomainDetailsPathParameter,
 )
-from infobip_channels.email.models.path_paramaters.update_tracking_events import (
+from infobip_channels.email.models.path_parameters.update_tracking_events import (
     UpdateTrackingEventsPathParameter,
 )
-from infobip_channels.email.models.path_paramaters.verify_domain import (
+from infobip_channels.email.models.path_parameters.verify_domain import (
     VerifyDomainPathParameter,
 )
 from infobip_channels.email.models.query_parameters.delivery_reports import (
