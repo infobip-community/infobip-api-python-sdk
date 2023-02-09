@@ -31,7 +31,7 @@ class MMSChannel(Channel):
         raw_response: Union[requests.Response, Any],
         response_class: Type[ResponseBase] = SendMMSResponse,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Type[ResponseBase]:
         if raw_response.status_code in (
             HTTPStatus.OK,

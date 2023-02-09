@@ -44,7 +44,7 @@ git fetch upstream
 ### 🛠️ Step 2: Build
 Please run all tests that are in repository, all test should pass.
 Please check do you need to activate some additional features that are repository or langauge specific.
-For example in infobip-api-python-sdk, pre-commit hooks must be enabled. [Python Readme](README.md)
+For example in infobip-api-python-sdk, pre-commit hooks must be enabled. See Commit section below.
 
 ### 🌱 Step 3: Branch
 To keep your development environment organized, create local branches to hold your work.
@@ -66,6 +66,41 @@ Most important things to keep in mind are:
 * 88 character line limits rather than 79. (differ from PEP-8)
 
 ### ✅ Step 5: Commit
+
+#### Enable pre-commit hooks (recommended)
+To enable pre-commit hooks run:
+```bash
+pip install -r requirements/dev.txt
+```
+You will need to install pre-commit hooks
+Using homebrew:
+```bash
+brew install pre-commit
+```
+Using conda (via conda-forge):
+```bash
+conda install -c conda-forge pre-commit
+```
+To check installation run:
+```bash
+pre-commit --version
+```
+If installation was successful you will see version number.
+You can find the Pre-commit configuration in `.pre-commit-config.yaml`.
+Install the git hook scripts:
+```bash
+pre-commit install
+```
+Run against all files:
+```bash
+pre-commit run --all-files
+```
+If setup was successful pre-commit will run on every commit.
+Every time you clone a project that uses pre-commit, running `pre-commit install`
+should be the first thing you do.
+
+#### Commit changes
+
 It is recommended to keep your changes grouped logically within individual commits.
 Many contributors find it easier to review changes that are split across multiple commits.
 There is no limit to the number of commits in a pull request.
@@ -98,6 +133,12 @@ git rebase upstream/main
 Bug fixes and features should always come with tests. Looking at other tests to see how they should be structured can also help.
 Before submitting your changes in a pull request, always run the full test suite.
 Make sure the linter does not report any issues and that all tests pass. Please do not submit patches that fail either check.
+
+To run tests position yourself in the project's root while your virtual environment
+is active and run:
+```bash
+python -m pytest
+```
 
 ### 🚀 Step 8: Push
 Once your commits are ready to go -- with passing tests and linting -- begin the process of opening a pull request by pushing your working branch to your fork on GitHub.

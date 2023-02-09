@@ -52,7 +52,6 @@ def test_rcs_endpoints__supported_status(
     expected_json,
     method_name,
 ):
-
     response = set_up_mock_server_and_send_request(
         httpserver,
         status_code,
@@ -101,7 +100,6 @@ def test_rcs_endpoints__unsupported_status(
     expected_json,
     method_name,
 ):
-
     response = set_up_mock_server_and_send_request(
         httpserver,
         status_code,

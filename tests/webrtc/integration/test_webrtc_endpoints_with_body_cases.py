@@ -76,7 +76,6 @@ def case__supported_status(endpoint_type, responses):
 
 @parametrize(endpoint_type=ENDPOINT_TEST_ARGUMENTS.keys())
 def case__unsupported_status(endpoint_type):
-
     return (
         201,
         get_webrtc_application_response(),
