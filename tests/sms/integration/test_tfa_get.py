@@ -68,6 +68,12 @@ def test_sms_endpoints__supported_status(
     )
     response_dict = SMSChannel.convert_model_to_dict(response)
     raw_response = response_dict.pop("rawResponse")
+
+    if type(response_content) is list:
+        response_content = {"list": response_content}
+    else:
+        response_content = response_content
+
     expected_response_dict = {
         **response_content,
         "statusCode": HTTPStatus(status_code),
