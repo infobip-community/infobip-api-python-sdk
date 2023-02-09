@@ -1,7 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from infobip_channels.email.models.body.validate_email_adresses import (
+from infobip_channels.email.models.body.validate_email_addresses import (
     ValidateEmailAddressesMessageBody,
 )
 

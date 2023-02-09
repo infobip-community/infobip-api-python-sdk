@@ -54,8 +54,8 @@ def test_when_destinations_to_is_invalid__validation_error_is_raised(destination
         )
 
 
-@pytest.mark.parametrize("calback_data", [{}, get_random_string(4001)])
-def test_when_calback_data_is_invalid__validation_error_is_raised(calback_data):
+@pytest.mark.parametrize("callback_data", [{}, get_random_string(4001)])
+def test_when_callback_data_is_invalid__validation_error_is_raised(callback_data):
     with pytest.raises(ValidationError):
         GenerateBinarySMSMessageBodyFactory.build(
             **{
@@ -66,7 +66,7 @@ def test_when_calback_data_is_invalid__validation_error_is_raised(calback_data):
                             "esmClass": 0,
                             "hex": "54 65 73 74 20 6d 65 73 73 61 67 65 2e",
                         },
-                        "callbackData": calback_data,
+                        "callbackData": callback_data,
                         "destinations": [{"to": "41793026727"}],
                     }
                 ]
