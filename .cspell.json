@@ -2,6 +2,7 @@
   "version": "0.2",
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/master/cspell.schema.json",
   "language": "en",
+  "dictionaries": ["python", "en_US", "en-gb"],
   "words": [
     "infobip",
     "ibsso"
