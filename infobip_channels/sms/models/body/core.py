@@ -43,8 +43,19 @@ class IndiaDlt(CamelCaseModel):
     principal_entity_id: constr(min_length=1, max_length=30) = None
 
 
+class TurkeyRecipientTypeEnum(str, Enum):
+    BIREYSEL = "BIREYSEL"
+    TACIR = "TACIR"
+
+
+class TurkeyIys(CamelCaseModel):
+    brand_code: Optional[int]
+    recipient_type: TurkeyRecipientTypeEnum
+
+
 class Regional(CamelCaseModel):
     india_dlt: Optional[IndiaDlt] = None
+    turkey_iys: Optional[TurkeyIys] = None
 
 
 class Time(CamelCaseModel):

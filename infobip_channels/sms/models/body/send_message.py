@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+from pydantic.types import constr
+
 from infobip_channels.core.models import (
     LanguageEnum,
     MessageBodyBase,
@@ -16,6 +18,8 @@ class Message(CoreMessage):
     text: Optional[str] = None
     language: Optional[LanguageEnum] = None
     transliteration: Optional[TransliterationEnum]
+    entity_id: Optional[constr(max_length=50)] = None
+    application_id: Optional[constr(max_length=50)] = None
 
 
 class SMSMessageBody(MessageBodyBase):
