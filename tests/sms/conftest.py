@@ -243,7 +243,58 @@ def get_update_scheduled_sms_messages_status_response():
 
 
 def get_scheduled_sms_messages_status_response():
-    return {"bulkId": "BulkId-xyz-123", "status": "PENDING"}
+    return {
+        "results": [
+            {
+                "bulkId": "BULK-ID-123-xyz",
+                "messageId": "MESSAGE-ID-123-xyz",
+                "to": "41793026727",
+                "sentAt": "2019-11-09T16:00:00.000+0000",
+                "doneAt": "2019-11-09T16:00:00.000+0000",
+                "smsCount": 1,
+                "price": {"pricePerMessage": 0.01, "currency": "EUR"},
+                "status": {
+                    "groupId": 3,
+                    "groupName": "DELIVERED",
+                    "id": 5,
+                    "name": "DELIVERED_TO_HANDSET",
+                    "description": "Message delivered to handset",
+                },
+                "error": {
+                    "groupId": 0,
+                    "groupName": "Ok",
+                    "id": 0,
+                    "name": "NO_ERROR",
+                    "description": "No Error",
+                    "permanent": False,
+                },
+            },
+            {
+                "bulkId": "BULK-ID-123-xyz",
+                "messageId": "12db39c3-7822-4e72-a3ec-c87442c0ffc5",
+                "to": "41793026834",
+                "sentAt": "2019-11-09T17:00:00.000+0000",
+                "doneAt": "2019-11-09T17:00:00.000+0000",
+                "smsCount": 1,
+                "price": {"pricePerMessage": 0.01, "currency": "EUR"},
+                "status": {
+                    "groupId": 3,
+                    "groupName": "DELIVERED",
+                    "id": 5,
+                    "name": "DELIVERED_TO_HANDSET",
+                    "description": "Message delivered to handset",
+                },
+                "error": {
+                    "groupId": 0,
+                    "groupName": "Ok",
+                    "id": 0,
+                    "name": "NO_ERROR",
+                    "description": "No Error",
+                    "permanent": False,
+                },
+            },
+        ]
+    }
 
 
 def get_sms_request_error_response():

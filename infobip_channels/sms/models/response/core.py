@@ -40,5 +40,10 @@ class CoreResult(CamelCaseModel):
     error: Optional[Error] = None
 
 
+class SMSReport(CoreResult):
+    mcc_mnc: Optional[str] = None
+    callback_data: Optional[str] = None
+
+
 class ScheduledSMSMessages(ResponseBase):
     bulk_id: str
