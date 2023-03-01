@@ -12,7 +12,7 @@ from infobip_channels.email.models.body.update_scheduled_status import (
 from infobip_channels.email.models.body.update_tracking_events import (
     UpdateTrackingEventsMessageBody,
 )
-from infobip_channels.email.models.body.validate_email_adresses import (
+from infobip_channels.email.models.body.validate_email_addresses import (
     ValidateEmailAddressesMessageBody,
 )
 
