@@ -22,3 +22,18 @@ class EntityManagementTestCase(unittest.TestCase):
 
         self.assertIsNotNone(response)
         self.assertEqual(HTTPStatus.CREATED, response.status_code)
+
+    def test_get_entity(self):
+        response = EntityManagementTestCase.api.get_entity("test-entity")
+
+        self.assertIsNotNone(response)
+        self.assertEqual(HTTPStatus.OK, response.status_code)
+
+    def test_modify_entity(self):
+        entity_body = {"entityName": "An even cooler Entity"}
+        response = EntityManagementTestCase.api.modify_entity(
+            "test-entity", entity_body
+        )
+
+        self.assertIsNotNone(response)
+        self.assertEqual(HTTPStatus.NO_CONTENT, response.status_code)

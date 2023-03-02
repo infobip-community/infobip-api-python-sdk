@@ -46,7 +46,7 @@ class ApplicationEntityManagement(Channel):
 
         raise ValueError
 
-    def get_entities(self) -> Union[ResponseBase, Any]:
+    def get_entities(self) -> Union[GetEntitiesResponse, ResponseBase, Any]:
         """Get a paginated list of entities.
 
         :return Response with a list of Entity objects.
@@ -57,7 +57,7 @@ class ApplicationEntityManagement(Channel):
     def create_entity(
         self,
         request_body: Union[CreateEntityBody, Dict],
-    ) -> Union[ResponseBase, Any]:
+    ) -> Union[CreateEntityResponse, ResponseBase, Any]:
         """Create an entity associated with the specified entityId.
 
         :param request_body: Body of the Entity to be created.
@@ -73,7 +73,7 @@ class ApplicationEntityManagement(Channel):
 
         return self._construct_response(response, CreateEntityResponse)
 
-    def get_entity(self, entity_id: str) -> Union[ResponseBase, Any]:
+    def get_entity(self, entity_id: str) -> Union[GetEntityResponse, ResponseBase, Any]:
         """Get an entity for the specified entityId.
 
         :param entity_id: Entity ID.
@@ -88,7 +88,7 @@ class ApplicationEntityManagement(Channel):
         self,
         entity_id: str,
         request_body: Union[ModifyEntityBody, Dict],
-    ):
+    ) -> Union[ModifyEntityResponse, ResponseBase, Any]:
         """Modify an entity for the specified entityId.
 
         :param entity_id: Entity ID.

@@ -2,8 +2,8 @@ from typing import Optional
 
 from pydantic.types import constr
 
-from infobip_channels.whatsapp.models.body.core import MessageBody
+from infobip_channels.core.models import MessageBodyBase
 
 
-class ModifyEntityBody(MessageBody):
-    entityName: Optional[constr(max_length=255)] = None
+class ModifyEntityBody(MessageBodyBase):
+    entity_name: Optional[constr(max_length=255)] = None
