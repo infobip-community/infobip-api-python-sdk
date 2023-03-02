@@ -6,5 +6,5 @@ from infobip_channels.core.models import CamelCaseModel
 
 
 class Entity(CamelCaseModel):
-    entityName: Optional[constr(max_length=255)] = None
-    entityId: Optional[constr(max_length=255)] = None
+    entity_name: Optional[constr(max_length=255)] = None
+    entity_id: Optional[constr(max_length=255)] = None

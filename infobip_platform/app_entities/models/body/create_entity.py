@@ -1,6 +1,6 @@
-from infobip_channels.whatsapp.models.body.core import MessageBody
+from infobip_channels.core.models import MessageBodyBase
 from infobip_platform.app_entities.models.core.entity import Entity
 
 
-class CreateEntityBody(MessageBody, Entity):
+class CreateEntityBody(MessageBodyBase, Entity):
     pass

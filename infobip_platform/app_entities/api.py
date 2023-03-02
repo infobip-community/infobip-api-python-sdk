@@ -67,7 +67,7 @@ class ApplicationEntityManagement(Channel):
         message = self.validate_message_body(request_body, CreateEntityBody)
 
         response = self._client.post(
-            self.PROVISIONING_PATH_VERSION_1 + "applications",
+            self.PROVISIONING_PATH_VERSION_1 + "entities",
             message.dict(by_alias=True),
         )
 
