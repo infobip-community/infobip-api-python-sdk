@@ -11,7 +11,8 @@ class EntityManagementTestCase(unittest.TestCase):
     api = ApplicationEntityManagement.from_env()
 
     def test_get_entities(self):
-        response = EntityManagementTestCase.api.get_entities()
+        query_parameters = {"page": 0, "size": 5}
+        response = EntityManagementTestCase.api.get_entities(query_parameters)
 
         self.assertIsNotNone(response)
         self.assertEqual(HTTPStatus.OK, response.status_code)

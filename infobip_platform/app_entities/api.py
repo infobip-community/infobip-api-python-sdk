@@ -7,6 +7,7 @@ from infobip_channels.core.channel import Channel
 from infobip_channels.core.models import ResponseBase
 from infobip_platform.app_entities.models.body.create_entity import CreateEntityBody
 from infobip_platform.app_entities.models.body.modify_entity import ModifyEntityBody
+from infobip_platform.app_entities.models.query_parameters.get_entities import GetEntitiesQueryParameters
 from infobip_platform.app_entities.models.response.core import PlatformResponseError
 from infobip_platform.app_entities.models.response.create_entity import (
     CreateEntityResponse,
@@ -46,12 +47,22 @@ class ApplicationEntityManagement(Channel):
 
         raise ValueError
 
-    def get_entities(self) -> Union[GetEntitiesResponse, ResponseBase, Any]:
+    def get_entities(
+            self,
+            query_parameters: Union[GetEntitiesQueryParameters, Dict],
+    ) -> Union[GetEntitiesResponse, ResponseBase, Any]:
         """Get a paginated list of entities.
 
         :return Response with a list of Entity objects.
         """
-        response = self._client.get(self.PROVISIONING_PATH_VERSION_1 + "entities")
+        query_parameters = self.validate_query_parameter(
+            query_parameters or {}, GetEntitiesQueryParameters
+        )
+
+        response = self._client.get(
+            self.PROVISIONING_PATH_VERSION_1 + "entities",
+            params=query_parameters.dict(by_alias=True),
+        )
         return self._construct_response(response, GetEntitiesResponse)
 
     def create_entity(
