@@ -1,7 +1,9 @@
 import pytest
 from pydantic import ValidationError
 
-from infobip_platform.app_entities.models.query_parameters.get_entities import GetEntitiesQueryParameters
+from infobip_platform.app_entities.models.query_parameters.get_entities import (
+    GetEntitiesQueryParameters,
+)
 
 
 def test_when_page_is_negative__validation_error_is_raised():
