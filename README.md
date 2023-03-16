@@ -5,7 +5,6 @@
 [![Workflow](https://img.shields.io/github/workflow/status/infobip-community/infobip-api-python-sdk/Python%20package)](https://github.com/infobip-community/infobip-api-python-sdk/actions/workflows/python-package.yml)
 ![Release](https://img.shields.io/github/release-date/infobip-community/infobip-api-python-sdk)
 [![Licence](https://img.shields.io/github/license/infobip-community/infobip-api-python-sdk)](LICENSE)
-![Lines](https://img.shields.io/tokei/lines/github/infobip-community/infobip-api-python-sdk)
 
 Client SDK to use the Infobip API with Python.
 
@@ -13,16 +12,21 @@ This package enables you to use multiple Infobip communication channels, like SM
 
 ---
 
-## 📡 Supported channels
+## 📡 Supported APIs
 
-- [SMS + 2FA Reference](https://www.infobip.com/docs/api#channels/sms)
-- [Whatsapp Reference](https://www.infobip.com/docs/api#channels/whatsapp)
-- [Email Reference](https://www.infobip.com/docs/api#channels/email)
-- [WebRTC Reference](https://www.infobip.com/docs/api#channels/webrtc/)
-- [MMS Reference](https://www.infobip.com/docs/api#channels/mms)
-- [RCS Reference](https://www.infobip.com/docs/api#channels/rcs)
+The following communication channels are supported:
 
-More channels to be added in the near future.
+- [SMS + 2FA](https://www.infobip.com/docs/api#channels/sms)
+- [Whatsapp](https://www.infobip.com/docs/api#channels/whatsapp)
+- [Email](https://www.infobip.com/docs/api#channels/email)
+- [WebRTC](https://www.infobip.com/docs/api#channels/webrtc/)
+- [MMS](https://www.infobip.com/docs/api#channels/mms)
+- [RCS](https://www.infobip.com/docs/api#channels/rcs)
+
+The following platform management APIs are supported:
+- [Entities](https://www.infobip.com/docs/api/platform/application-entity)
+ 
+More APIs to be added in the near future.
 
 ## 🔐 Authentication
 
