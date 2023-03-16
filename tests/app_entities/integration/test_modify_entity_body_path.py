@@ -27,11 +27,11 @@ def set_up_mock_server_and_send_request(
         json=message_body_instance.dict(by_alias=True),
     ).respond_with_response(get_response_object(status_code, response_content))
 
-    app_entity_mgmt = ApplicationEntityManagement.from_auth_params(
+    app_entity_management = ApplicationEntityManagement.from_auth_params(
         {"base_url": httpserver.url_for("/"), "api_key": "secret"}
     )
 
-    return getattr(app_entity_mgmt, method_name)(
+    return getattr(app_entity_management, method_name)(
         expected_path_parameters["entityId"],
         request_body,
     )
