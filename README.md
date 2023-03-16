@@ -25,7 +25,7 @@ The following communication channels are supported:
 
 The following platform management APIs are supported:
 - [Entities](https://www.infobip.com/docs/api/platform/application-entity)
- 
+
 More APIs to be added in the near future.
 
 ## 🔐 Authentication
