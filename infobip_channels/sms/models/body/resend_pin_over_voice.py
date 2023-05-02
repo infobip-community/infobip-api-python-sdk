@@ -1,3 +1,0 @@
-from infobip_channels.sms.models.body.resend_pin_over_sms import ResendPINOverSMSBody
-
-ResendPINOverVoiceBody = ResendPINOverSMSBody
