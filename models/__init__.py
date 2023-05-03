@@ -41,7 +41,7 @@ from models.mms_delivery_time_window import MmsDeliveryTimeWindow
 from models.mms_destination import MmsDestination
 from models.mms_error import MmsError
 from models.mms_inbound_report import MmsInboundReport
-from models.mms_inbound_report_response import MmsInboundReportResponse
+from models.mms_inbound_report_response import MMSInboundReportResponse
 from models.mms_message_result import MmsMessageResult
 from models.mms_price import MmsPrice
 from models.mms_report import MmsReport
@@ -203,7 +203,7 @@ from models.resource_association_response import (
 )
 from models.resource_type import ResourceType
 from models.sms_advanced_binary_request import SmsAdvancedBinaryRequest
-from models.sms_advanced_textual_request import SendRequestBody
+from models.sms_advanced_textual_request import SendSMSRequestBody
 from models.sms_binary_content import SmsBinaryContent
 from models.sms_binary_message import SmsBinaryMessage
 from models.sms_bulk_request import SmsBulkRequest

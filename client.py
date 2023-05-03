@@ -1,5 +1,7 @@
 from os import getenv
 from httpx import AsyncClient
+
+from api.mms import MMSClient
 from api.sms import SMSClient
 
 
@@ -16,3 +18,4 @@ class InfobipAPIClient(AsyncClient):
         super().__init__(base_url=base_url, headers=headers)
 
         self.SMS = SMSClient(self)
+        self.MMS = MMSClient(self)

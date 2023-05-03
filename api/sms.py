@@ -2,7 +2,7 @@ from collections.abc import Awaitable
 
 from httpx import AsyncClient, Response
 
-from models import SendRequestBody
+from models import SendSMSRequestBody
 from models.sms_preview_request import PreviewSMSRequestBody
 
 
@@ -30,7 +30,7 @@ class SMSClient:
 
     def send(
         self,
-        request_body: SendRequestBody,
+        request_body: SendSMSRequestBody,
     ) -> Awaitable[Response]:
         """Send SMS message
 

@@ -1,7 +1,7 @@
 import unittest
 
 from client import InfobipAPIClient
-from models import SendRequestBody, Message, Destination
+from models import SendSMSRequestBody, Message, Destination
 from models.sms_preview_request import PreviewSMSRequestBody
 from models.sms_preview_response import PreviewSMSResponseBody
 
@@ -29,12 +29,12 @@ class SMSTestCase(unittest.IsolatedAsyncioTestCase):
 
     async def test_send_message(self):
         # Create a request body object and validate its contents.
-        request_body = SendRequestBody(
+        request_body = SendSMSRequestBody(
             messages=[
                 Message(
                     destinations=[
                         Destination(
-                            to="523311800428",
+                            to="555555555555",
                         ),
                     ],
                     text="Hello from Infobip Python SDK!",
