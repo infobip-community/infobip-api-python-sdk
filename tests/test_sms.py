@@ -2,7 +2,7 @@
 
 import unittest
 
-from client import InfobipAPIClient
+from infobip.client import InfobipAPIClient
 from http_server_mock import HttpServerMock
 
 

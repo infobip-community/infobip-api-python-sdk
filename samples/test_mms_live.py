@@ -1,14 +1,14 @@
 import unittest
 
-from client import InfobipAPIClient
-from models import MMSInboundReportResponse
-from models.mms_get_inbound_messages_query_parameters import GetInboundMessagesQueryParameters
+from infobip.client import InfobipAPIClient
+from infobip.models.mms_get_inbound_messages_query_parameters import GetInboundMessagesQueryParameters
+from infobip.models.mms_inbound_report_response import GetInboundMessagesResponseBody
 
 
 class MMSTestCase(unittest.IsolatedAsyncioTestCase):
     client = InfobipAPIClient()
 
-    async def test_preview_message(self):
+    async def test_get_inbound_messages(self):
         # Create query parameters object and validate its contents.
         params = GetInboundMessagesQueryParameters(
             limit=10,
@@ -18,7 +18,7 @@ class MMSTestCase(unittest.IsolatedAsyncioTestCase):
         response = await self.client.MMS.get_inbound_messages(params)
 
         # Parse and validate response if needed.
-        response_body = MMSInboundReportResponse.from_json(response.text)
+        response_body = GetInboundMessagesResponseBody.from_json(response.text)
 
         # Do something with the response.
         print(response)
