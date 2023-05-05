@@ -2,7 +2,9 @@ from collections.abc import Awaitable
 
 from httpx import Response, AsyncClient
 
-from infobip.models.mms_get_inbound_messages_query_parameters import GetInboundMessagesQueryParameters
+from infobip.models.mms_get_inbound_messages_query_parameters import (
+    GetInboundMessagesQueryParameters,
+)
 
 
 class MMSClient:
@@ -12,8 +14,8 @@ class MMSClient:
         self.client = client
 
     def get_inbound_messages(
-            self,
-            query_parameters: GetInboundMessagesQueryParameters,
+        self,
+        query_parameters: GetInboundMessagesQueryParameters,
     ) -> Awaitable[Response]:
         """Get inbound messages
 

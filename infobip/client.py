@@ -5,7 +5,7 @@ from infobip.api.mms import MMSClient
 from infobip.api.sms import SMSClient
 
 
-class InfobipAPIClient(AsyncClient):
+class APIClient(AsyncClient):
     def __init__(self, base_url=None, api_key: str = None):
         if base_url is None:
             base_url = getenv("IB_BASE_URL")

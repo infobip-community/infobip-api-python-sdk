@@ -13,7 +13,7 @@ class GetInboundMessagesQueryParameters(BaseModel):
     limit: Optional[StrictInt] = Field(
         None,
         alias="limit",
-        description="Maximum number of delivery reports that will be returned."
+        description="Maximum number of delivery reports that will be returned.",
     )
 
     __properties = [

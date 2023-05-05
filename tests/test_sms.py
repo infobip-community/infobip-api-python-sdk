@@ -1,43 +1,37 @@
-# Test for validations
+import pytest
 
-import unittest
+from common import TEST_URL, get_test_client
+from infobip.models.sms_preview_request import PreviewSMSRequestBody
+from infobip.models.sms_preview_response import PreviewSMSResponseBody
 
-from infobip.client import InfobipAPIClient
-from http_server_mock import HttpServerMock
 
+@pytest.mark.asyncio
+async def test_preview_message(httpx_mock):
+    expected_response = {
+        "originalText": "Let's see how many characters remain unused in this message.",
+        "previews": [
+            {
+                "textPreview": "Let's see how many characters remain unused in this message.",
+                "messageCount": 1,
+                "charactersRemaining": 96,
+                "configuration": {},
+            }
+        ],
+    }
 
-class TestSMS(unittest.IsolatedAsyncioTestCase):
-    client = InfobipAPIClient()
+    async with get_test_client() as client:
+        httpx_mock.add_response(
+            url=f"{TEST_URL}{client.SMS.PATH_PREVIEW_SMS}",
+            method="POST",
+            json=expected_response,
+            status_code=200,
+        )
 
-    async def test_preview_message(self):
-        expected_response = {
-            "bulkId": "2034072219640523072",
-            "messages": [
-                {
-                    "messageId": "2250be2d4219-3af1-78856-aabe-1362af1edfd2",
-                    "status": {
-                        "description": "Message sent to next instance",
-                        "groupId": 1,
-                        "groupName": "PENDING",
-                        "id": 26,
-                        "name": "MESSAGE_ACCEPTED"
-                    },
-                    "to": "41793026727"
-                }
-            ]
-        }
+        request_body = PreviewSMSRequestBody(
+            text="Let's see how many characters remain unused in this message.",
+        )
 
-        # Start the mock server
-        mock_server = HttpServerMock("localhost", 5000)
+        response = await client.SMS.preview_message(request_body)
 
-        with mock_server.run():
-            client = InfobipAPIClient(base_url="http://localhost:5000")
-
-            # Call the endpoint and await returned Coroutine
-            response = await self.client.SMS.preview_message("test")
-
-            # Do something with the response.
-            print(response)
-
-            self.assertEquals(response.status_code, 200)
-            self.assertEquals(response.json(), expected_response)
+        assert PreviewSMSResponseBody.from_json(response.text).to_dict() == expected_response
+        assert response.status_code == 200

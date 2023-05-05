@@ -1,15 +1,16 @@
 import unittest
 
-from infobip.client import InfobipAPIClient
+from infobip.client import APIClient
 from infobip.models.sms_advanced_textual_request import SendSMSRequestBody
 from infobip.models.sms_destination import Destination
 from infobip.models.sms_preview_request import PreviewSMSRequestBody
 from infobip.models.sms_preview_response import PreviewSMSResponseBody
+from infobip.models.sms_response import SendSMSResponseBody
 from infobip.models.sms_textual_message import Message
 
 
 class SMSTestCase(unittest.IsolatedAsyncioTestCase):
-    client = InfobipAPIClient()
+    client = APIClient()
 
     async def test_preview_message(self):
         # Create a request body object and validate its contents.
@@ -48,7 +49,7 @@ class SMSTestCase(unittest.IsolatedAsyncioTestCase):
         response = await self.client.SMS.send(request_body)
 
         # (Optional) Parse and validate response if needed.
-        response_body = PreviewSMSResponseBody.from_json(response.text)
+        response_body = SendSMSResponseBody.from_json(response.text)
 
         # Do something with the response.
         print(response)
