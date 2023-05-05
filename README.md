@@ -58,7 +58,7 @@ Other channels can be used in a similar way.
 The first step is to import the Infobip API Client and needed models.
 Then you can use a context manager to create the client, and use it to call the API.
 After calling the endpoint, you can parse the response into a response body object.
-This code
+This code needs that you previously set the environment variables `IB_BASE_URL` and  `IB_API_KEY`.
 
 ```python
 import asyncio
@@ -70,7 +70,7 @@ from infobip.models.sms_response import SendSMSResponseBody
 
 
 async def main():
-    with APIClient() as client:
+    async with APIClient() as client:
         # Create a request body object and validate its contents.
         request_body = SendSMSRequestBody(
             messages=[
