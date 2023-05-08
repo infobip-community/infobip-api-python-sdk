@@ -37,25 +37,29 @@ async def test_preview_message(httpx_mock):
         response = await client.SMS.preview_message(request_body)
 
         assert response.status_code == 200
-        assert PreviewSMSResponseBody.from_json(response.text).to_dict() == expected_response
+        assert (
+            PreviewSMSResponseBody.from_json(response.text).to_dict()
+            == expected_response
+        )
+
 
 @pytest.mark.asyncio
 async def test_send_sms_message(httpx_mock):
     expected_response = {
-      "bulkId": "2034072219640523072",
-      "messages": [
-        {
-          "messageId": "2250be2d4219-3af1-78856-aabe-1362af1edfd2",
-          "status": {
-            "description": "Message sent to next instance",
-            "groupId": 1,
-            "groupName": "PENDING",
-            "id": 26,
-            "name": "MESSAGE_ACCEPTED"
-          },
-          "to": "41793026727"
-        }
-      ]
+        "bulkId": "2034072219640523072",
+        "messages": [
+            {
+                "messageId": "2250be2d4219-3af1-78856-aabe-1362af1edfd2",
+                "status": {
+                    "description": "Message sent to next instance",
+                    "groupId": 1,
+                    "groupName": "PENDING",
+                    "id": 26,
+                    "name": "MESSAGE_ACCEPTED",
+                },
+                "to": "41793026727",
+            }
+        ],
     }
 
     async with get_test_client() as client:
@@ -81,4 +85,6 @@ async def test_send_sms_message(httpx_mock):
         response = await client.SMS.send(request_body)
 
         assert response.status_code == 200
-        assert SendSMSResponseBody.from_json(response.text).to_dict() == expected_response
+        assert (
+            SendSMSResponseBody.from_json(response.text).to_dict() == expected_response
+        )
