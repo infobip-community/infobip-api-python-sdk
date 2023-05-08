@@ -8,13 +8,14 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr, constr
+
 from infobip.models.mms_advanced_message_segment import MmsAdvancedMessageSegment
 from infobip.models.mms_delivery_time_window import MmsDeliveryTimeWindow
 from infobip.models.mms_destination import MmsDestination

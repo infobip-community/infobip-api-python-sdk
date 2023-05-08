@@ -8,17 +8,16 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import BaseModel
+
 from infobip.models.page_info import PageInfo
-from infobip.models.resource_association_response import (
-    ResourceAssociationResponse,
-)
+from infobip.models.resource_association_response import ResourceAssociationResponse
 
 
 class PageResourceAssociation(BaseModel):

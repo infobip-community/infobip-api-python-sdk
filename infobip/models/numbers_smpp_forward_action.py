@@ -8,9 +8,10 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
 
 from infobip.models.numbers_mo_action import NumbersMoAction
 

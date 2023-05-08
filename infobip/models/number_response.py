@@ -8,13 +8,14 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import BaseModel, Field, StrictBool, StrictStr, constr, validator
+
 from infobip.models.number_price import NumberPrice
 from infobip.models.numbers_edit_permissions import NumbersEditPermissions
 from infobip.models.numbers_voice_setup import NumbersVoiceSetup

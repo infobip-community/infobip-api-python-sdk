@@ -8,17 +8,16 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Optional
+
 from pydantic import Field, StrictStr, constr
+
 from infobip.models.numbers_delivery_time_window import NumbersDeliveryTimeWindow
-from infobip.models.numbers_mo_non_forward_action import (
-    NumbersMoNonForwardAction,
-)
+from infobip.models.numbers_mo_non_forward_action import NumbersMoNonForwardAction
 
 
 class NumbersAutoResponseAction(NumbersMoNonForwardAction):

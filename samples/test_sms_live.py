@@ -53,5 +53,6 @@ class SMSTestCase(unittest.IsolatedAsyncioTestCase):
 
         # Do something with the response.
         print(response)
+        print(response_body)
 
         self.assertEqual(response.status_code, 200)

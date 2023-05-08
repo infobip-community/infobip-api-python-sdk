@@ -1,6 +1,6 @@
 from collections.abc import Awaitable
 
-from httpx import Response, AsyncClient
+from httpx import AsyncClient, Response
 
 from infobip.models.mms_get_inbound_messages_query_parameters import (
     GetInboundMessagesQueryParameters,

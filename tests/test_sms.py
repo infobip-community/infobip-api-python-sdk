@@ -1,6 +1,6 @@
 import pytest
-
 from common import TEST_URL, get_test_client
+
 from infobip.models.sms_advanced_textual_request import SendSMSRequestBody
 from infobip.models.sms_destination import Destination
 from infobip.models.sms_preview_request import PreviewSMSRequestBody

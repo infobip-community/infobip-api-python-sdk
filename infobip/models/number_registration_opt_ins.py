@@ -8,13 +8,14 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Optional
+
 from pydantic import BaseModel, Field
+
 from infobip.models.number_registration_interactive_voice_response_opt_in import (
     NumberRegistrationInteractiveVoiceResponseOptIn,
 )
@@ -24,9 +25,7 @@ from infobip.models.number_registration_keyword_opt_in import (
 from infobip.models.number_registration_verbal_opt_in import (
     NumberRegistrationVerbalOptIn,
 )
-from infobip.models.number_registration_web_opt_in import (
-    NumberRegistrationWebOptIn,
-)
+from infobip.models.number_registration_web_opt_in import NumberRegistrationWebOptIn
 
 
 class NumberRegistrationOptIns(BaseModel):

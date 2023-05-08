@@ -8,13 +8,15 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
 from datetime import datetime
 from typing import List, Optional
+
 from pydantic import BaseModel, Field, StrictStr
+
 from infobip.models.message_price import MessagePrice
 from infobip.models.mms_webhook_inbound_message_segment import (
     MmsWebhookInboundMessageSegment,

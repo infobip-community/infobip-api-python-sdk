@@ -8,12 +8,13 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
 
 from pydantic import Field, constr, validator
+
 from infobip.models.number_registration_business_identifier import (
     NumberRegistrationBusinessIdentifier,
 )

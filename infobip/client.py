@@ -1,4 +1,5 @@
 from os import getenv
+
 from httpx import AsyncClient
 
 from infobip.api.mms import MMSClient

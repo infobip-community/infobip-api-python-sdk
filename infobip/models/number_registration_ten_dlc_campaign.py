@@ -8,19 +8,18 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import Field, StrictBool, StrictStr, conlist, constr, validator
+
 from infobip.models.number_registration_brand_preview import (
     NumberRegistrationBrandPreview,
 )
-from infobip.models.number_registration_campaign import (
-    NumberRegistrationCampaign,
-)
+from infobip.models.number_registration_campaign import NumberRegistrationCampaign
 from infobip.models.number_registration_document_metadata import (
     NumberRegistrationDocumentMetadata,
 )

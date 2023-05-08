@@ -8,12 +8,13 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
 
 from pydantic import BaseModel, Field, constr
+
 from infobip.models.channel import Channel
 from infobip.models.resource_type import ResourceType
 

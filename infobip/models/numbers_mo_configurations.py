@@ -8,16 +8,15 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import BaseModel, Field, StrictInt
-from infobip.models.numbers_stored_mo_configuration import (
-    NumbersStoredMoConfiguration,
-)
+
+from infobip.models.numbers_stored_mo_configuration import NumbersStoredMoConfiguration
 
 
 class NumbersMoConfigurations(BaseModel):

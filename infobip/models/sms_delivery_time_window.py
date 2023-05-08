@@ -8,13 +8,14 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import BaseModel, Field
+
 from infobip.models.sms_delivery_day import SmsDeliveryDay
 from infobip.models.sms_delivery_time_from import SmsDeliveryTimeFrom
 from infobip.models.sms_delivery_time_to import SmsDeliveryTimeTo

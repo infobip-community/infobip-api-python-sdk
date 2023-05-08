@@ -8,17 +8,16 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import BaseModel, Field
+
 from infobip.models.number_registration_brand import NumberRegistrationBrand
-from infobip.models.number_registration_page_info import (
-    NumberRegistrationPageInfo,
-)
+from infobip.models.number_registration_page_info import NumberRegistrationPageInfo
 
 
 class NumberRegistrationPageResponseBrand(BaseModel):

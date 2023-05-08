@@ -8,13 +8,15 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-from infobip import models
-
 from typing import Optional
+
 from pydantic import BaseModel, StrictStr, validator
+
+from infobip import models
 
 
 class NumberRegistrationBusinessIdentifier(BaseModel):

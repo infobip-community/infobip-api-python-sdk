@@ -8,17 +8,16 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import BaseModel, Field, StrictStr, constr
+
 from infobip.models.numbers_mo_action import NumbersMoAction
-from infobip.models.numbers_mo_non_forward_action import (
-    NumbersMoNonForwardAction,
-)
+from infobip.models.numbers_mo_non_forward_action import NumbersMoNonForwardAction
 from infobip.models.numbers_use_conversation import NumbersUseConversation
 
 

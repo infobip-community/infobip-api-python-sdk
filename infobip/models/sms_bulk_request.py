@@ -8,12 +8,12 @@
 
 
 from __future__ import annotations
-from inspect import getfullargspec
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
 from datetime import datetime
+from inspect import getfullargspec
 
 from pydantic import BaseModel, Field
 

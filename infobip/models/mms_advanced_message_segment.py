@@ -8,11 +8,13 @@
 
 
 from __future__ import annotations
+
 import pprint
 import re  # noqa: F401
+from typing import Any, List, Optional
 
-from typing import Optional
-from pydantic import BaseModel, ValidationError, validator
+from pydantic import BaseModel, Field, ValidationError, validator
+
 from infobip.models.mms_advanced_message_segment_binary import (
     MmsAdvancedMessageSegmentBinary,
 )
@@ -28,8 +30,6 @@ from infobip.models.mms_advanced_message_segment_text import (
 from infobip.models.mms_advanced_message_segment_upload_reference import (
     MmsAdvancedMessageSegmentUploadReference,
 )
-from typing import Any, List
-from pydantic import Field
 
 MMSADVANCEDMESSAGESEGMENT_ANY_OF_SCHEMAS = [
     "MmsAdvancedMessageSegmentBinary",
