@@ -25,10 +25,11 @@ class SMSTestCase(unittest.IsolatedAsyncioTestCase):
         response_body = PreviewSMSResponseBody.from_json(response.text)
 
         # Do something with the response.
-        print(response)
-        print(response_body.previews)
+        # print(response)
+        # print(response_body.previews)
 
         self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response_body.previews)
 
     async def test_send_message(self):
         # Create a request body object and validate its contents.
@@ -52,7 +53,8 @@ class SMSTestCase(unittest.IsolatedAsyncioTestCase):
         response_body = SendSMSResponseBody.from_json(response.text)
 
         # Do something with the response.
-        print(response)
-        print(response_body)
+        # print(response)
+        # print(response_body)
 
         self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response_body.messages)

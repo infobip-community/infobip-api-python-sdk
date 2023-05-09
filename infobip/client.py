@@ -1,3 +1,5 @@
+import importlib.metadata
+import sys
 from os import getenv
 
 from httpx import AsyncClient
@@ -14,9 +16,23 @@ class APIClient(AsyncClient):
             api_key = getenv("IB_API_KEY")
 
         headers = {"Authorization": f"App {api_key}"}
-        headers.update({"User-Agent": "infobip-api-python-sdk/6.0.0"})
+        headers.update({"User-Agent": self.__get_user_agent()})
 
         super().__init__(base_url=base_url, headers=headers)
 
         self.SMS = SMSClient(self)
         self.MMS = MMSClient(self)
+
+    def __get_user_agent(cls) -> str:
+        return f"@infobip/python-sdk{cls.__get_package_version()} python/{sys.version.split(' ')[0]}"
+
+    def __get_package_version(cls) -> str:
+        sdk_version = ""
+        if "infobip_channels" in sys.modules:
+            try:
+                sdk_version = "/" + importlib.metadata.distribution("infobip").version
+            except importlib.metadata.PackageNotFoundError:
+                # Ignore as package is not installed in development environment.
+                pass
+
+        return sdk_version

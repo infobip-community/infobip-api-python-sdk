@@ -23,7 +23,8 @@ class MMSTestCase(unittest.IsolatedAsyncioTestCase):
         response_body = GetInboundMessagesResponseBody.from_json(response.text)
 
         # Do something with the response.
-        print(response)
-        print(response_body.results)
+        # print(response)
+        # print(response_body.results)
 
         self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response_body.results)

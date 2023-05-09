@@ -110,7 +110,7 @@ with real payloads.
 For SDK versioning we use
 [Semantic Versioning](https://semver.org) scheme.
 
-Python 3.6 is the minimum supported version by this library.
+Python 3.8 is the minimum supported version by this library.
 
 ## 🧡 Want to help and improve this open-source SDK?
 

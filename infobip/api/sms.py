@@ -32,7 +32,9 @@ class SMSClient:
         self,
         request_body: SendSMSRequestBody,
     ) -> Awaitable[Response]:
-        """Send SMS message
+        """Send an SMS message. You can send a simple single message to a single destination, up to batch sending of
+        personalized messages to the thousands of recipients with a single API request. Language, transliteration,
+        scheduling and every advanced feature you can think of is supported.
 
         :param request_body: Request body for sending an SMS message
         """
