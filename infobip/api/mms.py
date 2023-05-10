@@ -1,4 +1,4 @@
-from collections.abc import Awaitable
+from typing import Awaitable
 
 from httpx import AsyncClient, Response
 
