@@ -40,11 +40,11 @@ once more authentication methods are included.
 To install infobip SDK you will need to run:
 
 ```bash
-pip install infobip-api-python-sdk
+pip install infobip
 ```
 
 Details of the package can be found
-in the [PyPI page](https://pypi.org/project/infobip-api-python-sdk/).
+in the [PyPI page](https://pypi.org/project/infobip/).
 
 ## 🚀 Usage
 
@@ -53,45 +53,51 @@ To use the package you'll need an Infobip account.
 If you don't already have one, you can create a free trial account
 [here](https://www.infobip.com/signup).
 
-In this example, we will show how to send a WhatsApp text message.
+In this example, we will show how to send an SMS message.
 Other channels can be used in a similar way.
-The first step is to import the necessary channel, in this case WhatsApp channel.
+The first step is to import the Infobip API Client and needed models.
+Then you can use a context manager to create the client, and use it to call the API.
+After calling the endpoint, you can parse the response into a response body object.
+This code needs that you previously set the environment variables `IB_BASE_URL` and  `IB_API_KEY`.
 
 ```python
-from infobip_channels.whatsapp.channel import WhatsAppChannel
-```
+import asyncio
+from infobip.client import APIClient
+from infobip.models.sms_advanced_textual_request import SendSMSRequestBody
+from infobip.models.sms_textual_message import Message
+from infobip.models.sms_destination import Destination
+from infobip.models.sms_response import SendSMSResponseBody
 
-Now you can create instance of `WhatsAppChannel` with your `base_url` and `api_key`.
 
-```python
-c = WhatsAppChannel.from_auth_params({
-    "base_url": "<your_base_url>",
-    "api_key": "<your_api_key>"
-})
-```
+async def main():
+    async with APIClient() as client:
+        # Create a request body object and validate its contents.
+        request_body = SendSMSRequestBody(
+            messages=[
+                Message(
+                    destinations=[
+                        Destination(
+                            to="555555555555",
+                        ),
+                    ],
+                    text="Hello from Infobip Python SDK!",
+                )
+            ]
+        )
 
-Alternatively, you can create the instance from the environment, having the `IB_BASE_URL` and `IB_API_KEY` variables
-set, like this:
+        # Call the endpoint and await returned Coroutine
+        response = await client.SMS.send(request_body)
 
-```python
-c = WhatsAppChannel.from_env()
-```
+        # (Optional) Parse and validate response.
+        response_body = SendSMSResponseBody.from_json(response.text)
 
-After that you can access all the methods from `WhatsAppChannel`.
-To send text message you can use `send_text_message` method and add correct payload:
-```python
-response = c.send_text_message(
-    {
-      "from": "<WhatsApp sender number from your Infobib account>",
-      "to": "<Number that will receive WhatsApp message>",
-      "messageId": "a28dd97c-1ffb-4fcf-99f1-0b557ed381da",
-      "content": {
-        "text": "Some text"
-      },
-      "callbackData": "Callback data",
-      "notifyUrl": "https://www.example.com/whatsapp"
-    }
-)
+        # Do something with the response.
+        print(response)
+        print(response_body)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 ### Samples
@@ -101,10 +107,10 @@ with real payloads.
 
 ## 🗒️ Notes
 
-For `infobip-api-python-sdk` versioning we use
+For SDK versioning we use
 [Semantic Versioning](https://semver.org) scheme.
 
-Python 3.6 is the minimum supported version by this library.
+Python 3.8 is the minimum supported version by this library.
 
 ## 🧡 Want to help and improve this open-source SDK?
 
