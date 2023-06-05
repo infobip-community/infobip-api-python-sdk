@@ -1,0 +1,21 @@
+from os import getenv
+
+from httpx import Client
+
+from infobip.api.sms import SyncSMSClient
+from infobip.client import _get_user_agent
+
+
+class SyncAPIClient:
+    def __init__(self, base_url: str = None, api_key: str = None):
+        if base_url is None:
+            base_url = getenv("IB_BASE_URL")
+        if api_key is None:
+            api_key = getenv("IB_API_KEY")
+
+        headers = {"Authorization": f"App {api_key}"}
+        headers.update({"User-Agent": _get_user_agent()})
+
+        client = Client(base_url=base_url, headers=headers)
+
+        self.SMS = SyncSMSClient(client)

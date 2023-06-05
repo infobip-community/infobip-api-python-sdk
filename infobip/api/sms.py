@@ -1,22 +1,20 @@
 from typing import Awaitable
 
-from httpx import AsyncClient, Response
+from httpx import AsyncClient, Client, Response
 
 from infobip.models.sms_advanced_textual_request import SendSMSRequestBody
 from infobip.models.sms_preview_request import PreviewSMSRequestBody
 
+PATH_PREVIEW_SMS = "/sms/1/preview"
+PATH_SEND_SMS = "/sms/2/text/advanced"
+
 
 class SMSClient:
-    PATH_PREVIEW_SMS = "/sms/1/preview"
-    PATH_SEND_SMS = "/sms/2/text/advanced"
-
     def __init__(self, client: AsyncClient):
         self.client = client
         self.client.headers.update({"content-type": "application/json"})
 
-    def preview_message(
-        self, request_body: PreviewSMSRequestBody
-    ) -> Awaitable[Response]:
+    def preview(self, request_body: PreviewSMSRequestBody) -> Awaitable[Response]:
         """Check how different message configurations will affect your message text, number of characters and message
         parts.
 
@@ -24,7 +22,7 @@ class SMSClient:
         """
 
         return self.client.post(
-            self.PATH_PREVIEW_SMS,
+            PATH_PREVIEW_SMS,
             json=request_body.to_dict(),
         )
 
@@ -40,6 +38,24 @@ class SMSClient:
         """
 
         return self.client.post(
-            self.PATH_SEND_SMS,
+            PATH_SEND_SMS,
+            json=request_body.to_dict(),
+        )
+
+
+class SyncSMSClient:
+    def __init__(self, client: Client):
+        self._client = client
+        self._client.headers.update({"content-type": "application/json"})
+
+    def preview(self, request_body: PreviewSMSRequestBody) -> Response:
+        """Check how different message configurations will affect your message text, number of characters and message
+        parts. This is a synchronous version of the method.
+
+        :param request_body: Request body for previewing an SMS message
+        """
+
+        return self._client.post(
+            PATH_PREVIEW_SMS,
             json=request_body.to_dict(),
         )

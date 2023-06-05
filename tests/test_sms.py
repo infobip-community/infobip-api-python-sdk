@@ -1,6 +1,7 @@
 import pytest
-from common import TEST_URL, get_test_client
+from common import TEST_URL, get_test_client, get_test_sync_client
 
+from infobip.api.sms import PATH_PREVIEW_SMS, PATH_SEND_SMS
 from infobip.models.sms_advanced_textual_request import SendSMSRequestBody
 from infobip.models.sms_destination import Destination
 from infobip.models.sms_preview_request import PreviewSMSRequestBody
@@ -25,7 +26,7 @@ async def test_preview_message(httpx_mock):
 
     async with get_test_client() as client:
         httpx_mock.add_response(
-            url=f"{TEST_URL}{client.SMS.PATH_PREVIEW_SMS}",
+            url=f"{TEST_URL}{PATH_PREVIEW_SMS}",
             method="POST",
             json=expected_response,
             status_code=200,
@@ -34,7 +35,7 @@ async def test_preview_message(httpx_mock):
         request_body = PreviewSMSRequestBody(
             text="Let's see how many characters remain unused in this message.",
         )
-        response = await client.SMS.preview_message(request_body)
+        response = await client.SMS.preview(request_body)
 
         assert response.status_code == 200
         assert (
@@ -64,7 +65,7 @@ async def test_send_sms_message(httpx_mock):
 
     async with get_test_client() as client:
         httpx_mock.add_response(
-            url=f"{TEST_URL}{client.SMS.PATH_SEND_SMS}",
+            url=f"{TEST_URL}{PATH_SEND_SMS}",
             method="POST",
             json=expected_response,
             status_code=200,
@@ -88,3 +89,35 @@ async def test_send_sms_message(httpx_mock):
         assert (
             SendSMSResponseBody.from_json(response.text).to_dict() == expected_response
         )
+
+
+def test_sync_preview(httpx_mock):
+    expected_response = {
+        "originalText": "Let's see how many characters remain unused in this message.",
+        "previews": [
+            {
+                "textPreview": "Let's see how many characters remain unused in this message.",
+                "messageCount": 1,
+                "charactersRemaining": 96,
+                "configuration": {},
+            }
+        ],
+    }
+
+    client = get_test_sync_client()
+    httpx_mock.add_response(
+        url=f"{TEST_URL}{PATH_PREVIEW_SMS}",
+        method="POST",
+        json=expected_response,
+        status_code=200,
+    )
+
+    request_body = PreviewSMSRequestBody(
+        text="Let's see how many characters remain unused in this message.",
+    )
+    response = client.SMS.preview(request_body)
+
+    assert response.status_code == 200
+    assert (
+        PreviewSMSResponseBody.from_json(response.text).to_dict() == expected_response
+    )
