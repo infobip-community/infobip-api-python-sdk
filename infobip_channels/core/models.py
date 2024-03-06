@@ -285,6 +285,7 @@ class ContentTypeEnum(str, Enum):
 
 class CoreMixin:
     """Mixin containing fields shared across multiple message types."""
+
     entity_id: constr(min_length=1, max_length=255) = None
     application_id: constr(min_length=1, max_length=255) = None
 
