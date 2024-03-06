@@ -53,9 +53,14 @@ class TurkeyIys(CamelCaseModel):
     recipient_type: TurkeyRecipientTypeEnum
 
 
+class SouthKorea(CamelCaseModel):
+    reseller_code: Optional[int]
+
+
 class Regional(CamelCaseModel):
     india_dlt: Optional[IndiaDlt] = None
     turkey_iys: Optional[TurkeyIys] = None
+    south_korea: Optional[SouthKorea] = None
 
 
 class Time(CamelCaseModel):
