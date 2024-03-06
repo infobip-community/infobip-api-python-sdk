@@ -283,6 +283,13 @@ class ContentTypeEnum(str, Enum):
     APPLICATION_XML = "application/xml"
 
 
+class CoreMixin:
+    """Mixin containing fields shared across multiple message types."""
+
+    entity_id: constr(min_length=1, max_length=255) = None
+    application_id: constr(min_length=1, max_length=255) = None
+
+
 class MultipartMixin:
     """Mixin used for allowing models to export their fields to a multipart/form-data
     format. Field types currently supported are listed in the
