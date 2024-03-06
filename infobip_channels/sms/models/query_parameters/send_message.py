@@ -4,17 +4,12 @@ from typing import List, Optional, Union
 
 from pydantic import AnyHttpUrl, Field, StrictBool, conint, validator
 
-from infobip_channels.core.models import DateTimeValidator, QueryParameter, url_encoding
-
-
-class TransliterationEnum(str, Enum):
-    TURKISH = "TURKISH"
-    GREEK = "GREEK"
-    CYRILLIC = "CYRILLIC"
-    SERBIAN_CYRILLIC = "SERBIAN_CYRILLIC"
-    CENTRAL_EUROPEAN = "CENTRAL_EUROPEAN"
-    BALTIC = "BALTIC"
-    NON_UNICODE = "NON_UNICODE"
+from infobip_channels.core.models import (
+    DateTimeValidator,
+    QueryParameter,
+    TransliterationEnum,
+    url_encoding,
+)
 
 
 class ContentTypeEnum(str, Enum):
