@@ -37,3 +37,4 @@ class SMSMessageBody(MessageBodyBase):
     sending_speed_limit: Optional[SendingSpeedLimit] = None
     url_options: Optional[URLOptions] = None
     tracking: Optional[Tracking] = None
+    include_sms_count_in_response: Optional[bool] = None
