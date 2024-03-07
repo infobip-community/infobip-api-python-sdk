@@ -293,3 +293,65 @@ def test_when_input_data_is_valid__validation_error_is_not_raised(send_at):
         )
     except ValidationError:
         pytest.fail("Unexpected ValidationError raised")
+
+
+@pytest.mark.parametrize(
+    "send_at",
+    [datetime.now(timezone.utc) + timedelta(days=1), "2022-07-20T16:00:00.000+0000"],
+)
+def test_maximal_valid_input_data(send_at):
+    try:
+        SMSMessageBody(
+            **{
+                "bulk_id": "bulkId",
+                "messages": [
+                    {
+                        "text": "This is a sample message",
+                        "language": "AUTODETECT",
+                        "transliteration": "NON_UNICODE",
+                        "entity_id": None,
+                        "application_id": None,
+                        "callback_data": "callbackData",
+                        "delivery_time_window": {
+                            "days": ["MONDAY", "TUESDAY"],
+                            "from": {
+                                "hour": 10,
+                                "minute": 0,
+                            },
+                            "to": {
+                                "hour": 12,
+                                "minute": 0,
+                            },
+                        },
+                        "destinations": [
+                            {"message_id": "messageId", "to": "41793026727"}
+                        ],
+                        "flash": True,
+                        "from": "InfoSMS",
+                        "intermediate_report": False,
+                        "notify_content_type": "application/json",
+                        "notify_url": "https://example.com",
+                        "regional": {"south_korea": {"reseller_code": 90210}},
+                        "send_at": send_at,
+                        "validity_period": 1440,
+                    }
+                ],
+                "sending_speed_limit": {"amount": 50, "time_unit": "MINUTE"},
+                "url_options": {
+                    "shorten_url": False,
+                    "track_clicks": False,
+                    "tracking_url": "https://example.com",
+                    "remove_protocol": True,
+                    "custom_domain": "https://example.com",
+                },
+                "tracking": {
+                    "base_url": "baseURL",
+                    "process_key": "processKey",
+                    "track": "SMS",
+                    "type": "SOCIAL_INVITES",
+                },
+                "include_sms_count_in_response": True,
+            }
+        )
+    except ValidationError:
+        pytest.fail("Unexpected ValidationError raised")
