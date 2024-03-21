@@ -39,6 +39,8 @@ def test_when_input_data_is_valid__validation_error_is_not_raised():
                 "to": "38598451987",
                 "content": {"text": "a test message", "previewUrl": True},
                 "callbackData": "Some data",
+                "application_id": "An ID",
+                "entity_id": "Another ID",
             }
         )
     except ValidationError:
